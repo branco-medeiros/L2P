@@ -1,0 +1,19 @@
+## Interface: 80000
+## Title: Learn To Play!
+## Author: Glub@Terokkar
+## Version: 1.0
+## Notes: A priority system
+## DefaultState: enabled
+## SavedVariables: L2P_Global_SavedVars
+## SavedVariablesPerCharacter: L2P_SavedVars
+locale-ptBR.lua
+Main.lua
+Mage.lua
+Paladin.lua
+DeathKnight.lua
+Warrior.lua
+Hunter.lua
+Druid.lua
+Priest.lua
+DemonHunter.lua
+
