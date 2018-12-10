@@ -249,75 +249,74 @@ if select(2, UnitClass("player")) == 'DEMONHUNTER' then
 	------------------------------------------------------------------------------
 
   local havoc = {}
-  --[[
-  Annihilation = 201427
-  BladeDance = 188499
-  BlindFury = 203550
-  Blur = 198589
-  ChaosBrand = 255260
-  ChaosNova = 179057
-  ChaosStrike = 162794
-  ConsumeMagic = 278326
-  CycleOfHatred = 258887
-  DarkSlash = 258860
-  Darkness = 196718
-  DeathSweep = 210152
-  DemonBlades = 203555
-  DemonsBite = 162243
-  Demonic = 213410
-  DemonicAppetite = 206478
-  DemonicWards = 278386
-  Disrupt = 183752
-  EyeBeam = 198013
-  FelBarrage = 258925
-  FelMastery = 192939
-  FelRush = 195072
-  Felblade = 232893
-  FirstBlood = 206416
-  Glide = 131347
-  ImmolationAura = 258920
-  Imprison = 217832
-  InsatiableHunger = 258876
-  Metamorphosis = 191427
-  Momentum = 206476
-  Nemesis = 206491
-  ShatteredSouls = 178940
-  ThrowGlaive = 185123
-  Torment = 185245
-  TrailOfRuin = 258881
-  VengefulRetreat = 198793
+--[[
+Annihilation = 201427
+BladeDance = 188499
+BlindFury = 203550
+Blur = 198589
+ChaosBrand = 255260
+ChaosNova = 179057
+ChaosStrike = 162794
+ConsumeMagic = 278326
+CycleOfHatred = 258887
+DarkSlash = 258860
+Darkness = 196718
+DeathSweep = 210152
+DemonBlades = 203555
+DemonsBite = 162243
+Demonic = 213410
+DemonicAppetite = 206478
+DemonicWards = 278386
+Disrupt = 183752
+EyeBeam = 198013
+FelBarrage = 258925
+FelMastery = 192939
+FelRush = 195072
+Felblade = 232893
+FirstBlood = 206416
+Glide = 131347
+ImmolationAura = 258920
+Imprison = 217832
+InsatiableHunger = 258876
+Metamorphosis = 191427
+Momentum = 206476
+Nemesis = 206491
+ShatteredSouls = 178940
+ThrowGlaive = 185123
+Torment = 185245
+TrailOfRuin = 258881
+VengefulRetreat = 198793
 
 
-  fel-barrage:noinstant = true
-  eye-beam:noinstant = true
-  disrupt:interrupt = true
-  fel-rush:notarget = true
-  metamorphosis:notarget = true
-   
-  vengeful-retreat.escape = we-are-being-attacked and low-health
-  blur = we-are-being-attacked and low-health or pain-index > 3
-  vengeful-retreat.momentum = momentum-talented and not has-momentum-buff
-  fel-rush.momentum = has-momentum-buff and fury > 80
-  fel-barrage = target-is-near and (is-boss-fight or enemies > 1)
-  dark-slash = fury >= 80
-  eye-beam = target-is-near and (is-boss-fight or enemies > 1)
-  nemesis = is-boss-fight or (we-are-being-attacked and low-health)
-  metamorphosis = is-boss-fight or (we-are-being-attacked and low-health)
-  blade-dance.aoe = enemies > 2
-  death-sweep.aoe = enemies > 2
-  immolation-aura = target-is-near
-  blade-dance = true
-  death-sweep = true
-  felblade = fury < 80
-  dark-slash = true
-  chaos-strike = true
-  annihilation = true
-  demons-bite = fury < 80
-  fel-rush.2charges = fel-rush-charges > 1
-  throw-glaive.filler = true
-  fel-rush.filler = true
+fel-barrage:noinstant = true
+eye-beam:noinstant = true
+disrupt:interrupt = true
+metamorphosis:notarget = true
+ 
+vengeful-retreat.escape = we-are-being-attacked and low-health
+blur = we-are-being-attacked and low-health or pain-react > 3
+vengeful-retreat.momentum = momentum-talented and not has-momentum-buff
+fel-rush.momentum = target-is-not-far and has-momentum-buff and fury > 80
+fel-barrage = target-is-near and (is-boss-fight or enemies > 1)
+dark-slash = fury >= 80
+eye-beam = target-is-near and (is-boss-fight or enemies > 1)
+nemesis = is-boss-fight or (we-are-being-attacked and low-health)
+metamorphosis = is-boss-fight or (we-are-being-attacked and low-health)
+blade-dance.aoe = enemies > 2
+death-sweep.aoe = enemies > 2
+immolation-aura = target-is-near
+blade-dance = true
+death-sweep = true
+felblade = fury < 80
+dark-slash = true
+chaos-strike = true
+annihilation = true
+demons-bite = fury < 80
+fel-rush.2charges = target-is-not-far and fel-rush-charges > 1
+throw-glaive.filler = true
+fel-rush.filler = target-is-not-far 
 
-  ]]
+]]
 
   havoc.SID = {
     Annihilation = 201427,
@@ -375,7 +374,8 @@ if select(2, UnitClass("player")) == 'DEMONHUNTER' then
 
   havoc.onBlur = function(this, ctx)
     return ctx.WeAreBeingAttacked 
-      and ctx.PainPerSecond > 0 
+      and ctx.LowHealth 
+      or ctx.PainReact > 3 
   end
 
   havoc.onChaosStrike = function(this, ctx)
@@ -419,15 +419,17 @@ if select(2, UnitClass("player")) == 'DEMONHUNTER' then
   end
 
   havoc.onFelRush2charges = function(this, ctx)
-    return ctx.FelRushCharges > 1 
+    return ctx.TargetIsNotFar 
+      and ctx.FelRushCharges > 1 
   end
 
   havoc.onFelRushFiller = function(this, ctx)
-    return true 
+    return ctx.TargetIsNotFar 
   end
 
   havoc.onFelRushMomentum = function(this, ctx)
-    return ctx.HasMomentumBuff 
+    return ctx.TargetIsNotFar 
+      and ctx.HasMomentumBuff 
       and ctx.Fury > 80 
   end
 
@@ -460,6 +462,11 @@ if select(2, UnitClass("player")) == 'DEMONHUNTER' then
       and ctx.LowHealth 
   end
 
+  havoc.onVengefulRetreatMomentum = function(this, ctx)
+    return ctx.MomentumTalented 
+      and not ctx.HasMomentumBuff 
+  end
+
 
   havoc.Init = function(this, ctx)
     havoc.doInit(this, ctx)
@@ -470,39 +477,43 @@ if select(2, UnitClass("player")) == 'DEMONHUNTER' then
     ctx.HasMomentumBuff = UNKNOWN
     ctx.IsBossFight = UNKNOWN
     ctx.LowHealth = UNKNOWN
-    ctx.PainPerSecond = UNKNOWN
+    ctx.MomentumTalented = UNKNOWN
+    ctx.PainReact = UNKNOWN
     ctx.TargetIsNear = UNKNOWN
+    ctx.TargetIsNotFar = UNKNOWN
     ctx.WeAreBeingAttacked = UNKNOWN
   ]]
   end
 
   havoc.SPEC = {
-    {HAVOC, SPELL, "annihilation",             havoc.SID.Annihilation,             havoc.onAnnihilation},
-    {HAVOC, SPELL, "blade-dance",              havoc.SID.BladeDance,               havoc.onBladeDance},
-    {HAVOC, SPELL, "blade-dance.aoe",          havoc.SID.BladeDance,               havoc.onBladeDanceAoe},
-    {HAVOC, SPELL, "blur",                     havoc.SID.Blur,                     havoc.onBlur},
-    {HAVOC, SPELL, "chaos-strike",             havoc.SID.ChaosStrike,              havoc.onChaosStrike},
-    {HAVOC, SPELL, "dark-slash",               havoc.SID.DarkSlash,                havoc.onDarkSlash},
-    {HAVOC, SPELL, "dark-slash",               havoc.SID.DarkSlash,                havoc.onDarkSlash},
-    {HAVOC, SPELL, "death-sweep",              havoc.SID.DeathSweep,               havoc.onDeathSweep},
-    {HAVOC, SPELL, "death-sweep.aoe",          havoc.SID.DeathSweep,               havoc.onDeathSweepAoe},
-    {HAVOC, SPELL, "demons-bite",              havoc.SID.DemonsBite,               havoc.onDemonsBite},
-    {HAVOC, SPELL, "disrupt:interrupt",        havoc.SID.Disrupt,                  havoc.onDisruptInterrupt},
-    {HAVOC, SPELL, "eye-beam",                 havoc.SID.EyeBeam,                  havoc.onEyeBeam, NoInstant=true},
-    {HAVOC, SPELL, "fel-barrage",              havoc.SID.FelBarrage,               havoc.onFelBarrage, NoInstant=true},
-    {HAVOC, SPELL, "fel-rush.2charges",        havoc.SID.FelRush,                  havoc.onFelRush2charges, NoTarget=true},
-    {HAVOC, SPELL, "fel-rush.filler",          havoc.SID.FelRush,                  havoc.onFelRushFiller, NoTarget=true},
-    {HAVOC, SPELL, "fel-rush.momentum",        havoc.SID.FelRush,                  havoc.onFelRushMomentum, NoTarget=true},
-    {HAVOC, SPELL, "felblade",                 havoc.SID.Felblade,                 havoc.onFelblade},
-    {HAVOC, SPELL, "immolation-aura",          havoc.SID.ImmolationAura,           havoc.onImmolationAura},
-    {HAVOC, SPELL, "metamorphosis",            havoc.SID.Metamorphosis,            havoc.onMetamorphosis, NoTarget=true},
-    {HAVOC, SPELL, "nemesis",                  havoc.SID.Nemesis,                  havoc.onNemesis},
-    {HAVOC, SPELL, "throw-glaive.filler",      havoc.SID.ThrowGlaive,              havoc.onThrowGlaiveFiller},
-    {HAVOC, SPELL, "vengeful-retreat.escape",  havoc.SID.VengefulRetreat,          havoc.onVengefulRetreatEscape},
+    {HAVOC, SPELL, "annihilation",               havoc.SID.Annihilation,               havoc.onAnnihilation},
+    {HAVOC, SPELL, "blade-dance",                havoc.SID.BladeDance,                 havoc.onBladeDance},
+    {HAVOC, SPELL, "blade-dance.aoe",            havoc.SID.BladeDance,                 havoc.onBladeDanceAoe},
+    {HAVOC, SPELL, "blur",                       havoc.SID.Blur,                       havoc.onBlur},
+    {HAVOC, SPELL, "chaos-strike",               havoc.SID.ChaosStrike,                havoc.onChaosStrike},
+    {HAVOC, SPELL, "dark-slash",                 havoc.SID.DarkSlash,                  havoc.onDarkSlash},
+    {HAVOC, SPELL, "dark-slash",                 havoc.SID.DarkSlash,                  havoc.onDarkSlash},
+    {HAVOC, SPELL, "death-sweep",                havoc.SID.DeathSweep,                 havoc.onDeathSweep},
+    {HAVOC, SPELL, "death-sweep.aoe",            havoc.SID.DeathSweep,                 havoc.onDeathSweepAoe},
+    {HAVOC, SPELL, "demons-bite",                havoc.SID.DemonsBite,                 havoc.onDemonsBite},
+    {HAVOC, SPELL, "disrupt:interrupt",          havoc.SID.Disrupt,                    havoc.onDisruptInterrupt},
+    {HAVOC, SPELL, "eye-beam",                   havoc.SID.EyeBeam,                    havoc.onEyeBeam, NoInstant=true},
+    {HAVOC, SPELL, "fel-barrage",                havoc.SID.FelBarrage,                 havoc.onFelBarrage, NoInstant=true},
+    {HAVOC, SPELL, "fel-rush.2charges",          havoc.SID.FelRush,                    havoc.onFelRush2charges},
+    {HAVOC, SPELL, "fel-rush.filler",            havoc.SID.FelRush,                    havoc.onFelRushFiller},
+    {HAVOC, SPELL, "fel-rush.momentum",          havoc.SID.FelRush,                    havoc.onFelRushMomentum},
+    {HAVOC, SPELL, "felblade",                   havoc.SID.Felblade,                   havoc.onFelblade},
+    {HAVOC, SPELL, "immolation-aura",            havoc.SID.ImmolationAura,             havoc.onImmolationAura},
+    {HAVOC, SPELL, "metamorphosis",              havoc.SID.Metamorphosis,              havoc.onMetamorphosis, NoTarget=true},
+    {HAVOC, SPELL, "nemesis",                    havoc.SID.Nemesis,                    havoc.onNemesis},
+    {HAVOC, SPELL, "throw-glaive.filler",        havoc.SID.ThrowGlaive,                havoc.onThrowGlaiveFiller},
+    {HAVOC, SPELL, "vengeful-retreat.escape",    havoc.SID.VengefulRetreat,            havoc.onVengefulRetreatEscape},
+    {HAVOC, SPELL, "vengeful-retreat.momentum",  havoc.SID.VengefulRetreat,            havoc.onVengefulRetreatMomentum},
 
     --prio
     {HAVOC, PRIO, "vengeful-retreat.escape"},
     {HAVOC, PRIO, "blur"},
+    {HAVOC, PRIO, "vengeful-retreat.momentum"},
     {HAVOC, PRIO, "fel-rush.momentum"},
     {HAVOC, PRIO, "fel-barrage"},
     {HAVOC, PRIO, "dark-slash"},
@@ -535,6 +546,7 @@ if select(2, UnitClass("player")) == 'DEMONHUNTER' then
     ctx.HasMomentumBuff = ctx:CheckBuff(havoc.SID.Momentum) > 0
     ctx.LowHealth = ctx.HealthPercent < 0.7
     ctx.TargetIsNear = ctx:CheckEnemyIsClose()
+    ctx.TargetIsNotFar = ctx:CheckEnemyIsNotFar()
   end
   
   Main.specs = {havoc = havoc, veng = veng}
