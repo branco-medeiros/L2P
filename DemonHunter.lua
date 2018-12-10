@@ -1,7 +1,6 @@
 local _, Main = ...
 if select(2, UnitClass("player")) == 'DEMONHUNTER' then
 
-  Main.Engine.Debug = true
   --------------------------------------------------------------------------------
   function Main.L(text)
   --------------------------------------------------------------------------------
@@ -207,8 +206,8 @@ if select(2, UnitClass("player")) == 'DEMONHUNTER' then
     --------------------------------------------------------------------------
 		-- healing, mitigation
 		{VENG, PRIO, "metamorphosis"}, 			-- pain gen
-    {VENG, PRIO, "soul-cleave-heals"}, 	-- pain consumer
-    {VENG, PRIO, "spirit-bomb-heals"},
+        {VENG, PRIO, "soul-cleave-heals"}, 	-- pain consumer
+        {VENG, PRIO, "spirit-bomb-heals"},
 		{VENG, PRIO, "soul-barrier"},
 		{VENG, PRIO, "demon-spikes"}, 			-- pain consumer
 		{VENG, PRIO, "empower-wards"},
@@ -296,7 +295,8 @@ if select(2, UnitClass("player")) == 'DEMONHUNTER' then
   metamorphosis:notarget = true
    
   vengeful-retreat.escape = we-are-being-attacked and low-health
-  blur = we-are-being-attacked and pain-per-second > 0
+  blur = we-are-being-attacked and low-health or pain-index > 3
+  vengeful-retreat.momentum = momentum-talented and not has-momentum-buff
   fel-rush.momentum = has-momentum-buff and fury > 80
   fel-barrage = target-is-near and (is-boss-fight or enemies > 1)
   dark-slash = fury >= 80

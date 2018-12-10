@@ -1193,15 +1193,7 @@ local function Engine_HandleCombatLog(this)
 		this.AttackerList:Add(source)
 		local prefix = strsub(event, 1, 5)
 		local value = (prefix == "SWING" and p1) or (prefix == "ENVIR" and p2) or p4
-
-		-- if prefix == "SWING" then
-		-- print(event, sname, dname, ...)
-		local damage = (value or 0) / UnitHealthMax("player")
-		--if(damage > 0) then print("COMBAT DAMAGE: ", damage) end
-		this.ElapsedDamaged = (this.ElapsedDamaged or 0) + damage
-		if damage >= MINIMUM_DAMAGE_FOR_PAIN then
-			this.PainDuration = this.Now + DAMAGE_PAIN_DURATION
-		end
+		this.ElapsedDamage = (this.ElapsedDamage or 0) + (value or 0)
 
 	end
 
@@ -1270,42 +1262,10 @@ end -- fn Engine_CalcLag
 
 
 ------------------------------------------------------------------------------
-local function Engine_CalcDamage(this)
-------------------------------------------------------------------------------
--- calculates the incoming damage and provides a fall down of the damage already taken
-------------------------------------------------------------------------------
-  local Health = UnitHealth("player")
-  if not this.PainSnapshot or this.HealthPercent > 0.99 or this.PainPerSecond < 0 then
-    this.PainPerSecond = 0
-    this.HealthRef = Health
-    this.HealthPercentRef = this.HealthPercent
-    this.HealthRefTime = this.Now
-    this.HealthPercentRef2 this.HealthPercent
-    this.PainDelta = 0
-    this.PainDelta2 = 0
-    return
-  end
-
-  this.PainDelta2 = this.HealthPercent / this.HealthPercentRef2 - 1
-  this.HealthPercentRef2 = this.HealthPercent
-  this.PainDelta = this.HealthPercent / this.HealthPercentRef - 1
-  this.PainPerSecond = (this.HealthRef - Health) / (this.Now - this.HealthRefTime)
-  
-	if this.Debug and (not this.LastSnap or (this.Now - this.LastSnap) >= 1 ) then
-		if this.PainPerSecond > 0 then
-      ShowMsg("delta: %.2f%% - desta2: %.2f%% - PainPerSecond: %.3f%%", this.PainDelta, this.PainDelta2, this.PainPerSecond)
-    end
-		this.LastSnap = this.Now
-	end
-end
-
-------------------------------------------------------------------------------
 local function Engine_UpdateState(this)
 ------------------------------------------------------------------------------
 -- colects the information needed to select the spells
 ------------------------------------------------------------------------------
-  this.Now = GetTime()
-
   local target = UnitGUID("target")
   if target then this.MobList:Add(target) end
   this.Mobs = this.MobList:Refresh()
@@ -1324,9 +1284,30 @@ local function Engine_UpdateState(this)
 	this.IsPvp = UnitIsPlayer("target") and this:CheckDebuff(OBLIVION_SPHERE) == 0
   this.WeAreBeingAttacked = this.Attackers > 0
 
-  this.HealthPercent = UnitHealth("player")/UnitHealthMax("player")
-  this:CalcDamage()
+  --calcs health and pain
+  local Health = UnitHealth("player")
+  local HealthMax = UnitHealthMax("player")
+  this.HealthPercent = Health/HealthMax
+  local tick = 1/HealthMax
+  
+  local pain = (this.ElapsedDamage or 0) / HealthMax * 100
+  this.PainReact = (not this.PainReact and pain) or 
+      (pain < 0.01 and ((this.PainReact >= 0 and this.PainReact - 0.05) or 0)) or 
+      (math.max(pain, this.PainReact) + math.min(pain, this.PainReact) * 0.5)
+  
+  if not this.PainPerSecond or this.PainPerSecond <= 0 then
+    this.HealthSnapshot = Health + this.ElapsedDamage
+    this.HealthSnapshotTime = this.Now
+    this.PainPerSecond = this.ElapsedDamage
+  else
+    this.PainPerSecond = (this.HealthSnapshot - Health) / (this.Now - this.HealthSnapshotTime)
+  end
 
+	if true and (not this.LastSnap or (this.Now - this.LastSnap) >= 1) then
+    ShowMsg("pps: %.2f -  PainReact: %.5f%%", this.PainPerSecond, this.PainReact)
+		this.LastSnap = this.Now
+	end
+  
   this.HasBloodLust = (this:CheckBuff({SPN.Bloodlust, SPN.Heroism, SPN.TimeWarp, SPN.AncientHysteria}) > 0)
 
   this.IsMoving = GetUnitSpeed("player") > 0
@@ -1334,6 +1315,8 @@ local function Engine_UpdateState(this)
   -- alllows the initialization of the spec data
   -- for a new cicle
   if this.InitSpec then this.InitSpec(this, this) end
+
+  this.ElapsedDamage = 0
 end -- fn Engine_UpdateState
 
 ------------------------------------------------------------------------------
@@ -1972,14 +1955,15 @@ local function Engine_Create(Spec, Spells, Prio, GCDSpell, Throtle, Frame)
   eng.Throtle = Throtle or 0        -- how long to throtle the engine (in ms)
   eng.GCDSpell = GCDSpell           -- spell to use in gcd calculation
   eng.WeAreBeingAttacked = false
-  eng.DamageReceived = 0            -- the damage received recently as a percentual of toal health
-	eng.PainDuration = false        	-- interval that we feel the last damage received.
-	eng.PainPerSecond = 0             -- percentual estimate for the damage we are receiving
-	eng.ElapsedDamaged = 0            -- the raw damage received between updates
+	eng.PainPerSecond = 0             
+	eng.PainReact = 0               -- percentual estimate for the damage we are receiving
+  eng.ElapsedDamage = 0             -- the raw damage received between updates
+  eng.IncreasingPain = false
 	eng.HealthPercent = 1							 
 
   eng.Mobs = 0                      -- current number of mobs being hit by the player
 	eng.Attackers = 0                 -- current number of enemies attacking us
+  eng.Enemies = 0 
   eng.MobList = Tracker_Create()    -- tracks the mobs being hit
 	eng.AttackerList = Tracker_Create()  -- tracks who are attacking us
   eng.CurSpell = EmptySpell         -- the suggested current spell object
@@ -2014,7 +1998,6 @@ local function Engine_Create(Spec, Spells, Prio, GCDSpell, Throtle, Frame)
   eng.FindSpellName = Engine_FindSpellName
   eng.Reset = Engine_Reset
   eng.MapSpellsToBook = Engine_MapSpellsToBook
-  eng.CalcDamage = Engine_CalcDamage
 	eng.UpdateGCD = Engine_UpdateGCD
 
   eng.CheckBuff = Engine_CheckBuff
