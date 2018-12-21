@@ -66,6 +66,7 @@ if select(2, UnitClass("player")) == 'PALADIN' then
     DivinePurpose              = 223817,
     DivineShield               = 642,
     DivineStorm                = 53385,
+		EmpyreanPower							 = 286393,
     ExecutionSentence          = 267798,
     ExecutionSentenceDebuff    = 267799,
 		EyeForAnEye                = 205191,
@@ -135,6 +136,9 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		s, e, d = Ctx:CheckBuff(SPN.Inquisition)
 		Ctx.InquisitionUp = s > 0
 		Ctx.InquisitionRemain = e
+
+		s, e, d = Ctx:CheckBuff(SPId.EmpyreanPower)
+		Ctx.EmpyreanPowerUp = (s > 0 and true) or false
 		
 		Ctx.IsSpellExecutionSentence = IsPlayerSpell(SPId.ExecutionSentence)
 		Ctx.ExecutionSentenceCooldown = Ctx:SpellCooldown(SPN.ExecutionSentence)
@@ -193,10 +197,14 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		return ctx.IsDivineStormCastable
 	end
 	
+	retr.onDivineStormEmpyreanPower = function(this, ctx)
+		return ctx.EmpyreanPowerUp
+	end
 	
 	retr.onDivineStormHP5 = function(this, ctx)
 		return retr.onHP5(this, ctx) and retr.onDivineStorm(this, ctx)
 	end
+	
 	
 	retr.onTemplarsVerdict = function(this, ctx)
 		return not ctx.IsDivineStormCastable
@@ -336,6 +344,7 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		{RETR, SPELL, "crusader-strike-filler", 				SPId.CrusaderStrike, 				retr.OnCrusaderStrikeFiller},
 		{RETR, SPELL, "crusader-strike-heal", 					SPId.CrusaderStrike, 				retr.onCrusaderStrikeHeal},
 		{RETR, SPELL, "divine-storm", 									SPId.DivineStorm, 					retr.onDivineStorm},
+		{RETR, SPELL, "divine-storm-empirean-power", 		SPId.DivineStorm, 					retr.onDivineStormEmpyreanPower},
 		{RETR, SPELL, "divine-storm-hp5", 							SPId.DivineStorm, 					retr.onDivineStormHP5},
 		{RETR, SPELL, "execution-sentence", 						SPId.ExecutionSentence, 		retr.onExecutionSentence},
 		{RETR, SPELL, "hammer-of-wrath", 								SPId.HammerOfWrath, 				retr.onHammerOfWrath},
@@ -390,6 +399,7 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 
 		{RETR, PRIO, "judgment-debuff"},
 		{RETR, PRIO, "inquisition"},
+		{RETR, PRIO, "divine-storm-empirean-power"},
 		{RETR, PRIO, "divine-storm-hp5"},
 		{RETR, PRIO, "execution-sentence"},
 		{RETR, PRIO, "templars-verdict-hp5"},

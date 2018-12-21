@@ -1302,6 +1302,8 @@ local function Engine_UpdateState(this)
   else
     this.PainPerSecond = (this.HealthSnapshot - Health) / (this.Now - this.HealthSnapshotTime)
   end
+	
+	this.PainIndex = this.PainPerSecond / Health
 
 	if false and (not this.LastSnap or (this.Now - this.LastSnap) >= 1) then
     ShowMsg("pps: %.2f -  PainReact: %.5f%%", this.PainPerSecond, this.PainReact)
