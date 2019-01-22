@@ -80,11 +80,12 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		JudgmentDebuff						 = 197277,
     JusticarsVengeance         = 215661,
 		LayOnHands                 = 633,
+		OblivionSphere						 = 272407,
     Rebuke                     = 96231,
     Retribution                = 183436,
     RighteousVerdictBuff       = 267611,
     ScarletInquisitorsExp 		 = 248289,
-		SelflessHealer						 = 85804,
+		SelflessHealer						 = 114250,
 		ShieldOfVengeance          = 184662,
     TemplarsVerdict            = 85256,
 		WakeOfAshes                = 255937,
@@ -110,7 +111,9 @@ if select(2, UnitClass("player")) == 'PALADIN' then
     end
     
     
-      
+    local s, e, d = Ctx:CheckDebuff(SPN.OblivionSphere) 
+		Ctx.TargetIsUnderOblivionSphere = s > 0
+		Ctx.isPvp = Ctx.isPvp and not Ctx.TargetIsUnderOblivionSphere
     Ctx.GCDx2 = Ctx.GCD * 2
     Ctx.TargetHealthPercent = UnitHealth("target")/UnitHealthMax("target")
     Ctx.LowHealth = Ctx.HealthPercent <= .5
@@ -120,7 +123,7 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		Ctx.HolyPower = UnitPower("player", SPELL_POWER_HOLY_POWER) or 0
 
 		
-    local s, e, d = Ctx:CheckBuff(SPN.DivinePurpose)
+    s, e, d = Ctx:CheckBuff(SPN.DivinePurpose)
     Ctx.DivinePurposeUp = s > 0
     Ctx.DivinePurposeRemain = e
     Ctx.DivinePurposeReact = react(s, e, d)
@@ -137,6 +140,8 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		Ctx.InquisitionUp = s > 0
 		Ctx.InquisitionRemain = e
 
+		Ctx.SelflessHealerCharges = Ctx:CheckBuff(SPN.SelflessHealer)
+		
 		s, e, d = Ctx:CheckBuff(SPId.EmpyreanPower)
 		Ctx.EmpyreanPowerUp = (s > 0 and true) or false
 		
@@ -144,6 +149,8 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		Ctx.ExecutionSentenceCooldown = Ctx:SpellCooldown(SPN.ExecutionSentence)
 		
 		Ctx.AvengingWrathCooldown = Ctx:SpellCooldown(SPN.AvengingWrath)
+		s = Ctx:CheckBuff(SPN.AvengingWrath)
+		Ctx.AvengingWrathUp = s > 0
 		
 		Ctx.HasTalentDivineJudgment = Ctx:HasTalent(4, 1)
 		Ctx.IsDivineStormCastable = (Ctx.Mobs >= 3) or
@@ -197,6 +204,10 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		return ctx.IsDivineStormCastable
 	end
 	
+	retr.onDivineStormCrusade = function(this, ctx)
+		return (ctx.CrusadeUpor or ctx.AvengingWrathUp) and retr.onDivineStorm(this, ctx)
+	end
+	
 	retr.onDivineStormEmpyreanPower = function(this, ctx)
 		return ctx.EmpyreanPowerUp
 	end
@@ -210,6 +221,10 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		return not ctx.IsDivineStormCastable
 	end
 		
+	retr.onTemplarsVerdictCrusade = function(this, ctx)
+		return (ctx.CrusadeUp or ctx.AvengingWrathUp) and retr.onTemplarsVerdict(this, ctx)
+	end
+	
 	retr.onTemplarsVerdictHP5 = function(this, ctx)
 		return retr.onHP5(this, ctx) and retr.onTemplarsVerdict(this, ctx)
 	end
@@ -312,6 +327,22 @@ if select(2, UnitClass("player")) == 'PALADIN' then
     return ctx.HealthPercent <= 0.4 and
 			(ctx.PainPerSecond > 0) 
   end
+	
+	retr.onFlashOfLightFree = function(this, ctx)
+		return ctx.HealthPercent <= 0.9 and
+			ctx.SelflessHealerCharges > 3
+	end
+	
+	retr.onFlashOfLightHeal = function(this, ctx)
+		return ctx.HealthPercent <= 0.5 and
+			ctx.SelflessHealerCharges > 0 and 
+			ctx.SelflessHealerCharges < 4  
+	end
+  
+	retr.onFlashOfLightHealFree = function(this, ctx)
+		return ctx.HealthPercent <= 0.5 and
+			ctx.SelflessHealerCharges > 3
+	end
   
   retr.onLayOnHands = function(this, ctx)
     return ctx.HealthPercent <= 0.2
@@ -344,6 +375,7 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		{RETR, SPELL, "crusader-strike-filler", 				SPId.CrusaderStrike, 				retr.OnCrusaderStrikeFiller},
 		{RETR, SPELL, "crusader-strike-heal", 					SPId.CrusaderStrike, 				retr.onCrusaderStrikeHeal},
 		{RETR, SPELL, "divine-storm", 									SPId.DivineStorm, 					retr.onDivineStorm},
+		{RETR, SPELL, "divine-storm-crusade", 					SPId.DivineStorm, 					retr.onDivineStormCrusade},
 		{RETR, SPELL, "divine-storm-empirean-power", 		SPId.DivineStorm, 					retr.onDivineStormEmpyreanPower},
 		{RETR, SPELL, "divine-storm-hp5", 							SPId.DivineStorm, 					retr.onDivineStormHP5},
 		{RETR, SPELL, "execution-sentence", 						SPId.ExecutionSentence, 		retr.onExecutionSentence},
@@ -355,6 +387,7 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		{RETR, SPELL, "judgment-heal", 									SPId.Judgment, 							retr.onJudgmentHeal},
     {RETR, SPELL, "justicars-vengeance",		    		SPId.JusticarsVengeance,		retr.onJusticarsVengeance},
 		{RETR, SPELL, "templars-verdict", 							SPId.TemplarsVerdict, 			retr.onTemplarsVerdict},
+		{RETR, SPELL, "templars-verdict-crusade", 			SPId.TemplarsVerdict, 			retr.onTemplarsVerdictCrusade},
 		{RETR, SPELL, "templars-verdict-hp5", 					SPId.TemplarsVerdict, 			retr.onTemplarsVerdictHP5},
 		{RETR, SPELL, "wake-of-ashes", 									SPId.WakeOfAshes, 					retr.onWakeOfAshes, RangeSpell=SPId.JusticarsVengeance},
 		{RETR, SPELL, "wake-of-ashes-heal", 						SPId.WakeOfAshes, 					retr.onWakeOfAshesHeal, NoTarget=true},
@@ -371,6 +404,9 @@ if select(2, UnitClass("player")) == 'PALADIN' then
     -- healing
     {RETR, SPELL, "word-of-glory",                  SPId.WordOfGlory,           retr.onWordOfGlory, NoTarget = true},
     {RETR, SPELL, "divine-shield",                  SPId.DivineShield,          retr.onDivineShield, NoTarget = true},
+		{RETR, SPELL, "flash-of-light-free",						SPId.FlashOfLight,					retr.onFlashOfLightFree, NoTarget=true},
+		{RETR, SPELL, "flash-of-light-heal",						SPId.FlashOfLight,					retr.onFlashOfLightHeal, Secondary=true, NoInstant=true, NoTarget=true},
+		{RETR, SPELL, "flash-of-light-heal-free",				SPId.FlashOfLight,					retr.onFlashOfLightHealFree, NoTarget=true},
     {RETR, SPELL, "lay-on-hands",                   SPId.LayOnHands,            retr.onLayOnHands, NoTarget = true},
     {RETR, SPELL, "justicars-vengeance-heal",		    SPId.JusticarsVengeance,		retr.onJusticarsVengeanceHeal},
     {RETR, SPELL, "shield-of-vengeance",            SPId.ShieldOfVengeance,     retr.onShieldOfVengeance, NoTarget = true},
@@ -388,6 +424,8 @@ if select(2, UnitClass("player")) == 'PALADIN' then
     {RETR, PRIO, "divine-shield"},
     {RETR, PRIO, "lay-on-hands"},
     {RETR, PRIO, "word-of-glory"},
+    {RETR, PRIO, "flash-of-light-heal-free"},
+    {RETR, PRIO, "flash-of-light-heal"},
     {RETR, PRIO, "justicars-vengeance-heal"},
     {RETR, PRIO, "shield-of-vengeance"},
 		{RETR, PRIO, "blade-of-justice-heal"},
@@ -400,8 +438,10 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		{RETR, PRIO, "judgment-debuff"},
 		{RETR, PRIO, "inquisition"},
 		{RETR, PRIO, "divine-storm-empirean-power"},
+		{RETR, PRIO, "divine-storm-crusade"},
 		{RETR, PRIO, "divine-storm-hp5"},
 		{RETR, PRIO, "execution-sentence"},
+		{RETR, PRIO, "templars-verdict-crusade"},
 		{RETR, PRIO, "templars-verdict-hp5"},
 
 		{RETR, PRIO, "wake-of-ashes"},
@@ -420,6 +460,7 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		{RETR, PRIO, "templars-verdict"},
 
 		{RETR, PRIO, "crusader-strike-filler"},
+    {RETR, PRIO, "flash-of-light-free"},
     {RETR, AOE,  {}},
 
     --------------------------------------------------------------------------

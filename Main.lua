@@ -1281,7 +1281,7 @@ local function Engine_UpdateState(this)
   -- refreshes variables used by spec calculators
   local TLevel = UnitLevel("target") or 0
   this.IsBossFight = (TLevel < 0) or (TLevel > (UnitLevel("player") + 2)) or UnitIsPlayer("target")
-	this.IsPvp = UnitIsPlayer("target") and this:CheckDebuff(OBLIVION_SPHERE) == 0
+	this.IsPvp = UnitIsPlayer("target") 
   this.WeAreBeingAttacked = this.Attackers > 0
 
   --calcs health and pain
