@@ -3402,6 +3402,7 @@ local function HandleAddOnLoaded(this, evt, addon)
     DbgMsg("Activating the engine")
     
     local sf =  SpellFrame_Create(0, 0, 100, 80)
+    sf:SetFrameStrata("DIALOG")
     sf:Hide()
     sf.OnUpdate:Add(this.HandleOnUpdate, this)
 
