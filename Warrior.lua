@@ -58,6 +58,7 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
 		Dreadnaught 				= 262150, 
 		Execute 						= 163201, 
 		FervorOfBattle 			= 202316, 
+		Harmstring					= 1715,
 		HeroicLeap 					= 6544,
 		ImpendingVictory		= 202168,
 		InForTheKill 				= 248621,
@@ -119,6 +120,9 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
 		Ctx.IAmTheTarget = UnitIsUnit("boss1target", "player")
 		
 		Ctx.HasCleave = IsPlayerSpell(SPId.Cleave)
+		
+		s, d = Ctx:CheckBuff(SPId.DefensiveStance)
+		Ctx.DefensiveStanceOn = s > 0
   end
   
 	arms.onAvatar =  function(this, Ctx)
@@ -147,8 +151,8 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
 	end
 	
 	arms.onDefensiveStance =  function(this, Ctx)
-		return Ctx.LowHealth or
-			(Ctx.IsBossFight and Ctx.IAmTheTarget)
+		return not Ctx.DefensiveStanceOn and 
+			(Ctx.LowHealth or (Ctx.IsBossFight and Ctx.IAmTheTarget))
 	end
 	
 	arms.onDieByTheSword =  function(this, Ctx)
@@ -194,6 +198,10 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
 	
 	arms.onSkullsplitter = function(this, Ctx)
 		return Ctx.Rage < 80
+	end
+	
+	arms.onStormBolt = function(this, Ctx)
+		return not Ctx.IsBossFight
 	end
 	
 	arms.onSweepingStrikes =  function(this, Ctx)
@@ -304,24 +312,24 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
 		
   end
   
-  prot.BattleCry = function(this, Ctx)
+  prot.onBattleCry = function(this, Ctx)
     return Ctx.IsBossFight or (Ctx.Mobs or 0) > 2
   end
 
-  prot.DemoralizingShout = function(this, Ctx)
+  prot.onDemoralizingShout = function(this, Ctx)
     return (Ctx.IsBossFight or (Ctx.Mobs or 0) > 2 or (Ctx.HealthPercent or 1) < .85)
     and Ctx.WeAreBeingAttacked
   end
 
 
-  prot.FocusedRage = function(this, Ctx)
+  prot.onFocusedRage = function(this, Ctx)
     return not Ctx.HasFocusedRage
 		and Ctx.HasShieldBlock
 		-- and Ctx.ShieldSlam < 1.5
   end
 
 
-  prot.IgnorePain = function(this, Ctx)
+  prot.onIgnorePain = function(this, Ctx)
     return not Ctx.HasIgnorePain
     and Ctx.WeAreBeingAttacked
 		and Ctx.RagePercent < 0.5
@@ -329,34 +337,34 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
   end
 
 
-  prot.ImpendingVictory = function(this, Ctx)
+  prot.onImpendingVictory = function(this, Ctx)
     return Ctx.HealthPercent <= .85
   end
 
 
-  prot.ImpendingVictoryHeal = function(this, Ctx)
+  prot.onImpendingVictoryHeal = function(this, Ctx)
     return Ctx.HealthPercent <= .4
   end
 
 
-  prot.LastStand = function(this, Ctx)
+  prot.onLastStand = function(this, Ctx)
      return Ctx.HealthPercent < .4
   end
 
 
-	prot.NeltharionsFury = function(this, Ctx)
+	prot.onNeltharionsFury = function(this, Ctx)
 		return Ctx.WeAreBeingAttacked
 		and Ctx.HealthPercent < .5
 		and Ctx.PainPerSecond >= 0.01
 	end
 
 
-  prot.RevengeAoe = function(this, Ctx)
+  prot.onRevengeAoe = function(this, Ctx)
     return Ctx.Mobs > 2
   end
 
 
-  prot.ShieldBlock = function(this, Ctx)
+  prot.onShieldBlock = function(this, Ctx)
      return not Ctx.HasShieldBlock
      and Ctx.WeAreBeingAttacked
 		 --and Ctx.PainPerSecond >= 0.005
@@ -370,7 +378,7 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
 	end
 
 
-	prot.ThunderClap = function(this, Ctx)
+	prot.onThunderClap = function(this, Ctx)
 		return not Ctx.HasThunderClap
 	end
 
@@ -394,6 +402,7 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
       {ARMS, SPELL, "die-by-the-sword",			arms.SPId.DieByTheSword,			arms.onDieByTheSword, NoTarget=true},
       {ARMS, SPELL, "execute",							arms.SPId.Execute, 						arms.onExecute},
       {ARMS, SPELL, "execute-sudden-death",	arms.SPId.Execute,						arms.onExecuteSuddenDeath},
+      {ARMS, SPELL, "hamstring",						arms.SPId.Harmstring,					ON_COOLDOWN},
       {ARMS, SPELL, "impending-victory",		arms.SPId.ImpendingVictory,		arms.onImpendingVictory},
       {ARMS, SPELL, "intimidating-shout",		arms.SPId.IntimidatingShout,	arms.onIntimidatingShout, NoTarget=true},
       {ARMS, SPELL, "mortal-strike",				arms.SPId.MortalStrike,				arms.onMortalStrike},
@@ -404,6 +413,7 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
       {ARMS, SPELL, "rend",									arms.SPId.Rend,								arms.onRend},
       {ARMS, SPELL, "skullsplitter",				arms.SPId.Skullsplitter,			arms.onSkullsplitter},
       {ARMS, SPELL, "slam",									arms.SPId.Slam, 							arms.onSlam},
+      {ARMS, SPELL, "storm-bolt",						arms.SPId.StormBolt,					arms.onStormBolt},
       {ARMS, SPELL, "sweeping-strikes",			arms.SPId.SweepingStrikes,		arms.onSweepingStrikes, NoTarget=true},
       {ARMS, SPELL, "warbreaker",						arms.SPId.Warbreaker,					arms.onWarbreaker, NoTarget=true},
 			{ARMS, SPELL, "victory-rush",					arms.SPId.VictoryRush,				arms.onVictoryRush},
@@ -430,6 +440,9 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
 			{ARMS, PRIO, "whirlwind"},
 			{ARMS, PRIO, "slam"},
 			{ARMS, PRIO, "execute"},
+			{ARMS, PRIO, "storm-bolt"},
+			{ARMS, PRIO, "hamstring"},
+			
 
 			{ARMS, AOE,   {}},
 

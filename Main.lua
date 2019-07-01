@@ -1169,7 +1169,7 @@ local function Engine_HandleCombatLog(this)
 		if event == "SPELL_CAST_SUCCESS" then
 			this.LastCastSpell = p1
 			this.LastCastTime = GetTime()
-			--this:DbgTrack("LastCastSpell", tostring(this.LastCastSpell) .. " - " .. GetSpellInfo(this.LastCastSpell))
+			this:DbgTrack("LastCastSpell", tostring(this.LastCastSpell) .. " - " .. GetSpellInfo(this.LastCastSpell))
 		end
 	end
 
