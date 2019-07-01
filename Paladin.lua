@@ -61,6 +61,7 @@ if select(2, UnitClass("player")) == 'PALADIN' then
     BladeOfJustice             = 184575,
     BlindingLight              = 115750,
     Consecration               = 205228,
+		ConcentratedFlame					 = 295373,
     Crusade                    = 231895,
     CrusaderStrike             = 35395,
     DivinePurpose              = 223817,
@@ -369,6 +370,7 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 
 		{RETR, SPELL, "blade-of-justice",							 	SPId.BladeOfJustice, 				retr.onBladeOfJustice},
 		{RETR, SPELL, "blade-of-justice-heal",					SPId.BladeOfJustice, 				retr.onBladeOfJusticeHeal},
+		{RETR, SPELL, "concentrated-flame", 						SPId.ConcentratedFlame, 		ON_COOLDOWN},
 		{RETR, SPELL, "consecration", 									SPId.Consecration, 					retr.onConsecration, NoTarget=true},
 		{RETR, SPELL, "consecration-heal", 							SPId.Consecration, 					retr.onConsecrationHeal, NoTarget=true},
 		{RETR, SPELL, "crusader-strike", 								SPId.CrusaderStrike, 				retr.onCrusaderStrike},
@@ -449,6 +451,7 @@ if select(2, UnitClass("player")) == 'PALADIN' then
 		{RETR, PRIO, "judgment"},
 		{RETR, PRIO, "hammer-of-wrath"},
 		{RETR, PRIO, "consecration"},
+		{RETR, PRIO, "concentrated-flame"},
 		
 		{RETR, PRIO, "crusader-strike"},
 		{RETR, PRIO, "hammer-of-justice"},
