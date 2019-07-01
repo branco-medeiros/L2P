@@ -304,24 +304,24 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
 		
   end
   
-  prot.BattleCry = function(this, Ctx)
+  prot.onBattleCry = function(this, Ctx)
     return Ctx.IsBossFight or (Ctx.Mobs or 0) > 2
   end
 
-  prot.DemoralizingShout = function(this, Ctx)
+  prot.onDemoralizingShout = function(this, Ctx)
     return (Ctx.IsBossFight or (Ctx.Mobs or 0) > 2 or (Ctx.HealthPercent or 1) < .85)
     and Ctx.WeAreBeingAttacked
   end
 
 
-  prot.FocusedRage = function(this, Ctx)
+  prot.onFocusedRage = function(this, Ctx)
     return not Ctx.HasFocusedRage
 		and Ctx.HasShieldBlock
 		-- and Ctx.ShieldSlam < 1.5
   end
 
 
-  prot.IgnorePain = function(this, Ctx)
+  prot.onIgnorePain = function(this, Ctx)
     return not Ctx.HasIgnorePain
     and Ctx.WeAreBeingAttacked
 		and Ctx.RagePercent < 0.5
@@ -329,34 +329,34 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
   end
 
 
-  prot.ImpendingVictory = function(this, Ctx)
+  prot.onImpendingVictory = function(this, Ctx)
     return Ctx.HealthPercent <= .85
   end
 
 
-  prot.ImpendingVictoryHeal = function(this, Ctx)
+  prot.onImpendingVictoryHeal = function(this, Ctx)
     return Ctx.HealthPercent <= .4
   end
 
 
-  prot.LastStand = function(this, Ctx)
+  prot.onLastStand = function(this, Ctx)
      return Ctx.HealthPercent < .4
   end
 
 
-	prot.NeltharionsFury = function(this, Ctx)
+	prot.onNeltharionsFury = function(this, Ctx)
 		return Ctx.WeAreBeingAttacked
 		and Ctx.HealthPercent < .5
 		and Ctx.PainPerSecond >= 0.01
 	end
 
 
-  prot.RevengeAoe = function(this, Ctx)
+  prot.onRevengeAoe = function(this, Ctx)
     return Ctx.Mobs > 2
   end
 
 
-  prot.ShieldBlock = function(this, Ctx)
+  prot.onShieldBlock = function(this, Ctx)
      return not Ctx.HasShieldBlock
      and Ctx.WeAreBeingAttacked
 		 --and Ctx.PainPerSecond >= 0.005
@@ -364,13 +364,13 @@ if select(2, UnitClass("player")) == 'WARRIOR' then
   end
 
 
-	prot.ShockWave = function(this, Ctx)
+	prot.onShockWave = function(this, Ctx)
 		return Ctx.Mobs >= 2
 		or not Ctx.IsBossFight
 	end
 
 
-	prot.ThunderClap = function(this, Ctx)
+	prot.onThunderClap = function(this, Ctx)
 		return not Ctx.HasThunderClap
 	end
 
