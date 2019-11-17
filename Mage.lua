@@ -257,6 +257,7 @@ if select(2, UnitClass("player")) == 'MAGE' then
 		BlazingBarrierBuff = 235313, --
 		Cinderstorm = 198929,
 		Combustion = 190319, --
+		ConcentratedFlame = 295373,
 		Counterspell = 2139,
 		DragonsBreath = 31661,
 		FireBlast = 108853, --
@@ -346,7 +347,7 @@ if select(2, UnitClass("player")) == 'MAGE' then
 	end
 
 	fire.OnMeteor = function(this, Ctx)
-		return Ctx.IsBossFight or Ctx.Mobs > 1 or Ctx.HealthPercent < 0.6
+		return Ctx.IsBossFight or Ctx.Mobs > 2 or Ctx.HealthPercent < 0.6
 	end
 
 	fire.OnMirrorImage = function(this, Ctx)
@@ -395,8 +396,9 @@ if select(2, UnitClass("player")) == 'MAGE' then
 	
 	fire.cmds = {
 		{FIRE, SPELL, "blast-wave",          		SPI.BlastWave, fire.OnBlastWave},
-		{FIRE, SPELL, "combustion",          		SPI.Combustion, fire.OnCombustion, NoTarget=true, SecondaryOnly=true},
+		{FIRE, SPELL, "combustion",          		SPI.Combustion, fire.OnCombustion, NoTarget=true, Secondary=true},
 		{FIRE, SPELL, "combustion-spell",       SPI.Combustion, ON_COOLDOWN, NoTarget=true},
+		{FIRE, SPELL, "concentrated-flame",     SPI.ConcentratedFlame, ON_COOLDOWN},
 		{FIRE, SPELL, "counterspell",        		SPI.Counterspell, ON_COOLDOWN},
 		{FIRE, SPELL, "dragons-breath",      		SPI.DragonsBreath, fire.OnDragonsBreath, NoTarget=true},
 		{FIRE, SPELL, "dragons-breath-attack",  SPI.DragonsBreath, fire.OnDragonsBreathAttack},
@@ -406,7 +408,7 @@ if select(2, UnitClass("player")) == 'MAGE' then
 		{FIRE, SPELL, "flamestrike",         		SPI.Flamestrike, fire.OnFlamestrike},
 		{FIRE, SPELL, "living-bomb",         		SPI.LivingBomb, ON_COOLDOWN},
 		{FIRE, SPELL, "meteor",              		SPI.Meteor, fire.OnMeteor, NoTarget=true},
-		{FIRE, SPELL, "mirror-image",           SPI.MirrorImage, fire.OnMirrorImage, NoTarget=true, SecondaryOnly=true},
+		{FIRE, SPELL, "mirror-image",           SPI.MirrorImage, fire.OnMirrorImage, NoTarget=true, Secondary=true},
 		{FIRE, SPELL, "phoenix-flames",      		SPI.PhoenixFlames, fire.OnPhoenixFlames},
 		{FIRE, SPELL, "phoenix-flames-attack",  SPI.PhoenixFlames, fire.OnPhoenixFlamesAttack},
 		{FIRE, SPELL, "pyroblast",           		SPI.Pyroblast, fire.OnPyroblast},
@@ -417,7 +419,8 @@ if select(2, UnitClass("player")) == 'MAGE' then
 		{FIRE, SPELL, "time-warp",           		SPI.TimeWarp, ON_COOLDOWN, NoTarget=true},
 		
 		
-		{FIRE, PRIO, "meteor"},
+		{FIRE, PRIO, "mirror-image"},
+		{FIRE, PRIO, "combustion"},
 		{FIRE, PRIO, "pyroblast"},
 		{FIRE, PRIO, "phoenix-flames-attack"},
 		{FIRE, PRIO, "fire-blast-attack"},
@@ -426,9 +429,9 @@ if select(2, UnitClass("player")) == 'MAGE' then
 		{FIRE, PRIO, "flamestrike"},
 		{FIRE, PRIO, "fire-blast"},
 		{FIRE, PRIO, "dragons-breath-attack"},
-		{FIRE, PRIO, "combustion"},
 		{FIRE, PRIO, "fireball"},
-		{FIRE, PRIO, "mirror-image"},
+		{FIRE, PRIO, "concentrated-flame"},
+		{FIRE, PRIO, "meteor"},
 		{FIRE, PRIO, "blast-wave"},
 		{FIRE, PRIO, "living-bomb"},
 		{FIRE, PRIO, "scorch-moving"},

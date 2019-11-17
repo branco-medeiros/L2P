@@ -370,6 +370,7 @@ local function Spell_CreateById(Id, Name, Options)
     Name = nil
   end
   if not Name then Name = GetSpellInfo(Id) end
+	if not Name then ShowError("Invalid Spell Id:" .. Id) end 
   local sp = Spell_Create("", Name)
   sp.Id = Id
   --[[

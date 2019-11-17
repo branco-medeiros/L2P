@@ -127,6 +127,7 @@ if select(2, UnitClass("player")) == 'DEATHKNIGHT' then
     BoneShield = 195181,
     BoneStorm = 194844,
     BonesOfTheDamned = 279503,
+		ConcentratedFlame = 295373,
     Consumption = 205224,
     CrimsonScourge = 81141,
     DancingRuneWeapon = 49028,
@@ -135,6 +136,7 @@ if select(2, UnitClass("player")) == 'DEATHKNIGHT' then
     DeathGrip = 49576,
     DeathStrike = 49998,
     DeathsAdvance = 48265,
+		DeathsCaress = 195292,
     HeartStrike = 206930,
     IceboundFortitude = 48792,
     MarkOfBlood = 206940,
@@ -177,7 +179,7 @@ if select(2, UnitClass("player")) == 'DEATHKNIGHT' then
 
   blood.onDancingRuneWeapon = function(this, ctx)
     return ctx.IsBossFight 
-      or ctx.Enemies > 1 
+      or (ctx.Enemies > 1 and ctx.PainPerSecond > 0.02)
       or ctx.LowHealth 
   end
 
@@ -189,6 +191,10 @@ if select(2, UnitClass("player")) == 'DEATHKNIGHT' then
   blood.onDeathAndDecayCs = function(this, ctx)
     return ctx.HasBuffCrimsonScourge 
   end
+	
+	blood.onDeathsCaress = function(this, ctx)
+		return true
+	end
 
   blood.onDeathStrike = function(this, ctx)
     return ctx.BloodShieldExpiring 
@@ -280,10 +286,12 @@ if select(2, UnitClass("player")) == 'DEATHKNIGHT' then
     {BLOOD, SPELL, "blood-boil.filler",      blood.SID.BloodBoil,              blood.onBloodBoilFiller, RangeSpell=blood.SID.DeathStrike},
     {BLOOD, SPELL, "blooddrinker",           blood.SID.Blooddrinker,           blood.onBlooddrinker, NoInstant=true},
     {BLOOD, SPELL, "bone-storm",             blood.SID.BoneStorm,              blood.onBoneStorm},
+		{BLOOD, SPELL, "concentrated-flame",		 blood.SID.ConcentratedFlame,      ON_COOLDOWN},
     {BLOOD, SPELL, "consumption",            blood.SID.Consumption,            blood.onConsumption},
     {BLOOD, SPELL, "dancing-rune-weapon",    blood.SID.DancingRuneWeapon,      blood.onDancingRuneWeapon, NoTarget=true},
     {BLOOD, SPELL, "death-and-decay",        blood.SID.DeathAndDecay,          blood.onDeathAndDecay, NoTarget=true},
     {BLOOD, SPELL, "death-and-decay.cs",     blood.SID.DeathAndDecay,          blood.onDeathAndDecayCs, NoTarget=true},
+		{BLOOD, SPELL, "deaths-caress", 				 blood.SID.DeathsCaress, 					 ON_COOLDOWN},
     {BLOOD, SPELL, "death-strike",           blood.SID.DeathStrike,            blood.onDeathStrike},
     {BLOOD, SPELL, "death-strike.heal",      blood.SID.DeathStrike,            blood.onDeathStrikeHeal},
     {BLOOD, SPELL, "heart-strike",           blood.SID.HeartStrike,            blood.onHeartStrike},
@@ -306,20 +314,22 @@ if select(2, UnitClass("player")) == 'DEATHKNIGHT' then
     {BLOOD, PRIO, "bone-storm"},
     {BLOOD, PRIO, "consumption"},
     {BLOOD, PRIO, "dancing-rune-weapon"},
+    {BLOOD, PRIO, "death-and-decay.cs"},
     {BLOOD, PRIO, "marrowrend"},
     {BLOOD, PRIO, "death-strike"},
     {BLOOD, PRIO, "blooddrinker"},
     {BLOOD, PRIO, "blood-boil"},
     {BLOOD, PRIO, "marrowrend.no-drw"},
     {BLOOD, PRIO, "marrowrend.drw"},
-    {BLOOD, PRIO, "death-and-decay.cs"},
     {BLOOD, PRIO, "rune-strike"},
     {BLOOD, PRIO, "death-and-decay"},
     {BLOOD, PRIO, "heart-strike"},
+		{BLOOD, PRIO, "concentrated-flame"},
     {BLOOD, PRIO, "blood-boil.drw"},
     {BLOOD, PRIO, "mark-of-blood"},
     {BLOOD, PRIO, "blood-boil.filler"},
     {BLOOD, PRIO, "rune-strike.filler"},
+		{BLOOD, PRIO, "deaths-caress"},
 
     {BLOOD, INIT, blood.Init},
     {BLOOD, INT, "mind-freeze:interrupt"},
@@ -335,6 +345,8 @@ if select(2, UnitClass("player")) == 'DEATHKNIGHT' then
     local SID = blood.SID
     local gcdx2 = ctx.GCD * 2
     
+		ctx.RunicPower = UnitPower("player", SPELL_POWER_RUNIC_POWER) or 0
+		
     ctx.BloodBoilCharges = ctx:SpellCharges(SPN.BloodBoil)
     
     local c, e = ctx:CheckBuff(SID.BloodShield)
