@@ -11,34 +11,18 @@ local DEFAULT_BG_TEX = "Interface\\DialogFrame\\UI-DialogBox-Background"
 --local DEFAULT_BG_TEX = "Interface\\AddOns\\L2P\\textures\\Flat.tga"
 local DEFAULT_INTERVAL = 3
 local DEFAULT_TRACKER_MAX = 20
-local MODE_ST_TEX = "Interface\\WorldStateFrame\\CombatSwords"
-local MODE_CUSTOM_TEX = "Interface\\WorldStateFrame\\NeutralTower"
-local MODE_ST = 'st' -- Single target
-local MODE_AOE = 'aoe' -- aoe mode
-local MODE_CUSTOM = 'custom' -- a temporary mode, defined by the user
 
 local DEFAULT_ALPHA = 1
 local DEFAULT_LOCKED = false
 local DEFAULT_CHECKRANGE = true
 local DEFAULT_FREQUENCY = 15
-local MAX_FREQUENCY = 100
-local ACTIVE_SPELLS = 2
+
 local SPELL_CAST_TIME = 4
-local DAMAGE_PAIN_DURATION = 2 -- 2 seconds of pain
+
 local GCD_SPELL_ID = 61304
-local MINIMUM_DAMAGE_FOR_PAIN = 0.0001
 local DEFAULT_XICON_ROW_SIZE = 5
-local OBLIVION_SPHERE = 272407
-
-local MAX_BUFF_DEBUFF = 64
 
 
--- default modes
-local MODES = {
- [MODE_ST]     = {tex= MODE_ST_TEX, color={0, 0, 0}},
- [MODE_AOE]    = {tex= MODE_ST_TEX, color = {1, 0, 0}},
- [MODE_CUSTOM] = {tex= MODE_CUSTOM_TEX, color = {.5, .5, .5}}
-}
 
 local SPN = {
   Bloodlust       = GetSpellInfo(2825),
@@ -48,7 +32,19 @@ local SPN = {
   AncientHysteria = GetSpellInfo(90355),
 }
 
+-- forward commands (lua won't call a function declared later???)
 local Cmds = {}
+
+--------------------------------------------------------------------------------
+local function PrintTable(name, v)
+--------------------------------------------------------------------------------
+  print(name, ":")
+  print(table.concat(v, " "))
+  for k, v in pairs(v) do
+    print(k, ": ", v)
+  end
+  print("")
+end
 
 --------------------------------------------------------------------------------
 local function L(text)
@@ -64,12 +60,7 @@ local function NormalizeMode(list)
 -- normalizes a mode array ensuring that at least the entries for single target,
 -- aoe and custom are present
 --------------------------------------------------------------------------------
-  local r = {}
-  list = list or {}
-  r[MODE_ST]     = list[MODE_ST] or {}
-  r[MODE_AOE]    = list[MODE_AOE] or {}
-  r[MODE_CUSTOM] = list[MODE_CUSTOM] or {}
-  return r
+  return list
 end
 
 --------------------------------------------------------------------------------
@@ -247,7 +238,7 @@ local function Spell_Update(this, Ctx)
   this.Enabled = false
   this.NoMana = true
   if not this.SpName then return false end
-  if this.Id and not IsPlayerSpell(this.Id) then return false end
+  if this.SpellId and not IsPlayerSpell(this.SpellId) then return false end
   
   local cast = select(SPELL_CAST_TIME, GetSpellInfo(this.SpName))
   local ok = ((cast and cast <= 0) or this.NoInstant) and this:IsUsable()
@@ -322,9 +313,9 @@ local function Spell_Create(Key, SpName, Condition, Caption)
 -- spell meets the conditions to be actived
 -------------------------------------------------------------------------------
   sp = {}
-  sp.Key = Key          -- a unique name to identify this 'spell'
-  sp.SpName = SpName    -- the spell name
-  sp.Caption = Caption  -- a text describing the spell
+  sp.Key = Key          
+  sp.SpName = SpName    
+  sp.Caption = Caption  
   sp.Condition = Condition
   sp.When = 0
   sp.Start = 0
@@ -334,20 +325,6 @@ local function Spell_Create(Key, SpName, Condition, Caption)
   sp.Enabled = false
   sp.NoMana = true
 
-	if type(SpName) == "function" then
-	-- SpName can be function
-		sp.GetSpellName = SpName
-	  sp.InitSpellName = function(this)
-			this.SpName = this:GetSpellName()
-			return this.SpName
-		end
-		sp:InitSpellName()
-  else
-		sp.InitSpellName =function(this)
-			return this.SpName
-		end
-	end
-
   -- Spell API
   sp.GetTexture = Spell_GetTexture
   sp.Update = Spell_Update
@@ -355,35 +332,19 @@ local function Spell_Create(Key, SpName, Condition, Caption)
   sp.GetActivation = Spell_GetActivation
   sp.CheckRange = Spell_CheckRange
   sp.Debug = Spell_Debug
+
   return sp
 
 end -- fn Spell_Create()
 
 
 -------------------------------------------------------------------------------
-local function Spell_CreateById(Id, Name, Options)
+local function Spell_CreateById(Id)
 -------------------------------------------------------------------------------
 -- creates a spell based only in id and name
 -------------------------------------------------------------------------------
-  if type(Name) == "table" and not Options then
-    Options = Name
-    Name = nil
-  end
-  if not Name then Name = GetSpellInfo(Id) end
-	if not Name then ShowError("Invalid Spell Id:" .. Id) end 
-  local sp = Spell_Create("", Name)
-  sp.Id = Id
-  --[[
-  if Name then 
-    sp.SpellBookIndex = FindSpellBookSlotBySpellID(Id) 
-    sp.SpellBookIndexForRange = sp.SpellBookIndex
-  end
-  ]]
-  if Options then
-    sp.NoTarget = Options.NoTarget or false
-    sp.NoRange = Options.NoRange or false
-    sp.NoInstant = Options.NoInstant or false
-  end
+  local sp = Spell_Create("", GetSpellInfo(Id))
+  sp.SpellId = Id
   return sp
 end -- fn Spell_CreateById
 
@@ -633,7 +594,7 @@ local function Icon_Create(Parent, w, h, HasCooldown)
 --------------------------------------------------------------------------------
 -- creates an "icon" frame
 --------------------------------------------------------------------------------
-  local fr = CreateFrame("Frame", nil,  Parent)
+  local fr = CreateFrame("Frame", nil,  Parent, "BackdropTemplate")
   fr:SetSize(w, h)
 
   -- the image
@@ -645,7 +606,7 @@ local function Icon_Create(Parent, w, h, HasCooldown)
 
   -- the cooldown frame
   if HasCooldown then
-    cd = CreateFrame("Cooldown", nil, fr, "CooldownFrameTemplate")
+    local cd = CreateFrame("Cooldown", nil, fr, "CooldownFrameTemplate")
     cd:SetAllPoints()
     cd:SetAlpha(1)
     fr.CdFrame = cd
@@ -960,34 +921,6 @@ end -- fn MobsIcon_Create
 
 
 --//////////////////////////////////////////////////////////////////////////////
--- ModeIcon
--- used to indicate which mode is active (single target, aoe or custom)
---//////////////////////////////////////////////////////////////////////////////
-
---------------------------------------------------------------------------------
-local function ModeIcon_Create(Parent, w, h)
---------------------------------------------------------------------------------
-  local I = SpellIcon_Create(Parent, w, h)
-  I.Edge = "Interface\\Tooltips\\UI-Tooltip-Background"
-
-  I.Update = function(this, Ctx)
-    local Mode = Ctx.Mode or ''
-    if strlen(Mode) == 0 then Mode = MODE_ST end -- default mode is single target
-    if this.LastMode == Mode then return end
-    this.LastMode = Mode
-    local info = MODES[Mode]
-    this:SetImage(info.tex)
-    this.ImageTex:SetTexCoord(0, .5, 0, .5)
-    this:SetBorderColor(unpack(info.color))
-  end
-
-  return I
-
-end -- fn ModeIcon_Create
-
-
-
---//////////////////////////////////////////////////////////////////////////////
 -- HpIcon
 -- Changes color based on health status
 --//////////////////////////////////////////////////////////////////////////////
@@ -1064,6 +997,12 @@ end -- fn NextSpellIcon_Create
 --//////////////////////////////////////////////////////////////////////////////
 
 ------------------------------------------------------------------------------
+local function Engine_CalcGCD(this)
+------------------------------------------------------------------------------
+  this:UpdateGCD(this)
+end
+
+------------------------------------------------------------------------------
 local function Engine_UpdateGCD(this)
 ------------------------------------------------------------------------------
 -- updatess our global cooldown measure based on the Global Cooldown Spell,
@@ -1076,6 +1015,82 @@ local function Engine_UpdateGCD(this)
 		or (1.5 * (1 - UnitSpellHaste("player")/100))
 end
 
+------------------------------------------------------------------------------
+local function Engine_GetSpellInfo(this, spell)
+------------------------------------------------------------------------------
+--[[ returns information about a give spell: 
+  - ready: true if the spell can be used, 
+  - charges: the number of charges (0 if the spell doesn't have charges)
+  - cooldown: how long it will take for the cooldown to finish
+  - NextCharge: how long it will take for the next charge to load
+]]
+------------------------------------------------------------------------------
+  local ret = {ready = false, charges = 0, cooldown = 0, NextCharge = 0} 
+  local c, m, s, d = GetSpellCharges(spell)
+  if c then ret.charges = c end
+  if s then ret.NextCharge = s + d - this.Now end
+  local e
+  s, d, e = GetSpellCooldown(spell)
+  ret.ready = d == 0 or e == 0
+  if s then ret.cooldown = s + d - this.Now end
+  return ret
+end
+
+------------------------------------------------------------------------------
+local function Engine_GetDebuffInfo(this, spell, target)
+------------------------------------------------------------------------------
+--[[ returns information about a debuff in the specified target
+  - active: the debuff is present
+  - charges: how many charges 
+  - remaining: how much time remains until the debuff expires
+]]
+------------------------------------------------------------------------------
+  local charges, remaining, duration, name, id = this:CheckBuffOrDebuffAuto(spell, true, target)
+  
+  return {
+    active = charges > 0,
+    charges = charges,
+    remaining = remaining,
+    duration = duration,
+    name = name
+  }
+end
+
+------------------------------------------------------------------------------
+local function Engine_GetMyDebuffInfo(this, spell)
+------------------------------------------------------------------------------
+-- returns information about a debuff on the player
+------------------------------------------------------------------------------
+  return this:GetDebuff(spell, "PLAYER")
+end
+
+------------------------------------------------------------------------------
+local function Engine_GetTtargetBuffInfo(this, spell)
+------------------------------------------------------------------------------
+-- returns information about a buff on the target
+------------------------------------------------------------------------------
+  return this:GetBuff(spell, "TARGET")
+end
+
+------------------------------------------------------------------------------
+local function Engine_GetBuffInfo(this, spell, target)
+------------------------------------------------------------------------------
+--[[ returns information about a debuff in the specified target
+  - active: the debuff is present
+  - charges: how many charges 
+  - remaining: how much time remains until the debuff expires
+]]
+------------------------------------------------------------------------------
+  local charges, remaining, duration, name, id = this:CheckBuffOrDebuffAuto(spell, false, target)
+  --count, expires, duration, name, id, xp
+  return {
+    active = charges > 0,
+    charges = charges,
+    remaining = remaining,
+    duration = duration,
+    name = name
+  }
+end
 
 ------------------------------------------------------------------------------
 local function Engine_FindSpellName(this, Name)
@@ -1101,7 +1116,7 @@ local function Engine_ShowHideFrame(this)
 ------------------------------------------------------------------------------
 -- decides if the main frame should be shown
 ------------------------------------------------------------------------------
-  if this.HideFrame
+  if not this.Active
   or not this:IsInCombat() then
     this.Frame:Hide()
     return false
@@ -1115,45 +1130,43 @@ end
 
 
 ------------------------------------------------------------------------------
-local function Engine_Update(this)
+local function Engine_Update(this, elapsed)
 ------------------------------------------------------------------------------
-  -- exits if frame must be hidden
-  if not this:ShowHideFrame() then return end
-
-  this:UpdateState()
+  this:UpdateState(elapsed)
   this:UpdateSpells()
   this:SelectSpells()
-  this:SortSpells()
 
 end -- fn Engine_HandleUpdate
 
 ------------------------------------------------------------------------------
-local function Engine_HandleEnterCombat(this, evt, ...)
+local function Engine_OnEnterCombat(this)
 ------------------------------------------------------------------------------
   this.InCombat = true
   this:ShowHideFrame()
-end -- fn Engine_HandleEnterCombat
+end -- fn Engine_OnEnterCombat
 
 
 ------------------------------------------------------------------------------
-local function Engine_HandleLeaveCombat(this, evt, ...)
+local function Engine_OnLeaveCombat(this)
 ------------------------------------------------------------------------------
   this.InCombat = false
   this:ShowHideFrame()
-end -- fn Engine_HandleLeaveCombat
+end -- fn Engine_OnLeaveCombat
 
 
 ------------------------------------------------------------------------------
-local function Engine_HandleTargetChanged(this, evt, ...)
+local function Engine_OnTargetChanged(this)
 ------------------------------------------------------------------------------
   this:ShowHideFrame()
-end
+end -- fn Engine_OnTargetChanged
 
 
 ------------------------------------------------------------------------------
-local function Engine_HandleCombatLog(this)
+local function Engine_OnCombatLog(this)
 ------------------------------------------------------------------------------
-	local timestamp, event, hidecaster, source, sname, sflags,
+  if not this.Active then return end
+
+  local timestamp, event, hidecaster, source, sname, sflags,
   sflags2, dest, dname, dflags, flags2, 
 	p1, p2, p3, p4, p5, p7, p8, p9, p10 = CombatLogGetCurrentEventInfo()
 	
@@ -1195,11 +1208,9 @@ local function Engine_HandleCombatLog(this)
 		local prefix = strsub(event, 1, 5)
 		local value = (prefix == "SWING" and p1) or (prefix == "ENVIR" and p2) or p4
 		this.ElapsedDamage = (this.ElapsedDamage or 0) + (value or 0)
-
 	end
 
-
-end
+end -- fn Engine_OnCombatLog
 
 
 ------------------------------------------------------------------------------
@@ -1208,9 +1219,7 @@ local function Engine_IsInCombat(this)
 -- returns true if player is in combat
 ------------------------------------------------------------------------------
   --if UnitInVehicle("player") then return false end
-
-  return (this.LastMode == MODE_AOE)
-  or (
+  return (
     UnitGUID("target")
     and not UnitIsFriend("player", "target")
     and UnitHealth("target") > 0
@@ -1220,37 +1229,6 @@ local function Engine_IsInCombat(this)
 end -- fn Engine_IsInCombat
 
 
-------------------------------------------------------------------------------
-local function Engine_SelectMode(this)
-------------------------------------------------------------------------------
-  this.LastMode = this.Mode
-  if #this.CurPrio[MODE_CUSTOM] > 0 then
-    this.Mode = MODE_CUSTOM
-  else
-    this.Mode = MODE_ST
-    local aoe = this.AoeMin or 0
-    if aoe > 0 and this.Mobs >= aoe then
-      this.Mode = MODE_AOE
-    end
-  end
-  return this.Mode
-end -- fn Engine_SelectMode
-
-
-------------------------------------------------------------------------------
-local function Engine_CalcGCD_obsolete(this)
-------------------------------------------------------------------------------
--- calculates the GCD using the global cooldown of the reference spell
-------------------------------------------------------------------------------
-  if this.GCDSpell then
-    local GCD = select(SPELL_CAST_TIME, GetSpellInfo(this.GCDSpell))
-    this.GCD = GCD / 1000 -- cast time comes in msec, turn it into sec
-  else
-    -- uses a default value for global cooldown...
-    this.GCD = 1.5
-  end
-  return this.GCD
-end -- fn Engine_CalcGCD
 
 ------------------------------------------------------------------------------
 local function Engine_CalcLag(this)
@@ -1263,63 +1241,69 @@ end -- fn Engine_CalcLag
 
 
 ------------------------------------------------------------------------------
-local function Engine_UpdateState(this)
+local function Engine_UpdateState(this, elapsed)
 ------------------------------------------------------------------------------
 -- colects the information needed to select the spells
 ------------------------------------------------------------------------------
+  this.Now = GetTime()
+  this.Elapsed = elapsed
+
   local target = UnitGUID("target")
   if target then this.MobList:Add(target) end
+  
   this.Mobs = this.MobList:Refresh()
-	this.Attackers = this.AttackerList:Refresh()
+  this.Targets = this.Mobs
+	
+  this.Attackers = this.AttackerList:Refresh()
   this.Enemies = this.Attackers
+  
   for k, i in pairs(this.MobList.Items) do
     if not this.AttackerList.Items[k] then this.Enemies = this.Enemies + 1 end
   end
-  this:SelectMode()
+
   this:CalcGCD()
   this:CalcLag()
 
   -- refreshes variables used by spec calculators
   local TLevel = UnitLevel("target") or 0
+  
   this.IsBossFight = (TLevel < 0) or (TLevel > (UnitLevel("player") + 2)) or UnitIsPlayer("target")
 	this.IsPvp = UnitIsPlayer("target") 
+  
   this.WeAreBeingAttacked = this.Attackers > 0
 
   --calcs health and pain
+  this.PrevHealth = this.Health
+  
   local Health = UnitHealth("player")
   local HealthMax = UnitHealthMax("player")
+  
+  this.Health = Health
+  this.HealthMax = HealthMax
   this.HealthPercent = Health/HealthMax
-  local tick = 1/HealthMax
-  
-  local pain = (this.ElapsedDamage or 0) / HealthMax * 100
-  this.PainReact = (not this.PainReact and pain) or 
-      (pain < 0.01 and ((this.PainReact >= 0 and this.PainReact - 0.05) or 0)) or 
-      (math.max(pain, this.PainReact) + math.min(pain, this.PainReact) * 0.5)
-  
-  if not this.PainPerSecond or this.PainPerSecond <= 0 then
-    this.HealthSnapshot = Health + this.ElapsedDamage
-    this.HealthSnapshotTime = this.Now
-    this.PainPerSecond = this.ElapsedDamage
-  else
-    this.PainPerSecond = (this.HealthSnapshot - Health) / (this.Now - this.HealthSnapshotTime)
-  end
+
+  if not this.PrevHealth then this.PrevHealth = Health end
+  this.HealthChangingRate = (Health / this.PrevHealth) - 1
 	
-	this.PainIndex = this.PainPerSecond / Health
-
-	if false and (not this.LastSnap or (this.Now - this.LastSnap) >= 1) then
-    ShowMsg("pps: %.2f -  PainReact: %.5f%%", this.PainPerSecond, this.PainReact)
-		this.LastSnap = this.Now
-	end
-  
   this.HasBloodLust = (this:CheckBuff({SPN.Bloodlust, SPN.Heroism, SPN.TimeWarp, SPN.AncientHysteria}) > 0)
-
   this.IsMoving = GetUnitSpeed("player") > 0
-
-  -- alllows the initialization of the spec data
-  -- for a new cicle
-  if this.InitSpec then this.InitSpec(this, this) end
-
+  this.TargetIsMoving = GetUnitSpeed("target") > 0
+  
+  this.TargetHealthMax = UnitHealthMax("target") or 0
+  this.TargetHealth = UnitHealth("target") or 0
+  this.TargetHealthPercent = (this.TargetHealthMax > 0 and this.TargetHealth/this.TargetHealthMax) or 0; 
+  
+  this.Power = {}
+  
+  for k, v in pairs(Enum.PowerType) do
+    if v >= 0 and k ~= "NumPowerTypes" then 
+      this.Power[k] = UnitPower("player", v) or 0
+    end
+  end
+  
   this.ElapsedDamage = 0
+  
+  this:RefreshVars()
 end -- fn Engine_UpdateState
 
 ------------------------------------------------------------------------------
@@ -1358,101 +1342,11 @@ local function Engine_SortFunc(a, b)
   end
   
   if a.prio == b.prio then
-    return (a.When < b.When) or (a.Id < b.Id)
+    return (a.When < b.When) or (a.SpellId < b.SpellId)
   else
     return a.prio > b.prio
   end
 end
-
--------------------------------------------------------------------------------
-local function Engine_SortSpells(this, priority)
--------------------------------------------------------------------------------
--- sorts ths spells by priority
--------------------------------------------------------------------------------
-  local PRIO_INC = 100
-  local NORM_COOLDOWN = 5
-  
-  priority = priority or this.priority
-  if priority then
-    local ctx = this
-    local now = this.Now
-    for k, s in pairs(priority.spells) do
-      s.prio = 0
-      s.cdDelta = 0
-      s.conditions = "" 
-      if s:Update() then
-        s.prio = 1
-        s:GetActivation(now)
-        s:CheckRange()
-      end
-    end -- for
-    
-    if priority.init then 
-      priority.init(this, ctx)
-    end
-    local splist = {}
-    for k, s in pairs(priority.spells) do
-      if s.prio > 1 then 
-        s.cdDelta = (NORM_COOLDOWN - math.min(s.Cooldown or NORM_COOLDOWN, NORM_COOLDOWN))  / NORM_COOLDOWN
-        table.insert(splist, s) 
-      end
-    end
-    
-    for k, c in pairs(priority.conditions) do
-      local ok = c.test(this, ctx)
-      if ok then
-        for i, s in ipairs(c.spells) do
-          s.prio = s.prio + (c.weight or 1) * PRIO_INC * s.cdDelta
-          s.conditions = s.conditions .. " " .. k
-        end
-      end
-    end -- for k, c
-    
-    
-    table.sort(splist, Engine_SortFunc)
-    
-    -- maps the spells to already mapped keys
-    klist={}
-    for k, s in pairs(this.Spells) do
-      klist[s.SpName] = s.Message
-    end
-    
-    this.priority.PrevSortedSpells = this.priority.SortedSpells or {{Id=0}, {Id=0}, {Id=0}}
-    this.priority.SortedSpells = splist
-    
-    ctx.CurSpell = splist[1]
-    ctx.CurSpell.Message = klist[ctx.CurSpell.SpName]
-    
-    ctx.NextSpell = splist[2]
-    ctx.NextSpell.Message = klist[ctx.NextSpell.SpName]
-
-    
-    local sp1 = this.priority.PrevSortedSpells
-    local sp2 = this.priority.SortedSpells
-    local function show(sp)
-      return (klist[sp.SpName] or "??") .. " - " .. sp.SpName .. " (cd: " .. string.format("%.2f", sp.When - now) .. " prio: " .. string.format("%.2f", sp.prio) ..  "-> " .. sp.conditions .. ")"
-    end
-    
-    if sp1[1].Id ~= sp2[1].Id or sp1[2].Id ~= sp2[2].Id then
-      ctx.SortCount = (ctx.SortCount or 0) + 1
-      if ctx.LastSpellSelection then
-        if not ctx.LastCastTime or (ctx.LastCastTime < ctx.LastSpellSelection) then
-          print("Spell Change Delta: ", ctx.Now - ctx.LastSpellSelection)
-        end
-      end
-      ctx.LastSpellSelection = ctx.Now
-      print("Prio: ", ctx.SortCount, " Mobs: ", ctx.Mobs)
-      print("  ", show(sp2[1]))
-      print("  ", show(sp2[2]))
-      print("  ", show(sp2[3]))
-    end
-    
-    return splist
-    
-  end
-  
-end
-
 
 -------------------------------------------------------------------------------
 local function Engine_IsSpellAvailable(this, spell)
@@ -1473,62 +1367,16 @@ local function Engine_SwitchToNewSpells(this, BestSpell, SecondBestSpell)
 -- returns true if the last suggested spell was not used and is preffered to the
 -- current one
 -------------------------------------------------------------------------------
-  if true then
-    if this.CurSpell.Key ~= BestSpell.Key or this.NextSpell.Key ~= SecondBestSpell.Key then
-      this:DbgTrack("spells:", (BestSpell.Key or 'none') .. " - " .. (SecondBestSpell.Key or 'none'))
-    end
-    
-    this.CurSpell = BestSpell
-    this.NextSpell = SecondBestSpell
-
-    return 
-  end
-
-	local GRACE_PERIOD = 0.5 -- half second
-	local TimePicked = this.Now
-
-	if not this.CurSpell or not this.CurSpell.SpellId then
-	-- ifthere was not a best spell, go on as planned
-
-		-- does nothing here
-
-	elseif this.CurSpell.SpellId == BestSpell.SpellId then
-	-- if we are selecting the same spell (even if for different reasons)
-	-- pretend it was selected before
-
-		TimePicked = this.CurSpell.TimePicked
-
-	elseif this.CurSpell.SpellId ~= this.LastCastSpell then
-	-- if we chose a spell before less than a grace period ago, and it was not used
-	-- *and it can be used*, keep it around a little longer (to prevent sudden
-	-- changes in the interface)
-
-		if (this.Now - this.CurSpell.TimePicked < GRACE_PERIOD)
-		and this.CurSpell.Valid then
-			SecondBestSpell = BestSpell
-			BestSpell = this.CurSpell
-			TimePicked = BestSpell.TimePicked
-		end
-
-
-
-	end
-
-  if this.CurSpell.SpellIId ~= BestSpell.SpellId then
-    this:DbgTrack("BestSpell: ", BestSpell.SpName .. " (" .. BestSpell.Key .. ")")
+  if this.CurSpell.Key ~= BestSpell.Key or this.NextSpell.Key ~= SecondBestSpell.Key then
+    this:DbgTrack("spells:", (BestSpell.Key or 'none') .. " - " .. (SecondBestSpell.Key or 'none'))
   end
   
-  if this.NextSpell.SpellIId ~= SecondBestSpell.SpellId then
-    this:DbgTrack("NextBestSpell: ", SecondBestSpell.SpName .. " (" .. SecondBestSpell.Key .. ")")
-  end
-  
-  
-	this.CurSpell = BestSpell
-	this.NextSpell = SecondBestSpell
-	this.CurSpell.TimePicked = TimePicked
+  this.CurSpell = BestSpell
+  this.NextSpell = SecondBestSpell
 
-end -- fn Engine_SwitchToNewSpells
-
+  return
+  
+end -- Engine_SwitchToNewSpells
 
 -------------------------------------------------------------------------------
 local function Engine_SelectSpells(this, spells)
@@ -1559,7 +1407,7 @@ local function Engine_FindBestSpell(this, except, spells, NotThese)
 -- returns the best spell form the list of priorities, excluding the one
 -- given by except
 -------------------------------------------------------------------------------
-  local Prio = this.CurPrio[this.Mode]
+  local Prio = this.Prio
   local Spells = spells or this.Spells
 	NotThese = NotThese or {}
 
@@ -1600,112 +1448,6 @@ local function Engine_FindBestSpell(this, except, spells, NotThese)
 end -- fn Engine_FindBestSpell
 
 
-
--------------------------------------------------------------------------------
-local function Engine_SelectSpells_old(this)
--------------------------------------------------------------------------------
-  local Prio = this.CurPrio[this.Mode]
-  local Spells = this.Spells
-
-  local now = this.Now
-
-  -- creates two dummy spells for [current] and [next]
-  local curspell = Spell_Create()
-  curspell.When = now + 60000
-
-  local nextspell = Spell_Create()
-  nextspell.When = now + 60000
-
-  --local Casting, _, _, _, CastStart, CastEnd = UnitCastingInfo("player")
-  -- only takes casting into account if its about to finish
-  -- (in this case we try not to interrupt it)
-  --if (Casting and ((now * 1000 - CastStart) / (CastEnd - CastStart) < .7)) then Casting = nil end
-
-  -- future indicates when the next spell will become usable
-  local future = now + this.Lag + this.GCD
-
-  -- delta prevents a good spell losing to a not so good one because
-  -- of some few msecs. If throtle is set, delta will try to
-  -- keep a good spell thats becoming available in the next cicle
-  local Delta = 0 -- math.max((this.Throtle or 0), 1/8)
-
-  for _, k in ipairs(Prio) do
-  -- verifies which spell is the first to come, in prio order
-    local s = Spells[k]
-    local valid = s
-      and (s.SpName ~= curspell.SpName)
-      and (s.SpName ~= nextspell.SpName)
-      and s.Valid
-
-    if valid then
-      local when = s.When
-      -- decides the better spell based on availability/range
-      local better = (not curspell.InRange and s.InRange)
-        or ((when + Delta) < curspell.When)
-
-
-      if better then
-      -- found a good spell
-        nextspell = curspell
-        curspell = s
-        nextspell.When = math.max(nextspell.When, future)
-      else
-      -- this is no better than the current spell,
-      -- so lets check it against the next spell
-        when = math.max(when, future)
-        if when < nextspell.When then
-        -- makes this the nextspell if it is available
-        -- earlier than the current nextspell
-          nextspell = s
-          nextspell.When = when
-        end -- if
-      end -- if better
-    end -- if valid
-  end -- for k...
-  if this.Debug then
-    if curspell and curspell.Key and (this.CurSpell.Key ~= curspell.Key) then
-			ShowMsg(
-				format("[%s] %s: %s - %s",
-					this.Mode,
-					curspell.Key,
-					curspell.SpName,
-					curspell.Tooltip or L'[no description]'
-				)
-      )
-		elseif curspell and not curspell.Key and this.CurSpell.Key then
-			ShowMsg(L"No Spell")
-		end
-  end
-
-	local timePicked = this.Now
-
-	if this.CurSpell and this.CurSpell.SpellId and this.CurSpell.SpellId ~= curspell.SpellId then
-	-- if we selected another spell and make it available only at least 0.5 seconds from the time
-	-- we previously selected it, so we have a smoothier transition between spells
-		if (this.CurSpell.SpellId ~= this.LastCastSpell) and
-			((this.Now - this.CurSpell.picked) < 0.5) then
-			-- keep the current spell but set the next best one as the one we just found
-			nextspell = curspell
-			curspell = this.CurSpell
-			timePicked = curspell.picked
-		end
-
-	end
-
-  this.CurSpell = curspell
-	this.CurSpell.picked = timePicked
-
-  this.NextSpell = nextspell
-end -- fn Engine_SelectSpells()
-
-
--------------------------------------------------------------------------------
-local function Engine_Reset(this, mode)
--------------------------------------------------------------------------------
-  this.CurPrio[mode] = this.RefPrio[mode] or nil
-end -- fn Engine_Reset
-
-
 -------------------------------------------------------------------------------
 local function Engine_MapSpellsToBook(this)
 -------------------------------------------------------------------------------
@@ -1717,15 +1459,8 @@ local function Engine_MapSpellsToBook(this)
   local sp = {}
   local k, s, i
 
-  local function initId(k, v)
-    sp["" .. k] = v or 0
-  end
-
-  local function getId(k)
-    return sp["" .. k] or false
-  end
-
-  local function getSpellSlot(id, name)
+  local function getSpellSlot(id)
+    local name = GetSpellInfo(id)
     local ok, index = pcall(FindSpellBookSlotBySpellID, id)
     if not ok then ShowError("Error locating spell book index for %s (%d)", tostring(name), id) end
     return index
@@ -1733,40 +1468,28 @@ local function Engine_MapSpellsToBook(this)
   
   -- gets the id of each spell (and of the RangeSpell, if present)
   for k, s in pairs(this.Spells) do
-    local id = s.Id or select(INDEX_SPELL_ID, GetSpellInfo(s.SpName))
-    if id then
-      s.SpellId = id
-      s.SpellBookIndex = getSpellSlot(id, s.Key)
-      
-      --initId(id)
-      if s.RangeSpell then
-        id = (type(s.RangeSpell) == "number" and s.RangeSpell) or select(INDEX_SPELL_ID, GetSpellInfo(s.RangeSpell))
-        s.RangeSpellId = id
-        s.RangeSpellBookIndex = getSpellSlot(id, s.RangeSpell)
-        --initId(id)
-      end
+    local id = s.SpellId
+    s.SpellBookIndex = getSpellSlot(id)
+    
+    if s.RangeSpell then
+      id = s.RangeSpell
+      s.RangeSpellId = id
+      s.RangeSpellBookIndex = getSpellSlot(id)
     end
   end
 
   -- saves RangeSpellBookIndex and NoRange if the spell uses no range
   for k, s in pairs(this.Spells) do
     if not s.NoRange and not s.NoTarget then
-      if s.SpellId then
-        --s.SpellBookIndex = getId(s.SpellId)
-        if s.RangeSpellId then
-          --s.RangeSpellBookIndex = getId(s.RangeSpellId)
-          s.SpellBookIndexForRange = s.RangeSpellBookIndex
-        elseif s.SpellBookIndex then
-          s.NoRange = not SpellHasRange(s.SpellBookIndex, BOOKTYPE_SPELL)
-          if not s.NoRange then s.SpellBookIndexForRange = s.SpellBookIndex end
-        end
-      else
-        s.NoRange = true
+      if s.RangeSpellId then
+        --s.RangeSpellBookIndex = getId(s.RangeSpellId)
+        s.SpellBookIndexForRange = s.RangeSpellBookIndex
+      elseif s.SpellBookIndex then
+        s.NoRange = not SpellHasRange(s.SpellBookIndex, BOOKTYPE_SPELL)
+        if not s.NoRange then s.SpellBookIndexForRange = s.SpellBookIndex end
       end
     end
   end
-
-
 end
 
 -------------------------------------------------------------------------------
@@ -1774,27 +1497,6 @@ local function Engine_HasTalent(this, row, col)
 -------------------------------------------------------------------------------
 	local sg = GetActiveSpecGroup()
 	return (select(4, GetTalentInfo(row, col, sg)) and true) or false
-end
-
--------------------------------------------------------------------------------
-local function Engine_SpellCooldown(this, n)
--------------------------------------------------------------------------------
--- returns the cooldown remaining, in seconds, of the specified spell
--- if the spell is invalid returns a bogus number. if the spell is ready,
--- returns 0
--------------------------------------------------------------------------------
-	local s, d = GetSpellCooldown(n)
-	if s == nil then return 60*60*24 end
-	return (s > 0 and (s + d - this.Now)) or 0
-end
-
--------------------------------------------------------------------------------
-local function Engine_SpellCharges(this, spellname)
--------------------------------------------------------------------------------
-	local c, m, s, d = GetSpellCharges(spellname)
-	if c == nil then return 0 end
-	if c == m then return c end
-	return c + ((s + d - this.Now)/d)
 end
 
 -------------------------------------------------------------------------------
@@ -1823,7 +1525,7 @@ local function Engine_CheckBuffDebuffAuto(this, What, isDebuff, target)
 		Getter = function(i) return UnitDebuff(target, i, src) end
 	else
 		target = target or "PLAYER"
-		Getter = function(i) return UnitBuff("PLAYER", i) end
+		Getter = function(i) return UnitBuff(target, i) end
 	end
 	if type(What) ~= "table" then What = {What} end
   for i = 1, 128 do
@@ -1840,6 +1542,7 @@ local function Engine_CheckBuffDebuffAuto(this, What, isDebuff, target)
 				elseif expires > 0 then 
 					expires = expires - this.Now 
 				end
+        
 				return count, expires, duration, name, id, xp
 			end
 		end
@@ -1916,6 +1619,44 @@ end -- HasGlyphSpell
 
 
 -------------------------------------------------------------------------------
+local function Engine_Load(this, data)
+-------------------------------------------------------------------------------
+  this.SPI = data.SPI or {}
+  this.Spells = {}
+  this.Prio = {}
+  if data.prios then
+    for n, p in ipairs(data.prios) do
+      local spell = Spell_CreateById(p.SpellId)
+      for k, v in pairs(p) do
+        spell[k] = v
+      end
+      this.Spells[spell.Key] = spell
+      local key = spell.Key
+      if spell.Role ~= 'interrupt' and spell.Role ~= 'slot' then
+        table.insert(this.Prio, key)
+      end
+    end
+  end
+  
+  this.code = data.code or {}
+  this.slots = data.slots or {}
+  
+  this:MapSpellsToBook()
+  
+  DbgMsg("Loaded %d spells for spec %s", #data.prios, this.vars.Spec)
+end
+
+-------------------------------------------------------------------------------
+local function Engine_Init(this)
+-------------------------------------------------------------------------------
+  this.PlayerClass = select(2, UnitClass("player"))
+  this.Spec = GetSpecialization()
+  this.vars = this.vars or {}
+  this.vars.Spec = this.PlayerClass .. "-" .. this.Spec -- e.g. PALADIN-3
+end
+
+
+-------------------------------------------------------------------------------
 local function Engine_DbgTrack(this, name, value)
 -------------------------------------------------------------------------------
 	nome = tostring(name)
@@ -1943,20 +1684,52 @@ local function Engine_Dump(this)
 	end
 end
 
+-------------------------------------------------------------------------------
+local function Engine_RefreshVars(this)
+-------------------------------------------------------------------------------
+-- loads value sinto Engine.vars (which will be used by the current spec-handler)
+-------------------------------------------------------------------------------
+  local vars = this.vars or {}
+  this.vars = vars
+  
+  for k, v in pairs(this.Power) do
+    vars[k] = v
+  end
+  
+  vars.Health = this.Health
+  vars.HealthMax = this.HealthMax
+  vars.HealthPercent = this.HealthPercent
+  vars.TargetHealth = this.TargetHealth
+  vars.TargetHealthMax = this.TargetHealthMax
+  vars.TargetHealthPercent = this.TargetHealthPercent
+  vars.Attackers = this.Attackers
+  vars.Targets = this.Targets
+  vars.Now = this.Now
+  vars.IsBossFight = this.IsBossFight
+  vars.IsPvp = this.IsPvp
+  vars.GCD = this.GCD
+  vars.HealthRate = this.HealthChangingRate
+  vars.HealthChangingRate = this.HealthChangingRate
+  vars.LastCastSpell = this.LastCastSpell
+  vars.IsMoving = this.IsMoving
+  vars.TargetIsMoving = this.TargetIsMoving
+  
+  for k, f in pairs(this.code) do
+    vars[k] = f(this)
+  end
+end
+
 
 -------------------------------------------------------------------------------
-local function Engine_Create(Spec, Spells, Prio, GCDSpell, Throtle, Frame)
+local function Engine_Create(Frame)
 -------------------------------------------------------------------------------
   local eng = {}
 
   local EmptySpell = Spell_Create()
 
-  eng.Spec = Spec or ''             -- player spec we are handling
-  eng.Spells = Spells or {}         -- list of valid spells indexed by keys
+  eng.Spec = ''                     -- player spec we are handling
+  eng.Spells = {}                   -- list of valid spells indexed by keys
   eng.Frame = Frame                 -- the spell frame
-  eng.RefPrio = NormalizeMode(Prio) -- array with spell ids in priority list
-  eng.Throtle = Throtle or 0        -- how long to throtle the engine (in ms)
-  eng.GCDSpell = GCDSpell           -- spell to use in gcd calculation
   eng.WeAreBeingAttacked = false
 	eng.PainPerSecond = 0             
 	eng.PainReact = 0               -- percentual estimate for the damage we are receiving
@@ -1978,19 +1751,19 @@ local function Engine_Create(Spec, Spells, Prio, GCDSpell, Throtle, Frame)
   eng.GCD = 0                       -- the current global cooldown
   eng.Lag = 0                       -- the network lag of the current session
   eng.Now = 0                       -- current time
-  eng.CurPrio = eng.RefPrio
   eng.PlayerGUID = UnitGUID("player")
 
   -- Engine API
-  eng.HandleEnterCombat = Engine_HandleEnterCombat
-  eng.HandleLeaveCombat = Engine_HandleLeaveCombat
-  eng.HandleCombatLog = Engine_HandleCombatLog
-  eng.HandleTargetChanged = Engine_HandleTargetChanged
+  eng.Init = Engine_Init
+  eng.Load = Engine_Load
+  eng.OnEnterCombat = Engine_OnEnterCombat
+  eng.OnLeaveCombat = Engine_OnLeaveCombat
+  eng.OnCombatLog = Engine_OnCombatLog
+  eng.OnTargetChanged = Engine_OnTargetChanged
   eng.Update = Engine_Update
   eng.ShowHideFrame = Engine_ShowHideFrame
   eng.IsInCombat = Engine_IsInCombat
-  eng.SelectMode = Engine_SelectMode
-  eng.CalcGCD = Engine_UpdateGCD -- Engine_CalcGCD
+  eng.CalcGCD = Engine_UpdateGCD
   eng.CalcLag = Engine_CalcLag
   eng.UpdateState = Engine_UpdateState
   eng.UpdateSpells = Engine_UpdateSpells
@@ -2005,20 +1778,31 @@ local function Engine_Create(Spec, Spells, Prio, GCDSpell, Throtle, Frame)
 
   eng.CheckBuff = Engine_CheckBuff
   eng.CheckDebuff = Engine_CheckDebuff
+	eng.CheckBuffOrDebuffAuto = Engine_CheckBuffDebuffAuto
+
   eng.CheckEnemyDistance = Engine_CheckEnemyDistance
   eng.CheckEnemyIsClose = Engine_CheckEnemyIsClose
   eng.CheckEnemyIsNotFar = Engine_CheckEnemyIsNotFar
   eng.CheckEnemyIsFar = Engine_CheckEnemyIsFar  
-	eng.CheckBuffOrDebuffAuto = Engine_CheckBuffDebuffAuto
+  
 	eng.HasTalent = Engine_HasTalent
-	eng.SpellCharges = Engine_SpellCharges
-	eng.SpellCooldown = Engine_SpellCooldown
-  eng.HasGlyphSpell = Engine_HasGlyphSpell
+  
   eng.Dump = Engine_Dump
 	eng.DbgTrack = Engine_DbgTrack
-  eng.SortSpells = Engine_SortSpells
-
-  eng:MapSpellsToBook()
+  
+  eng.RefreshVars = Engine_RefreshVars
+  
+  eng.GetSpellInfo = Engine_GetSpellInfo
+  eng.GetBuffInfo = Engine_GetBuffInfo
+  eng.GetDebuffInfo = Engine_GetDebuffInfo
+  eng.GetTargetBuffInfo = Engine_GetTargetBuffInfo
+  eng.GetMyBuffInfo = Engine_GetMyBuffInfo
+  
+  eng.GetBuff = eng.GetBuffInfo
+  eng.GetSpell = eng.GetSpellInfo
+  eng.GetDebuff = eng.GetDebuffInfo
+  eng.GetTargetBuff = eng.GetTargetBuffInfo
+  eng.GetMyDebuff = eng.GetMyBuffInfo
 
   return eng
 end -- fn Engine_Create
@@ -2086,7 +1870,7 @@ end -- SpecInfo_AddAura
 local function SpecInfo_SetBuffs(this, Slot, ...)
 --------------------------------------------------------------------------------
 -- defines a list of buffs to monitor
-  return this:SetSlot(Slot, "b", ...)
+    return this:SetSlot(Slot, "b", ...)
 end
 
 
@@ -2132,10 +1916,8 @@ end
 --------------------------------------------------------------------------------
 local function SpecInfo_SetSingleTargetSpells(this, ...)
 --------------------------------------------------------------------------------
-  if not this.Prio then this.Prio = {} end
-  local r = {...}
-  this.Prio[MODE_ST] = r
-  return r
+  this.Prio = {...}
+  return this
 end
 
 --------------------------------------------------------------------------------
@@ -2144,19 +1926,9 @@ local function SpecInfo_AddSingleTargetSpell(this, spell)
 -- adds a single spell at the end of the priority list
 --------------------------------------------------------------------------------
   if not this.Prio then this.Prio = {} end
-  if not this.Prio[MODE_ST] then this.Prio[MODE_ST] = {} end
-  table.insert(this.Prio[MODE_ST], spell)
+  table.insert(this.Prio, spell)
+  return this
 end
-
---------------------------------------------------------------------------------
-local function SpecInfo_SetAoeSpells(this, ...)
---------------------------------------------------------------------------------
-  if not this.Prio then this.Prio = {} end
-  local r = {...}
-  this.Prio[MODE_AOE] = r
-  return r
-end
-
 
 --------------------------------------------------------------------------------
 local function SpecInfo_SetVar(this, Name, Value)
@@ -2284,119 +2056,66 @@ function Main:Translate(Text)
 end
 
 --------------------------------------------------------------------------------
-function Main:PrepareEngine()
+function Main:ResetEngine()
 --------------------------------------------------------------------------------
--- selects the appropriate engine data for the current spec. If no engine is
--- present orelse there's no data for this spec, hides the main frame
+  self.Engine:Init()
+  self.Engine:Load(self:GetSpecData(self.Engine))
+  self:CreateSlots(self.Engine.slots)
+  self.Engine.Active = #self.Engine.Prio > 0
+  self.Active = self.Engine.Active
+end
+
+
 --------------------------------------------------------------------------------
-  local Ok = false
-  local Spec = GetSpecialization() or (self.EngineData and self.EngineData.DefaultSpec) or 0
-  self.Spec = Spec
-  self.SpecName = ''
-  local Data = self.EngineData
-  if Data[Spec] and Data[Spec].Spells then
-    DbgMsg("Found Spec %s", Spec)
-    Ok = true
-    Data = Data[Spec]
-    self.SpecName = Data.SpecName
-    self.Engine = Engine_Create(
-      Data.SpecName,
-      Data.Spells,
-      Data.Prio,
-      Data.GCDSpell,
-      self.Throtle,
-      self.MainFrame
-    )
-    self.Engine.InitSpec = Data.InitSpec or (ShowMsg("No initialization for this spec") or function() end)
-    self.Engine.SpecToolbar = Data.SpecToolbar
-    self.Engine.HideFrame = not (Data.Spells and Data.Prio)
-    self:InitXIcons(Data.XIconsRowSize)
+function Main:CreateSlots()
+--------------------------------------------------------------------------------
+    self:InitXIcons(#self.Engine.slots)
     self:ReloadIcons()
     
-    local BuildIcon = function(Icon, Value)
-     -- converts the icon into an appropriate type for the data
-      if not Value then
-        return
-      elseif Value.IsBuff then
-        BuffIcon_FromIcon(Icon)
-        Icon.Buffs = Value
-      elseif Value.IsDebuff then
-        DebuffIcon_FromIcon(Icon)
-        Icon.Debuffs = Value
-      elseif Value.IsAura then
-        AuraIcon_FromIcon(Icon)
-        Icon.Auras = Value
-      elseif Value.IsSpell then
-        SpellMonitorIcon_FromIcon(Icon)
-        Icon.Spells = Value
-      end
-      Icon.Tooltip = Value.Tooltip
-    end
-    
-    --BuildIcon(self.Sp1, Data.Sp1)
-    --BuildIcon(self.Sp2, Data.Sp2)
-    --BuildIcon(self.Sp3, Data.Sp3)
-    --BuildIcon(self.Sp4, Data.Sp4)
-    --BuildIcon(self.Sp5, Data.Sp5)
-    for i, what in ipairs(Data.XIcons) do
+    for i, slot in ipairs(self.Engine.slots) do
       local icon = self:AddXIcon()
-      BuildIcon(icon, what)
+      if slot.Type == "buff" then 
+        Cmds.CreateBuffIcon(icon)
+        icon.Buffs = {slot.Spell}
+        
+      elseif slot.Type == "debuff" then
+        Cmds.CreateDebuffIcon(icon)
+        icon.Debuffs = {slot.Spell}
+        
+      elseif slot.Type == "aura" then
+        Cmds.CreateAuraIcon(icon)
+        icon.Auras = {slot.Spell}
+        
+      elseif slot.Type == "spell" then
+        local splist ={}
+        for k, v in pairs(self.Engine.Spells) do
+          if v.Role == "slot" and v.SpellId == slot.Spell then
+            splist = {v}
+            break
+          end
+        end  
+        Cmds.CreateSpellMonitor(icon)
+        icon.Spells = splist
+      end
     end
 
-    self.InterruptIcon.Spells = Data.Interrupt
-    self.LoadKeysNeeded = true
+    local interrupts = {}
+    for k, v in pairs(self.Engine.Spells) do
+      if v.Role == "interrupt" then table.insert(interrupts, Cmds.CreateInterruptSpell(v)) end
+    end
+    self.InterruptIcon.Spells = interrupts
+end
 
-    
-    
-  else
-    self.Engine = nil
-  end
-
-  self.Active = Ok
-  self:AttachEngine()
-  self.MainFrame:SetVisible(Ok)
-  
-  if self.Engine then self.Engine.priority = self.priorityData end
-end -- fn Main:PrepareEngine
-
-
---------------------------------------------------------------------------------
-function Main:AttachEngine()
---------------------------------------------------------------------------------
--- wire the engine to the events it needs
---------------------------------------------------------------------------------
-  if self.Active and not self.vars then self:SetVars() end
-
-  local fr = self.EventFrame
-  local eng = self.Engine or {}
-
-  local SetEvent = function(Name, Handler)
-    local e = fr[Name]
-    e:Clear()
-    if Handler then e:Add(Handler, eng) end
-  end
-
-  SetEvent('PLAYER_ENTER_COMBAT', eng.HandleEnterCombat)
-  SetEvent('PLAYER_LEAVE_COMBAT', eng.HandleLeaveCombat)
-  SetEvent('COMBAT_LOG_EVENT_UNFILTERED', eng.HandleCombatLog)
-  SetEvent('PLAYER_TARGET_CHANGED', eng.HandleTargetChanged)
-
-  if self.Active then
-    eng.AoeMin = self:GetAoeMin()
-    eng.CheckRange = self:GetCheckRange()
-  end
-
-end -- fn Main:AttachEngine
 
 --------------------------------------------------------------------------------
 function Main:EnableEvents()
 --------------------------------------------------------------------------------
   local fr = self.EventFrame
   fr:RegisterFor('PLAYER_LOGIN', self.HandlePlayerLogin, self)
-  fr:RegisterFor('PLAYER_ENTER_COMBAT')
-  fr:RegisterFor('PLAYER_LEAVE_COMBAT')
-  fr:RegisterFor('PLAYER_TARGET_CHANGED')
-  fr:RegisterFor('COMBAT_LOG_EVENT_UNFILTERED')
+  fr:RegisterFor('PLAYER_ENTER_COMBAT', self.HandleEnterCombat, self)
+  fr:RegisterFor('PLAYER_LEAVE_COMBAT', self.HandleLeaveCombat, self)
+  fr:RegisterFor('PLAYER_TARGET_CHANGED', self.HandleTargetChanged, self)
+  fr:RegisterFor('COMBAT_LOG_EVENT_UNFILTERED', self.HandleCombatLog, self)
   fr:RegisterFor('UPDATE_SHAPESHIFT_FORM', self.HandleShapeshiftUpdate, self)
   fr:RegisterFor('PLAYER_TALENT_UPDATE', self.HandleTalentUpdate, self)
 	fr:RegisterFor('ACTIVE_TALENT_GROUP_CHANGED', self.HandleTalentGroupChanged, self)
@@ -2415,6 +2134,29 @@ function Main:DisableEvents()
 	fr:Unregister('ACTIVE_TALENT_GROUP_CHANGED')
 end -- fn Main:DisableEvents
 
+--------------------------------------------------------------------------------
+function Main:HandleEnterCombat(evt, ...)
+--------------------------------------------------------------------------------
+  self.Engine:OnEnterCombat(evt, ...)
+end -- fn Main:HandleEnterCombat
+
+--------------------------------------------------------------------------------
+function Main:HandleLeaveCombat(evt, ...)
+--------------------------------------------------------------------------------
+  self.Engine:OnLeaveCombat(evt, ...)
+end -- fn Main:HandleLeaveCombat
+
+--------------------------------------------------------------------------------
+function Main:HandleTargetChanged(evt, ...)
+--------------------------------------------------------------------------------
+  self.Engine:OnTargetChanged(evt, ...)
+end -- fn Main:HandleTargetChanged
+
+--------------------------------------------------------------------------------
+function Main:HandleCombatLog(evt, ...)
+--------------------------------------------------------------------------------
+  self.Engine:OnCombatLog(evt, ...)
+end -- fn Main:HandleCombatLog
 
 --------------------------------------------------------------------------------
 function Main:HandleShapeshiftUpdate(evt, ...)
@@ -2426,7 +2168,7 @@ end -- fn Main:HandlePlayerLogin
 function Main:HandlePlayerLogin(evt, ...)
 -------------------------------------------------------------------------------
   DbgMsg("Player Login")
-  self:PrepareEngine()
+  self.SpecChanged = true
 end -- fn Main:HandlePlayerLogin
 
 --------------------------------------------------------------------------------
@@ -2446,31 +2188,26 @@ end -- fn Main:HandleTalentUpdate
 --------------------------------------------------------------------------------
 function Main:HandleOnUpdate(evt, elapsed, ...)
 --------------------------------------------------------------------------------
-	if self.Engine then self.Engine.Now = GetTime() end
-  self.Elapsed = self.Elapsed + elapsed
+-- called by the MainFrame when it is visible
+--------------------------------------------------------------------------------
+  self.Elapsed = (self.Elapsed or 0) + (elapsed or 0)
   -- exits if throtling
   if self.Throtle and self.Elapsed < self.Throtle then return end
 
-	if self.SpecChanged or self.TalentsChanged then
-		if self.SpecChanged then
-			self.SpecChanged = false
-			DbgMsg("Engine was reset")
-			self:InitEngineData()
-		else
-			self.TalentsChanged = false
-			DbgMsg('Talents were reset')
-		end-- reloads the engine!
-		self:PrepareEngine()
+  if self.SpecChanged or self.TalentsChanged then
+    self.SpecChanged = false
+    self.TalentsChanged = false
+    self.LoadKeysNeeded = true
+		self:ResetEngine() -- reset engine may change our active status
 	end
 
-
-  if self.Engine then
+  if self.Active then
     if self.LoadKeysNeeded then
       self.LoadKeysNeeded = false
       self:LoadKeys()
     end
-		self.Engine.Elapsed = elapsed
-    self.Engine:Update()
+
+    self.Engine:Update(elapsed)
     self:UpdateIcons()
   end
 end -- fn Main:HandleOnUpdate(
@@ -2489,454 +2226,6 @@ function Main:UpdateIcons()
   self.NextSpellIcon.TooltipData = GetSpName(Ctx.NextSpell)
 end -- fn Main:UpdateIcons
 
---------------------------------------------------------------------------------
-function Main:SetVars()
---------------------------------------------------------------------------------
--- loads saved variables, applying defaults if necessary
---------------------------------------------------------------------------------
-  if not L2P_SavedVars then L2P_SavedVars = {} end
-  local Vars = L2P_SavedVars
-
-  self.vars = Vars
-
-  local Prio = (Vars.Prio and Vars.Prio[self.Spec]) or {}
-
-  self:SetPrio(MODE_ST, Prio[MODE_ST])
-  self:SetPrio(MODE_AOE, Prio[MODE_AOE])
-  self:SetPrio(MODE_CUSTOM, Prio[MODE_CUSTOM])
-
-  self:SetLocked(Vars.Locked)
-
-  -- number of mobs to consider aoe
-  self:SetAoeMin(Vars.AoeMin and Vars.AoeMin[self.SpecName])
-
-  -- user wants to see spell range information
-  self:SetCheckRange(Vars.CheckRange)
-
-  -- alpha value for the main frame
-  self:SetAlpha(Vars.Alpha)
-
-  -- the messages to show on each spell
-  self:SetMessages(Vars.Messages and Vars.Messages[self.SpecName])
-
-  -- the frequency value
-  self:SetFrequency(Vars.Frequency)
-end -- fn Main:SetVars
-
---------------------------------------------------------------------------------
-function Main:SetAoeMin(value)
---------------------------------------------------------------------------------
-  local DefaultValue = self.EngineData[self.Spec].AoeMin or 0
-  if value == nil then value = DefaultValue end
-  value = tonumber(value)
-  if value == DefaultValue then
-    if self.vars.AoeMin then self.vars.AoeMin[self.SpecName] = nil end
-  else
-    if not self.vars.AoeMin then self.vars.AoeMin = {} end
-    self.vars.AoeMin[self.SpecName] = value
-  end
-  if self.Engine then self.Engine.AoeMin = value end
-end -- fn Main:SetAoeMin
-
---------------------------------------------------------------------------------
-function Main:GetAoeMin()
---------------------------------------------------------------------------------
-  if not (self.vars and self.vars.AoeMin and self.vars.AoeMin[self.SpecName]) then
-    return self.EngineData[self.Spec].AoeMin or 0
-  end
-  return self.vars.AoeMin[self.SpecName]
-end -- fn Main:GetAoeMin
-
---------------------------------------------------------------------------------
-function Main:SetCheckRange(value)
---------------------------------------------------------------------------------
-  if value == nil then value = DEFAULT_CHECKRANGE end
-  value = (value and true) or false
-  if value == DEFAULT_CHECKRANGE then
-    self.vars.CheckRange = nil
-  else
-    self.vars.CheckRange = value
-  end
-  self.CheckRange = value
-  if self.Engine then self.Engine.CheckRange = value end
-end -- fn Main:SetCheckRange
-
---------------------------------------------------------------------------------
-function Main:GetCheckRange()
---------------------------------------------------------------------------------
-  if self.vars.CheckRange == nil then return DEFAULT_CHECKRANGE end
-  return self.vars.CheckRange
-end -- fn Main:GetCheckRange
-
---------------------------------------------------------------------------------
-function Main:SetLocked(value)
---------------------------------------------------------------------------------
-  if value == nil then value = DEFAULT_LOCKED end
-  value = (value and true) or false
-  if value == DEFAULT_LOCKED then
-    self.vars.Locked = nil
-  else
-    self.vars.Locked = value
-  end
-  self.MainFrame:SetLocked(value)
-end -- fn Main:SetLocked
-
---------------------------------------------------------------------------------
-function Main:GetCheckRange()
---------------------------------------------------------------------------------
-  if self.vars.CheckRange == nil then return DEFAULT_CHECKRANGE end
-  return self.vars.CheckRange
-end -- Main:GetCheckRange
-
---------------------------------------------------------------------------------
-function Main:SetMessages(Keys)
---------------------------------------------------------------------------------
-  if Keys == nil or Keys == '' then
-    for k, s in pairs(self.Engine.Spells) do
-      s.Message = nil
-    end
-    if self.vars.Messages then
-      self.vars.Messages[self.SpecName] = nil
-    end
-  else
-    for k, m in pairs(Keys) do
-      local Sp = self.Engine.Spells[k]
-      if m == '' then m = nil end
-      if Sp then Sp.Message = m end
-    end
-    if not self.vars.Messages then self.vars.Messages = {} end
-    self.vars.Messages[self.SpecName] = self:GetMessages()
-  end
-end
-
---------------------------------------------------------------------------------
-function Main:GetMessages()
---------------------------------------------------------------------------------
-  local list = {}
-  for k, s in pairs(self.Engine.Spells) do
-    if s.Message then list[k] = s.Message end
-  end
-  return list
-end -- fn Main:GetMsg
-
---------------------------------------------------------------------------------
-function Main:SetAlpha(value)
---------------------------------------------------------------------------------
-  if value == nil then value = DEFAULT_ALPHA end
-  value = math.min(1, math.max(0, tonumber(value)))
-  if value == DEFAULT_ALPHA then
-    self.vars.Alpha = nil
-  else
-    self.vars.Alpha = value
-  end
-  self.MainFrame:SetAlpha(value)
-end -- fn Main:SetAlpha
-
-
---------------------------------------------------------------------------------
-function Main:GetAlpha()
---------------------------------------------------------------------------------
-  if self.vars.Alpha == nil then return DEFAULT_ALPHA end
-  return self.vars.Alpha
-end -- Main:GetAlpha
-
---------------------------------------------------------------------------------
-function Main:SetFrequency(value)
---------------------------------------------------------------------------------
-  if value == nil then value = DEFAULT_FREQUENCY end
-  value = math.min(MAX_FREQUENCY, math.max(0, tonumber(value)))
-  if value == DEFAULT_FREQUENCY then
-    self.vars.Frequency = nil
-  else
-    self.vars.Frequency = value
-  end
-  value = (value == 0 and 0) or 1/value
-  self.Throtle = value
-  if self.Engine then self.Engine.Throtle = value end
-end -- fn Main:SetFrequency
-
---------------------------------------------------------------------------------
-function Main:GetFrequency()
---------------------------------------------------------------------------------
-  if self.vars.Frequency == nil then return DEFAULT_FREQUENCY end
-  return self.vars.Frequency
-end -- fn Main:GetFrequency
-
---------------------------------------------------------------------------------
-function Main:SetPrio(mode, value)
---------------------------------------------------------------------------------
--- Gets/Sets the spells for the specified mode. the spells are a list of
--- spell ids which must match the list of spell ids provided by this.Spells
--- the spell list can be specified as an array or as a space separated list
---------------------------------------------------------------------------------
-  local eng = self.Engine
-  local spec = eng.SpecName
-  if not eng.CurPrio[mode] then
-    ShowError(L'Invalid mode: %s', mode)
-    return
-  end
-
-  if value == nil or value == '' or value == {} then
-  -- restores the default values for the current mode and deletes the
-  -- corresponding values from the exported vars
-    eng:Reset(mode)
-    if self.vars.Prio and self.vars.Prio[spec] then
-      self.vars.Prio[spec][mode] = nil
-    end
-    return
-  end
-
-
-  --creates a hash for each spell key
-  if not eng.SPN then
-    local n = {}
-    for _, k in ipairs(eng.Spells) do
-      n[strlower(k)] = k
-    end
-    eng.SPN = n
-  end
-
-  -- if the new prio is a space separated list, converts to proper list
-  if type(value) == 'string' then value = {strsplit(' ', value)} end
-
-  -- if no list was suplied, uses a reference list
-  if type(value) ~= 'table' then
-    ShowError(L'Invalid value')
-    return
-  end
-
-  -- list contains all the recognized spells supplied
-  local list = {}
-  local names = eng.SPN
-  local Errors = 0
-  for i, s in ipairs(value) do
-    local k = strlower(s)
-    local n = names[k]
-    if n then
-      table.insert(list, k)
-    else
-      Errors = Erros + 1
-      -- alerts that we are getting crap from the user
-      ShowError(L'Bad spell: %s', s)
-    end
-  end --for
-
-  -- if the list of spells contained errors, abort
-  if Errors > 0 then return end
-
-  if #list == 0 then
-    -- if not enough spells were supplied, whines and bails out
-    ShowError(L'No spell found')
-    return
-  end
-
-  -- Saves the spell list
-  eng.CurPrio[mode] = list
-  local final = table.concat(list, ' ')
-
-  -- ref contais the list of default spells for this mode
-  local ref = strlower(table.concat(eng.RefPrio[mode], ' '))
-
-  if final == ref then
-   -- deletes the exported priority if the current list is the default
-    if self.vars.Prio
-    and self.vars.Prio[spec]
-    and self.vars.Prio[spec][mode] then
-      self.vars.Prio[spec][mode] = nil
-    end
-  else
-    if not self.vars.Prio then self.vars.Prio = {} end
-    if not self.vars.Prio[spec] then self.vars.Prio[spec] = {} end
-    self.vars.Prio[spec][mode] = final
-  end
-end -- fn Main:SetPrio
-
-
---------------------------------------------------------------------------------
-function Main:GetPrio(mode)
---------------------------------------------------------------------------------
-  local prio = self.Engine.Prio[mode]
-  if prio then return strlower(table.concat(prio, ' ')) else return '' end
-end -- Main:GetPrio(mode)
-
---------------------------------------------------------------------------------
-function Main:CreateEvent(...)
---------------------------------------------------------------------------------
-  return Event_Create(...)
-end -- Main:CreateEvent
-
---------------------------------------------------------------------------------
-function Main:CreateSpell(...)
---------------------------------------------------------------------------------
-  return Spell_Create(...)
-end -- Main:CreateSpell
-
---------------------------------------------------------------------------------
-function Main:CreateSpellById(...)
---------------------------------------------------------------------------------
-  return Spell_CreateById(...)
-end -- Main:CreateSpellById
-
---------------------------------------------------------------------------------
-function Main:CreateInterrupt(...)
---------------------------------------------------------------------------------
-  return InterruptSpell_Create(...)
-end -- Main:CreateInterrupt
-
-
---------------------------------------------------------------------------------
-function Main:CreateSpecInfo(...)
---------------------------------------------------------------------------------
-  return SpecInfo_Create(...)
-end
-
-
---------------------------------------------------------------------------------
-function Main:InitSpecs(...)
---------------------------------------------------------------------------------
-  local Specs = {}
-  local SpList = {}
-  local args = {...}
-
-  local GetSpells = function(spec, s)
-    -- return a list with the spell(s) referenced by
-    -- the name in s
-    local temp = {}
-    s = ((type(s) ~= "table") and {s}) or s
-    for i, v in ipairs(s) do
-      tinsert(temp, spec.Spells[v])
-    end
-    return temp
-  end
-
-  for i, v in ipairs(args) do
-    if #v > 1 then
-      local spec = v[1]
-      local vcmd = v[2]
-
-      if not SpList[spec] then
-      -- adds the spec if not there yet.
-      -- creation order of the specs must match the
-      -- spec number in the Wow interface
-        local s = self:CreateSpecInfo(spec)
-        SpList[spec] = s
-        spec = s
-        tinsert(Specs, s)
-        DbgMsg("Creating spec %s (#%i)", v[i], #Specs)
-      else
-        spec = SpList[spec]
-      end -- if
-
-      if vcmd == "spell" then
-        local sp = spec:AddSpell(v[3], v[4])
-        sp.Condition = v[5] or false
-        sp.NoTarget = v.NoTarget
-        sp.NoRange = v.NoRange
-        sp.Tooltip = v.Tooltip or v[4]
-        sp.NoInstant = v.NoInstant
-        sp.RangeSpell = v.RangeSpell
-        sp.ActionSpell = v.ActionSpell
-        sp.PetSpell = v.PetSpell
-				sp.Secondary = v.Secondary
-				sp.Primary = v.Primary
-
-      elseif vcmd == "init" then
-        spec.InitSpec = v[3]
-
-      elseif vcmd == "interrupt" then
-        -- interrupt spells must be previously registered with a "spell" command;
-        -- here we have just their tags
-        -- e.g. {SPEC_NAME, "interrupt", {"first-interrupt", "second-interrupt", ... }}
-        -- or   {SPEC_NAME, "interrupt", "interrupt-spell-key"}
-        local data = {}
-        for i, s in ipairs(GetSpells(spec, v[3])) do
-          tinsert(data, InterruptSpell_Create(s))
-        end
-        --local data = GetSpells(spec, v[3])
-        spec:MonitorInterrupts(unpack(data))
-
-      elseif vcmd == "prio" then
-        local list = v[3]
-        if type(list) == "string" then
-          spec:AddSingleTargetSpell(list)
-        else 
-          spec:SetSingleTargetSpells(unpack(v[3]))
-        end
-
-      elseif vcmd == "aoe" then
-        spec:SetAoeSpells(unpack(v[3]))
-
-      elseif vcmd == "var" then
-        local vn = v[3]
-        local vv = v[4]
-        -- saves some predefined vars
-        if vn == "AoeMin" or vn == "GCDSpell" then
-          spec[vn] = vv
-        else
-          spec:SetVar(v[3], v[4])
-        end
-
-      elseif vcmd == "toolbar" then
-      -- ??
-        spec.SpecToolbar = v[3]
-
-      elseif vcmd == "skip" then
-      -- skip
-
-      elseif vcmd == "cols" then
-        spec.XIconsRowSize = v[3]
-        
-      else
-
-        local _, _, slot = string.find(vcmd, "^slot(%d)$")
-        local cmd = false
-        slot = slot or (vcmd == "icon" and 0)
-        if slot then
-        -- slot specification
-        -- (we used slotX before, now it is just 'icon')
-        -- e.g. {SPEC_NAME, "icon", "buff", {Buff1, Buff2, ...}, tooltip}
-        -- or   {SPEC_NAME, "icon", "buff", Buff, tooltip}
-
-          local data = ((type(v[4]) ~= "table") and {v[4]}) or v[4]
-          if v[3] == "buff" then
-            cmd = spec.MonitorBuffs
-
-          elseif v[3] == "debuff" then
-            cmd = spec.MonitorDebuffs
-
-          elseif v[3] == "aura" then
-            cmd = spec.MonitorAuras
-
-          elseif v[3] == "spell" then
-            -- spells must be previously registered with a SPELL command;
-            -- here we have just their tags
-            -- e.g. {SPEC_NAME, "slotx", "spell", {"first-spell", "second-spell"}, tooltip}
-            -- or   {SPEC_NAME, "slotx", "spell", "spell-key", tooltip}
-            data = GetSpells(spec, data)
-            cmd = spec.MonitorSpells
-          end
-
-          if cmd then
-            local r = cmd(spec, slot, unpack(data))
-            r.Tooltip = v[5]
-          else
-            error("Invalid command for slot " .. vcmd .. ": " .. tostring(v[3]))
-          end
-
-        else
-          error("Invalid command: " .. tostring(vcmd))
-
-        end -- if slot
-      end -- if vcmd
-    end -- for v#
-  end -- for
-
-  return Specs
-end
-
-
-
-
 
 --------------------------------------------------------------------------------
 function Main:cmd_help(...)
@@ -2949,8 +2238,6 @@ function Main:cmd_help(...)
   ShowMsg(L"     list the spells in priority order")
   ShowMsg("/l2p loadkeys")
   ShowMsg(L"     tries to load the keys corresponding to each spell")
-  ShowMsg("/l2p msg")
-  ShowMsg(L"     associates a message with each spell")
   ShowMsg("/l2p debug [on|off]")
   ShowMsg(L"     enables/disables debug mode")
   ShowMsg("/l2p debug_spells")
@@ -2968,7 +2255,7 @@ function Main:cmd_reset(Args)
 
   elseif strlower(Args) == 'prio' then
     ShowMsg(L'The priority lists were reset')
-    self.Engine:Reset()
+    self:ResetEngine()
   end
 end -- fn Main:cmd_reset
 
@@ -2989,10 +2276,8 @@ function Main:cmd_list()
 --------------------------------------------------------------------------------
   if self.Active then
     local Prio = self.Engine.CurPrio
-    for _, k in ipairs({MODE_ST, MODE_AOE, MODE_CUSTOM}) do
-      local list = table.concat(Prio[k], ' ')
-      ShowMsg("%s: %s", k, list)
-    end
+    local list = table.concat(Prio, ' ')
+    ShowMsg("prio: %s", k, list)
   else
     ShowMsg(L"L2P is not active")
   end
@@ -3006,45 +2291,6 @@ function Main:cmd_loadkeys(value)
 --------------------------------------------------------------------------------
   self:LoadKeys(true)
 end
-
---------------------------------------------------------------------------------
-function Main:cmd_msg(Value)
---------------------------------------------------------------------------------
-  Value = string.trim(Value)
-  local list
-  if strlower(Value) == 'clear' then
-    self:SetMessages()
-    ShowMsg(L'Messages removed')
-
-  elseif Value and Value ~= '' then
-    local match, msg, p
-    p = 1
-    list = {}
-    repeat
-      key, msg, p = string.match(Value, "([%w-_]+)%s*:%s*([^%s]+)()", p)
-      if key then
-        local spkey = self.Engine:FindSpellName(strlower(key))
-        if spkey  then
-          if msg == "''" or msg == '""' then msg = '' end
-          list[spkey] = msg
-        else
-          ShowMsg(L"Spell no found: %s", key)
-        end
-      end
-    until not key
-    self:SetMessages(list)
-  end
-
-  list = self:GetMessages()
-  local text = {}
-  for k, s in pairs(list) do
-    table.insert(text, format("%s:%s", k, s))
-  end
-  if #text then
-    ShowMsg(table.concat(text, ' '))
-  end
-end -- Main:cmd_msg
-
 
 --------------------------------------------------------------------------------
 function Main:cmd_debug(value)
@@ -3098,7 +2344,7 @@ function Main:MapSpellKeys()
       if not key then key = k2 end
       if key then
         local button = _G[barName .. 'Button' .. i]
-        local slot = ActionButton_GetPagedID(button) or ActionButton_CalculateAction(button) or button:GetAttribute('action') or 0
+        local slot = button.action or button:GetAttribute('action') or 0
         if HasAction(slot) then
           local actionType, id = GetActionInfo(slot)
           if actionType == 'macro' then
@@ -3312,21 +2558,6 @@ end -- Main_CreateIcons
 
 
 --------------------------------------------------------------------------------
-function Main.joinTables(...)
---------------------------------------------------------------------------------
--- returns all the tables passed as parameters as a single parameter list
---------------------------------------------------------------------------------
-  local args = {...}
-  local result = {}
-  for i, v in ipairs(args) do
-    for j, w in ipairs(v) do
-      table.insert(result, w)
-    end 
-  end
-  return unpack(result)
-end
-
---------------------------------------------------------------------------------
 function Main:CreateSpellNames(ids)
 --------------------------------------------------------------------------------
 -- generates a table with the spell names from the spells, which ids are 
@@ -3349,25 +2580,18 @@ end
 
 
 --------------------------------------------------------------------------------
-function Main:SetEngineData(data)
---------------------------------------------------------------------------------
-  self.priorityData = data
-end
-
-
---------------------------------------------------------------------------------
-local function DispatchCmd(this, Text)
+function Main:DispatchCmd(Text)
 --------------------------------------------------------------------------------
   local Text = string.trim(SecureCmdOptionParse(Text))
   if not Text or Text == '' then
-    this:cmd_help()
+    self:cmd_help()
   else
     local Cmd, Args = string.match(Text, "(%S+)(.*)")
     Args = string.trim(Args)
     Cmd = 'cmd_' .. strlower(Cmd)
-    if this[Cmd] then
-      if this.Active then
-        this[Cmd](this, Args)
+    if self[Cmd] then
+      if self.Active then
+        self[Cmd](self, Args)
       else
         ShowMsg(L"L2P is not active")
       end
@@ -3379,73 +2603,67 @@ end -- fn DispatchCmd
 
 
 --------------------------------------------------------------------------------
-local function InitEngineData(this)
+function Main:HandleAddOnLoaded(evt, addon)
 --------------------------------------------------------------------------------
--- attaches the user engine
---------------------------------------------------------------------------------
-  this.EngineData = (this.GetEngine and this:GetEngine(MODE_ST, MODE_AOE)) or false
-end
-
---------------------------------------------------------------------------------
-local function HandleAddOnLoaded(this, evt, addon)
---------------------------------------------------------------------------------
-
   if addon ~= addon_name then return end
 
   DbgMsg("HandleAddOnLoaded")
+
+  local sf =  SpellFrame_Create(0, 0, 100, 80)
+  sf:SetFrameStrata("DIALOG")
+  sf:Hide()
   
-	this:InitEngineData()
-  if not this.EngineData then DbgMsg("No engine data") end
+  self.Elapsed = 0
+  self.Throtle = 1 / DEFAULT_FREQUENCY
+  self.MainFrame = sf
+  self.Active = false;
+  
+  sf.OnUpdate:Add(self.HandleOnUpdate, self)
 
-  if this.EngineData then
-    -- the spell frame
-    
-    DbgMsg("Activating the engine")
-    
-    local sf =  SpellFrame_Create(0, 0, 100, 80)
-    sf:SetFrameStrata("DIALOG")
-    sf:Hide()
-    sf.OnUpdate:Add(this.HandleOnUpdate, this)
+  self:cmd_reset()
+  self:CreateIcons()
 
-    this.MainFrame = sf
-    this:cmd_reset()
-    this:CreateIcons()
-    this.Elapsed = 0
-    this:EnableEvents()
-  else
-    DbgMsg("Deactivating the engine")
-    this:DisableEvents()
-  end
+  DbgMsg("Activating the engine")
+  self.Engine = Engine_Create(sf)
+  self:EnableEvents()
+  if self.GetSpecData then self:ResetEngine() end
+  
 end --  fn HandleAddOnLoaded
 
 
 --------------------------------------------------------------------------------
-local function Initialize(this)
+function Main:Initialize()
 --------------------------------------------------------------------------------
-
-  _G["L2P"] = this
-
+  self.Debug = true
+  DbgMsg("Initialize")
+  
+  _G["L2P"] = self
+ 
   -- the event frame
   local fr = EventFrame_Create()
-  fr:RegisterFor('ADDON_LOADED', HandleAddOnLoaded, this)
+  fr:RegisterFor('ADDON_LOADED', Main.HandleAddOnLoaded, self)
 
-  this.EventFrame = fr
-	this.InitEngineData = InitEngineData
-  this.AddonName = addon_name
-	this.DispatchCmd = DispatchCmd
-	this.Dbg = Debug_Create()
+  self.EventFrame = fr
+  self.AddonName = addon_name
+	self.Dbg = Debug_Create()
 
 
   -- create slash comds
   SLASH_L2P1 = '/l2p'
   SlashCmdList.L2P = function(msg, editbox)
-    DispatchCmd(this, msg, editbox)
+    self:DispatchCmd(msg, editbox)
   end
 
 end -- fn Initialize
 
-Main.ShowMsg = ShowMsg
+Cmds.CreateIcon = Icon_Create -- needed to forward the Icon_Create call
+Cmds.CreateBuffIcon = BuffIcon_FromIcon
+Cmds.CreateDebuffIcon = DebuffIcon_FromIcon
+Cmds.CreateAuraIcon = AuraIcon_FromIcon
+Cmds.CreateSpellIcon = SpellIcon_FromIcon
+Cmds.CreateSpellMonitor = SpellMonitorIcon_FromIcon
+Cmds.CreateInterruptSpell = InterruptSpell_Create
 
-Cmds.CreateIcon = Icon_Create
-Initialize(Main)
+Main.ShowMsg = ShowMsg
+Main:Initialize()
 
