@@ -2049,7 +2049,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            ctx.vars.CanGenerate15Rage
+            return ctx.vars.CanGenerate15Rage
           end
         },
 
