@@ -51,52 +51,6 @@ function L2P:GetSpecData(ctx)
         WordOfGlory = 85673,
       },
 
-      Roles = {
-        ArcaneTorrent = {  }
-        AshenHallow = {  }
-        AvengingWrath = {  }
-        BladeOfJustice = {  }
-        BlessingOfAutumn = {  }
-        BlessingOfSpring = {  }
-        BlessingOfSummer = {  }
-        BlessingOfWinter = {  }
-        BloodOfTheEnemy = {  }
-        ConcentratedFlame = {  }
-        Consecration = {  }
-        ConsecrationDebuff = {  }
-        Crusade = {  }
-        CrusaderStrike = {  }
-        DivinePurpose = {  }
-        DivineShield = {  }
-        DivineStorm = {  }
-        DivineToll = {  }
-        EmpyreanPower = {  }
-        ExecutionSentence = {  }
-        FinalReckoning = {  }
-        FlashOfLight = {  }
-        FocusedAzeriteBeam = {  }
-        GuardianOfAzeroth = {  }
-        HammerOfJustice = {  }
-        HammerOfWrath = {  }
-        HandOfHindrance = {  }
-        HolyAvenger = {  }
-        Judgment = {  }
-        LayOnHands = {  }
-        MemoryOfLucidDreams = {  }
-        PurifyingBlast = {  }
-        Rebuke = {  }
-        SelflessHealer = {  }
-        Seraphim = {  }
-        ShieldOfTheRighteous = {  }
-        ShieldOfVengeance = {  }
-        TemplarSVerdict = {  }
-        TheUnboundForce = {  }
-        VanquisherSHammer = {  }
-        VisionOfPerfection = {  }
-        WakeOfAshes = {  }
-        WordOfGlory = {  }
-      }
-
       prios = {
         {Key="divine-shield", SpellId=642, Role={ "survival","cooldown", },
           Description="",
@@ -663,45 +617,6 @@ function L2P:GetSpecData(ctx)
         WordOfGlory = 85673,
       },
 
-      Roles = {
-        ArcaneTorrent = {  }
-        ArdentDefender = {  }
-        AshenHallow = {  }
-        AvengerSShield = {  }
-        AvengingWrath = {  }
-        BlessingOfSummer = {  }
-        BloodOfTheEnemy = {  }
-        ConcentratedFlame = {  }
-        Consecration = {  }
-        ConsecrationDebuff = {  }
-        Crusade = {  }
-        DivinePurpose = {  }
-        DivineShield = {  }
-        DivineToll = {  }
-        ExecutionSentence = {  }
-        FlashOfLight = {  }
-        FocusedAzeriteBeam = {  }
-        GuardianOfAncientKings = {  }
-        GuardianOfAzeroth = {  }
-        HammerOfJustice = {  }
-        HammerOfTheRighteous = {  }
-        HammerOfWrath = {  }
-        HandOfHindrance = {  }
-        HolyAvenger = {  }
-        Judgment = {  }
-        Judgment = {  }
-        LayOnHands = {  }
-        MemoryOfLucidDreams = {  }
-        PurifyingBlast = {  }
-        Rebuke = {  }
-        Seraphim = {  }
-        ShieldOfTheRighteous = {  }
-        ShiningLight = {  }
-        VanquisherSHammer = {  }
-        WakeOfAshes = {  }
-        WordOfGlory = {  }
-      }
-
       prios = {
         {Key="avengers-shield-taunt", SpellId=31935, Role={ "preparation", },
           Description="",
@@ -1038,9 +953,6 @@ function L2P:GetSpecData(ctx)
       SPI = {
       },
 
-      Roles = {
-      }
-
       prios = {
       },
 
@@ -1056,9 +968,6 @@ function L2P:GetSpecData(ctx)
       SPI = {
       },
 
-      Roles = {
-      }
-
       prios = {
       },
 
@@ -1073,9 +982,6 @@ function L2P:GetSpecData(ctx)
     return {
       SPI = {
       },
-
-      Roles = {
-      }
 
       prios = {
       },
@@ -1124,42 +1030,6 @@ function L2P:GetSpecData(ctx)
         Warbreaker = 262161,
         Whirlwind = 1680,
       },
-
-      Roles = {
-        AncientAftershock = {  }
-        Avatar = {  }
-        Bladestorm = {  }
-        Cleave = {  }
-        ColossusSmash = {  }
-        Condemn = {  }
-        ConquerorSBanner = {  }
-        DeadlyCalm = {  }
-        DeepWounds = {  }
-        DefensiveStance = {  }
-        DieByTheSword = {  }
-        Execute = {  }
-        FocusedAzeriteBeam = {  }
-        GuardianOfAzeroth = {  }
-        Hamstring = {  }
-        IgnorePain = {  }
-        ImpendingVictory = {  }
-        IntimidatingShout = {  }
-        MemoryOfLucidDreams = {  }
-        MortalStrike = {  }
-        Overpower = {  }
-        Pummel = {  }
-        PurifyingBlast = {  }
-        Rend = {  }
-        Skullsplitter = {  }
-        Slam = {  }
-        SpearOfBastion = {  }
-        StormBolt = {  }
-        SweepingStrikes = {  }
-        TheUnboundForce = {  }
-        VictoryRush = {  }
-        Warbreaker = {  }
-        Whirlwind = {  }
-      }
 
       prios = {
         {Key="impending-victory", SpellId=202168, Role={ "heal", },
@@ -1610,36 +1480,6 @@ function L2P:GetSpecData(ctx)
         VengefulRetreat = 198793,
       },
 
-      Roles = {
-        Annihilation = {  }
-        BladeDance = {  }
-        Blur = {  }
-        ChaosNova = {  }
-        ChaosStrike = {  }
-        ConsumeMagic = {  }
-        Darkness = {  }
-        DeathSweep = {  }
-        DemonSBite = {  }
-        Disrupt = {  }
-        ElysianDecree = {  }
-        EssenceBreak = {  }
-        EyeBeam = {  }
-        FelBarrage = {  }
-        Felblade = {  }
-        FelRush = {  }
-        FodderToTheFlame = {  }
-        GlaiveTempest = {  }
-        ImmolationAura = {  }
-        InnerDemons = {  }
-        Metamorphosis = {  }
-        Netherwalk = {  }
-        SinfulBrand = {  }
-        TheHunt = {  }
-        ThrowGlaive = {  }
-        UnboundChaos = {  }
-        VengefulRetreat = {  }
-      }
-
       prios = {
         {Key="netherwalk", SpellId=196555, Role={ "survival", },
           Description="Run, little girl, run!",
@@ -2076,59 +1916,6 @@ function L2P:GetSpecData(ctx)
         Whirlwind = 1680,
       },
 
-      Roles = {
-        AncientAftershock = {  }
-        Avatar = {  }
-        BattleShout = {  }
-        BerserkerRage = {  }
-        Bladestorm = {  }
-        Bloodbath = {  }
-        Cleave = {  }
-        CleaveBuff = {  }
-        ColossusSmash = {  }
-        ColossusSmashDebuff = {  }
-        ConcentratedFlame = {  }
-        Condemn = {  }
-        ConquerorSBanner = {  }
-        DeepWounds = {  }
-        DemoralizingShout = {  }
-        Devastate = {  }
-        DragonRoar = {  }
-        Execute = {  }
-        FocusedRage = {  }
-        HeroicLeap = {  }
-        HeroicThrow = {  }
-        IgnorePain = {  }
-        ImpendingVictory = {  }
-        Intercept = {  }
-        IntimidatingShout = {  }
-        LastStand = {  }
-        MortalStrike = {  }
-        MortalWounds = {  }
-        NeltharionSFury = {  }
-        Overpower = {  }
-        Pummel = {  }
-        RallyingCry = {  }
-        Ravager = {  }
-        Recklessness = {  }
-        Rend = {  }
-        Revenge = {  }
-        ShieldBlock = {  }
-        ShieldBlockBuff = {  }
-        ShieldSlam = {  }
-        ShieldWall = {  }
-        Shockwave = {  }
-        Slam = {  }
-        SpearOfBastion = {  }
-        StormBolt = {  }
-        SuddenDeath = {  }
-        ThunderClap = {  }
-        Victorious = {  }
-        VictoryRush = {  }
-        Warbreaker = {  }
-        Whirlwind = {  }
-      }
-
       prios = {
         {Key="shield-wall", SpellId=871, Role={ "survival","cooldown", },
           Description="",
@@ -2503,31 +2290,6 @@ function L2P:GetSpecData(ctx)
         TheHunt = 323639,
         ThrowGlaive = 204157,
       },
-
-      Roles = {
-        ConsumeMagic = {  }
-        DemonSpikes = {  }
-        Disrupt = {  }
-        ElysianDecree = {  }
-        Felblade = {  }
-        FelDevastation = {  }
-        FieryBrand = {  }
-        FodderToTheFlame = {  }
-        Fracture = {  }
-        ImmolationAura = {  }
-        InfernalStrike = {  }
-        Metamorphosis = {  }
-        RazelikhSDefilement = {  }
-        Shear = {  }
-        SigilOfFlame = {  }
-        SinfulBrand = {  }
-        SoulBarrier = {  }
-        SoulCleave = {  }
-        SoulFragments = {  }
-        SpiritBomb = {  }
-        TheHunt = {  }
-        ThrowGlaive = {  }
-      }
 
       prios = {
         {Key="elysian-decree-pull", SpellId=306830, Role={ "reaction", },
