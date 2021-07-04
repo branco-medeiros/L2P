@@ -588,6 +588,7 @@ function L2P:GetSpecData(ctx)
         BloodOfTheEnemy = 297108,
         ConcentratedFlame = 295373,
         Consecration = 26573,
+        ConsecrationBuff = 188370,
         ConsecrationDebuff = 204242,
         Crusade = 231895,
         DivinePurpose = 223817,
@@ -714,8 +715,9 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.NoConsecrationDebuff and
-              ctx.vars.IsNotMoving
+            return ctx.vars.IsNotMoving
+            and (ctx.vars.NoConsecrationDebuff 
+            or ctx.vars.NoConsecrationBuff)
           end
         },
 
@@ -801,6 +803,8 @@ function L2P:GetSpecData(ctx)
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.IsNotMoving
+            and (ctx.vars.NoConsecrationDebuff 
+            or ctx.vars.NoConsecrationBuff)
           end
         },
 
@@ -943,6 +947,10 @@ function L2P:GetSpecData(ctx)
 
         HasManyEnemies=function(ctx)
           return ctx.vars.Enemies > 2
+        end,
+
+        NoConsecrationBuff=function(ctx)
+          return not ctx:GetBuff(ctx.SPI.ConsecrationBuff).active
         end,
 
       }
