@@ -14,7 +14,7 @@ function L2P:GetClassSpec(ctx)
         ConcentratedFlame = 295373,
         Consecration = 26573,
         ConsecrationDebuff = 204242,
-        Crusade = 231895,	
+        Crusade = 231895,
         CrusaderStrike = 35395,
         DivinePurpose = 223817,
         DivineShield = 642,
@@ -54,8 +54,8 @@ function L2P:GetClassSpec(ctx)
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HealthIsLow 
-              and ctx.vars.IsBeingDamaged
+            return ctx.vars.HealthIsLow and
+            ctx.vars.IsBeingDamaged
           end
         },
 
@@ -75,8 +75,8 @@ function L2P:GetClassSpec(ctx)
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HealthIsLow 
-              and ctx.vars.IsBeingDamaged
+            return ctx.vars.HealthIsLow and 
+            ctx.vars.IsBeingDamaged
           end
         },
 
@@ -182,7 +182,7 @@ function L2P:GetClassSpec(ctx)
           end
         },
 
-        {Key="divine-toll-no-hp", SpellId=304971, Role={ "dps","generator", },
+        {Key="divine-toll-no-hp", SpellId=304971, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -194,7 +194,7 @@ function L2P:GetClassSpec(ctx)
           end
         },
 
-        {Key="holy-avenger", SpellId=105809, Role={ "preparation","cooldown", },
+        {Key="holy-avenger", SpellId=105809, Role={ "preparation", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -262,7 +262,7 @@ function L2P:GetClassSpec(ctx)
           end
         },
 
-        {Key="divine-toll", SpellId=304971, Role={ "dps","generator", },
+        {Key="divine-toll", SpellId=304971, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -272,7 +272,7 @@ function L2P:GetClassSpec(ctx)
           end
         },
 
-        {Key="vanquishers-hammer", SpellId=328204, Role={ "dps","spender","preparation", },
+        {Key="vanquishers-hammer", SpellId=328204, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -302,7 +302,7 @@ function L2P:GetClassSpec(ctx)
           end
         },
 
-        {Key="blessing-of-winter", SpellId=328281, Role={ "survival","dps", },
+        {Key="blessing-of-winter", SpellId=328281, Role={ "survival", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -362,7 +362,7 @@ function L2P:GetClassSpec(ctx)
           end
         },
 
-        {Key="consecration", SpellId=26573, Role={ "hinder","spender", },
+        {Key="consecration", SpellId=26573, Role={ "hinder", },
           Description="",
           RangeSpell=35395, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -571,4 +571,5 @@ function L2P:GetClassSpec(ctx)
 
       }
     }
+
 end
