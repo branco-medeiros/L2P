@@ -18,7 +18,7 @@ function L2P:GetSpecData(ctx)
         ConcentratedFlame = 295373,
         Consecration = 26573,
         ConsecrationDebuff = 204242,
-        Crusade = 231895,
+        Crusade = 231895,	
         CrusaderStrike = 35395,
         DivinePurpose = 223817,
         DivineShield = 642,
@@ -584,6 +584,8 @@ function L2P:GetSpecData(ctx)
         AshenHallow = 316958,
         AvengerSShield = 31935,
         AvengingWrath = 31884,
+        BastionOfLight = 378974,
+        BlessedHammer = 204019,
         BlessingOfSummer = 328620,
         BloodOfTheEnemy = 297108,
         ConcentratedFlame = 295373,
@@ -595,6 +597,7 @@ function L2P:GetSpecData(ctx)
         DivineShield = 642,
         DivineToll = 304971,
         ExecutionSentence = 343527,
+        EyeOfTyr = 387174,
         FlashOfLight = 19750,
         FocusedAzeriteBeam = 299336,
         GuardianOfAncientKings = 86659,
@@ -610,6 +613,7 @@ function L2P:GetSpecData(ctx)
         MemoryOfLucidDreams = 299374,
         PurifyingBlast = 299347,
         Rebuke = 96231,
+        SentinelBuff = 389539,
         Seraphim = 152262,
         ShieldOfTheRighteous = 53600,
         ShiningLight = 321136,
@@ -632,7 +636,7 @@ function L2P:GetSpecData(ctx)
         {Key="lay-on-hands", SpellId=633, Role={ "survival", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=true, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsCritical
@@ -655,7 +659,7 @@ function L2P:GetSpecData(ctx)
         {Key="ardent-defender", SpellId=31850, Role={ "survival", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsAlmostCritical 
@@ -666,7 +670,7 @@ function L2P:GetSpecData(ctx)
         {Key="guardian-of-ancient-kings", SpellId=86659, Role={ "survival", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsLow and 
@@ -677,7 +681,7 @@ function L2P:GetSpecData(ctx)
         {Key="word-of-glory", SpellId=85673, Role={ "heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsMedium
@@ -688,11 +692,21 @@ function L2P:GetSpecData(ctx)
         {Key="holy-avenger", SpellId=105809, Role={ "preparation", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsMedium
               and ctx.vars.HasLessThan3HP
+          end
+        },
+
+        {Key="bastion-of-light", SpellId=378974, Role={ "cooldown", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
           end
         },
 
@@ -705,19 +719,20 @@ function L2P:GetSpecData(ctx)
             return ctx.vars.Has5Hp or 
               ctx.vars.AvengingWrathActive or 
               ctx.vars.DivinePurposeActive or
-              ctx.vars.HolyAvengerActive
+              ctx.vars.HolyAvengerActive or
+              ctx.vars.SentinelActive or
+              ctx.vars.BastionOfLightActive
           end
         },
 
-        {Key="consecration", SpellId=26573, Role={ "preparation","hinder","dps", },
+        {Key="consecration", SpellId=26573, Role={ "preparation", },
           Description="",
           RangeSpell=53595, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsNotMoving
-            and (ctx.vars.NoConsecrationDebuff 
-            or ctx.vars.NoConsecrationBuff)
+            return ctx.vars.NoConsecrationDebuff and
+              ctx.vars.IsNotMoving
           end
         },
 
@@ -765,16 +780,6 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="avengers-shield", SpellId=31935, Role={ "preparation", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
         {Key="hammer-of-the-righteous", SpellId=53595, Role={ "preparation", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
@@ -785,10 +790,40 @@ function L2P:GetSpecData(ctx)
           end
         },
 
+        {Key="blessed-hammer", SpellId=204019, Role={ "generator","preparation", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.WillNotCapHP
+          end
+        },
+
+        {Key="avengers-shield", SpellId=31935, Role={ "preparation", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="eye-of-tyr", SpellId=387174, Role={ "dps","hinder", },
+          Description="",
+          RangeSpell=53595, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
         {Key="word-of-glory-free", SpellId=85673, Role={ "heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsMedium and 
@@ -796,15 +831,13 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="consecration-filler", SpellId=26573, Role={ "preparation","dps","hinder", },
+        {Key="consecration-filler", SpellId=26573, Role={ "preparation", },
           Description="",
           RangeSpell=53595, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.IsNotMoving
-            and (ctx.vars.NoConsecrationDebuff 
-            or ctx.vars.NoConsecrationBuff)
           end
         },
 
@@ -841,7 +874,7 @@ function L2P:GetSpecData(ctx)
         {Key="avenging-wrath", SpellId=31884, Role={ "slot", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return true
@@ -949,8 +982,17 @@ function L2P:GetSpecData(ctx)
           return ctx.vars.Enemies > 2
         end,
 
-        NoConsecrationBuff=function(ctx)
-          return not ctx:GetBuff(ctx.SPI.ConsecrationBuff).active
+        ConsecrationBuffExpiring=function(ctx)
+          return false
+        end,
+
+        BastionOfLightActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.BastionOfLight).active
+        end,
+
+        SentinelActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.SentinelBuff).active
+          
         end,
 
       }
@@ -2258,7 +2300,7 @@ function L2P:GetSpecData(ctx)
         end,
 
         ThunderClapActive=function(ctx)
-          return ctx:CheckDebuff(ctx.SPI.ThunderClap).active
+          return ctx:GetDebuff(ctx.SPI.ThunderClap).active
         end,
 
         CanGenerate15Rage=function(ctx)
