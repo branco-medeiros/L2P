@@ -515,7 +515,7 @@ function Main:cmd_names()
 --------------------------------------------------------------------------------
   if self.Active then
     for k, v in pairs(self.Engine.Spells) do
-      self:Print("%s: %s", k, v.SpName)
+      self:Printf("%s: %s", k, v.SpName)
     end
   else
     self:Print(L"L2P is not active")
