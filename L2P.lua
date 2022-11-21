@@ -210,7 +210,8 @@ function Main:LoadKeys(show)
     -- sets the message for the spell based on the spell name
     -- or the action spell name (in cases such as in Pyroblast, where the actual spell cast
     -- when the effect procs is different from the spell in the action bar)
-    s.Message = klist[s.SpName] or (s.ActionSpell and klist[s.ActionSpell])
+	local key = klist[s.SpName] or (s.ActionSpell and klist[s.ActionSpell])
+    s.Message = key and key:gsub("SHIFT%-", "s")
     if show then self:Print(k, ":", s.Message or "") end
   end
 end
