@@ -765,6 +765,7 @@ local function InitEngine(Engine)
   eng.Now = 0                       -- current time
   eng.Debug = false
   eng.PlayerGUID = UnitGUID("player")
+  eng.CheckRange = true
   
 end -- fn Engine_Create
 
