@@ -140,7 +140,7 @@ function L2P:GetSpecData(ctx)
 
         {Key="shield-of-the-righteous", SpellId=53600, Role={ "dps","spender", },
           Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
