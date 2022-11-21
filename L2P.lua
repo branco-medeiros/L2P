@@ -29,6 +29,7 @@ function Main:ResetEngine()
   self.Active = self.Engine:SetActive(prios>0).Active
   if self.Active then self:LoadKeys() end
   self:DbgMsg("Loaded %d spells for spec %s", prios, spec)
+  self.Engine:ShowHideFrame()
 end
 
 
@@ -116,6 +117,7 @@ end
 --------------------------------------------------------------------------------
 function Main:PLAYER_TARGET_CHANGED(evt, ...)
 --------------------------------------------------------------------------------
+  --self:Print("PLAYER_TARGET_CHANGED")
   self.Engine:OnTargetChanged(evt, ...)
 end 
 
@@ -164,8 +166,8 @@ function Main:OnUpdate(evt, elapsed, ...)
   if self.SpecChanged or self.TalentsChanged then
     self.SpecChanged = false
     self.TalentsChanged = false
-		self:ResetEngine() -- reset engine may change our active status
-	end
+    self:ResetEngine() -- reset engine may change our active status
+  end
 
   if self.Active then
     if self.LoadKeysNeeded then
@@ -199,7 +201,7 @@ function Main:ResetFramePosition()
 --------------------------------------------------------------------------------
   self:DbgMsg(L'Frame position was reset')
   self.MainFrame:ClearAllPoints()
-  self.MainFrame:SetPoint("CENTER", 0, -200)
+  self.MainFrame:SetPoint("CENTER", 0, -150)
 end
 
 --------------------------------------------------------------------------------
