@@ -3,6 +3,51 @@ function L2P:GetSpecData(ctx)
   if not ctx.vars.Spec then 
     return {}
   
+  elseif ctx.vars.Spec == "DEATH-KNIGHT-1" then
+    return {
+      SPI = {
+      },
+
+      prios = {
+      },
+
+      slots={
+      },
+
+      code={
+      }
+    }
+
+  elseif ctx.vars.Spec == "MAGE-1" then
+    return {
+      SPI = {
+      },
+
+      prios = {
+      },
+
+      slots={
+      },
+
+      code={
+      }
+    }
+
+  elseif ctx.vars.Spec == "MAGE-2" then
+    return {
+      SPI = {
+      },
+
+      prios = {
+      },
+
+      slots={
+      },
+
+      code={
+      }
+    }
+
   elseif ctx.vars.Spec == "PALADIN-3" then
     return {
       SPI = {
@@ -14,6 +59,7 @@ function L2P:GetSpecData(ctx)
         BlessingOfSpring = 328282,
         BlessingOfSummer = 328620,
         BlessingOfWinter = 328281,
+        BlindingLight = 115750,
         BloodOfTheEnemy = 297108,
         ConcentratedFlame = 295373,
         Consecration = 26573,
@@ -21,11 +67,13 @@ function L2P:GetSpecData(ctx)
         Crusade = 231895,
         CrusaderStrike = 35395,
         DivinePurpose = 223817,
+        DivinePurposeBuff = 223819,
         DivineShield = 642,
         DivineStorm = 53385,
         DivineToll = 304971,
         EmpyreanPower = 326733,
         ExecutionSentence = 343527,
+        Exorcism = 383185,
         FinalReckoning = 343721,
         FlashOfLight = 19750,
         FocusedAzeriteBeam = 299336,
@@ -38,6 +86,7 @@ function L2P:GetSpecData(ctx)
         LayOnHands = 633,
         MemoryOfLucidDreams = 299374,
         PurifyingBlast = 299347,
+        RadiantDecree = 384052,
         Rebuke = 96231,
         SelflessHealer = 114250,
         Seraphim = 152262,
@@ -115,6 +164,27 @@ function L2P:GetSpecData(ctx)
           end
         },
 
+        {Key="empyrean-divine-storm", SpellId=53385, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.EmpyreanPowerActive
+          end
+        },
+
+        {Key="shield-of-vengeance-dps", SpellId=184662, Role={ "dps","survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
+            and ctx.vars.NotHpTime
+          end
+        },
+
         {Key="seraphin", SpellId=152262, Role={ "preparation","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
@@ -127,6 +197,26 @@ function L2P:GetSpecData(ctx)
           end
         },
 
+        {Key="holy-avenger", SpellId=105809, Role={ "preparation", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
+          end
+        },
+
+        {Key="final-reckoning", SpellId=343721, Role={ "preparation","dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
         {Key="execution-sentence", SpellId=343527, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
@@ -135,6 +225,16 @@ function L2P:GetSpecData(ctx)
           Condition=function(this, ctx)
             return ctx.vars.IsBossFight or 
             ctx.vars.TargetNotDying
+          end
+        },
+
+        {Key="radiant-decree", SpellId=384052, Role={ "spender","dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
           end
         },
 
@@ -150,17 +250,13 @@ function L2P:GetSpecData(ctx)
 
         {Key="divine-storm", SpellId=53385, Role={ "dps","spender", },
           Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.EmpyreanPowerActive or 
-            (ctx.vars.MultipleTargets and 
-              (ctx.vars.Has5HP or
-               ctx.vars.HolyAvengerActive or
-               ctx.vars.WingsOn
-              )
-            )
+            return ctx.vars.MultipleTargets and 
+            (ctx.vars.Has5HP or ctx.vars.ItsHpTime)
+            
           end
         },
 
@@ -170,51 +266,33 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.Has5HP or
-            ctx.vars.HolyAvengerActive or
-            ctx.vars.WingsOn
+            return ctx.vars.Has5HP 
+            or ctx.vars.ItsHpTime
           end
         },
 
-        {Key="final-reckoning", SpellId=343721, Role={ "preparation","dps", },
+        {Key="divine-toll-aoe", SpellId=304971, Role={ "dps","generator", },
           Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="divine-toll-no-hp", SpellId=304971, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsDangerousFight 
-              and (ctx.vars.DivineTollOneEnemy
-              or ctx.vars.DivineTollMoreEnemies)
-          end
-        },
-
-        {Key="holy-avenger", SpellId=105809, Role={ "preparation", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.IsDangerousFight
+            return ctx.vars.MultipleTargets and 
+            ctx.vars.DivineToll
           end
         },
 
         {Key="wake-of-ashes", SpellId=255937, Role={ "dps","generator", },
           Description="",
-          RangeSpell=35395, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=184575, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HasLessThan3HP and not ctx.vars.HolyAvengerActive
+            return (
+              ctx.vars.HolyPower + 
+              (3 * ctx.vars.HPMultiplier)
+            ) < 6
+            
           end
         },
 
@@ -224,9 +302,11 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return (ctx.vars.HolyAvengerActive and 
-            ctx.vars.HasLessThan3HP) or 
-            ctx.vars.HasLessThan5HP
+            return (
+              ctx.vars.HolyPower + 
+              (1 * ctx.vars.HPMultiplier)
+            ) < 6
+            
           end
         },
 
@@ -236,9 +316,11 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return (ctx.vars.HolyAvengerActive and 
-            ctx.vars.HasLessThan3HP) or 
-            ctx.vars.HasLessThan5HP
+            return (
+              ctx.vars.HolyPower + 
+              (2 * ctx.vars.HPMultiplier)
+            ) < 6
+            
           end
         },
 
@@ -248,21 +330,25 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return (ctx.vars.HolyAvengerActive and 
-            ctx.vars.HasLessThan3HP) or 
-            ctx.vars.HasLessThan5HP
+            return (
+              ctx.vars.HolyPower + 
+              (1 * ctx.vars.HPMultiplier)
+            ) < 6
+            
           end
         },
 
         {Key="crusader-strike", SpellId=35395, Role={ "dps","generator", },
           Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return (ctx.vars.HolyAvengerActive and 
-            ctx.vars.HasLessThan3HP) or 
-            ctx.vars.HasLessThan5HP
+            return (
+              ctx.vars.HolyPower + 
+              (1 * ctx.vars.HPMultiplier)
+            ) < 6
+            
           end
         },
 
@@ -272,67 +358,17 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.MultipleAttackers
+            return ctx.vars.DivineToll
           end
         },
 
-        {Key="vanquishers-hammer", SpellId=328204, Role={ "dps","generator", },
+        {Key="exorcism", SpellId=383185, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="blessing-of-summer", SpellId=328620, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="blessing-of-autumn", SpellId=328622, Role={ "survival", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="blessing-of-winter", SpellId=328281, Role={ "survival", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="blessing-of-spring", SpellId=328282, Role={ "survival", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="ashen-hallow", SpellId=316958, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
+            return ctx.vars.NotHpTime
           end
         },
 
@@ -356,25 +392,14 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="word-of-glory-filler", SpellId=85673, Role={ "heal","spender", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=true,
-          Condition=function(this, ctx)
-            return ctx.HealthIsMedium
-          end
-        },
-
         {Key="consecration", SpellId=26573, Role={ "hinder", },
           Description="",
-          RangeSpell=35395, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          RangeSpell=184575, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.IsNotMoving 
-              and not ctx.vars.WingsOn
-              and not ctx.vars.HolyAvengerActive
+            and ctx.vars.NotHpTime
           end
         },
 
@@ -396,6 +421,26 @@ function L2P:GetSpecData(ctx)
           Condition=function(this, ctx)
             return ctx.vars.IsPvp or
             (not ctx.vars.IsBossFight and ctx.vars.TargetIsMoving)
+          end
+        },
+
+        {Key="blinding-light", SpellId=115750, Role={  },
+          Description="",
+          RangeSpell=35395, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.NotHpTime
+          end
+        },
+
+        {Key="word-of-glory-filler", SpellId=85673, Role={ "heal","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=true,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsMedium and ctx.vars.NotHpTime
           end
         },
 
@@ -451,25 +496,9 @@ function L2P:GetSpecData(ctx)
       },
 
       code={
-        Has5HP=function(ctx)
-          return ctx.vars.HolyPower == 5
-        end,
-
-        HasNoHP=function(ctx)
-          return ctx.vars.HolyPower == 0
-        end,
-
-        CanGenerateHP=function(ctx)
-          return (ctx:GetSpell(ctx.SPI.CrusaderStrike).cooldown <= ctx.vars.GCD
-          or ctx:GetSpell(ctx.SPI.BladeOfJustice).cooldown <= ctx.vars.GCD
-          or ctx:GetSpell(ctx.SPI.HammerOfWrath).cooldown <= ctx.vars.GCD
-          or ctx:GetSpell(ctx.SPI.Judgment).cooldown <= ctx.vars.GCD
-          or ctx:GetSpell(ctx.SPI.WakeOfAshes).cooldown <= ctx.vars.GCD) and
-          ctx.vars.HolyPower < 3
-        end,
-
-        HasLessThan4HP=function(ctx)
-          return ctx.vars.HolyPower < 4
+        WingsOn=function(ctx)
+          return ctx:GetBuff(ctx.SPI.AvengingWrath).active
+          or ctx:GetBuff(ctx.SPI.Crusade).active
         end,
 
         FinalReckoningActive=function(ctx)
@@ -481,10 +510,6 @@ function L2P:GetSpecData(ctx)
           return ctx:GetBuff(ctx.SPI.ExecutionSentence).active
         end,
 
-        HasLessThan3HP=function(ctx)
-          return ctx.vars.HolyPower < 3 
-        end,
-
         EmpyreanPowerActive=function(ctx)
           return ctx:GetBuff(ctx.SPI.EmpyreanPower).active
         end,
@@ -493,8 +518,34 @@ function L2P:GetSpecData(ctx)
           return ctx:GetBuff(ctx.SPI.HolyAvenger).active
         end,
 
-        HasLessThan5HP=function(ctx)
-          return ctx.vars.HolyPower < 5
+        DivinePurposeActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.DivinePurposeBuff).active
+        end,
+
+        SeraphinActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.Seraphin).active
+        end,
+
+        ConsecrationActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.Consecration).active
+        end,
+
+        HPMultiplier=function(ctx)
+          return (ctx.vars.HolyAvengerActive and 3) or 1
+        end,
+
+        ItsHpTime=function(ctx)
+          return ctx.vars.WingsOn
+          or ctx.vars.HolyAvengerActive
+          or ctx.vars.DivinePurposeActive
+        end,
+
+        NotHpTime=function(ctx)
+          return not ctx.vars.ItsHpTime
+        end,
+
+        Has5HP=function(ctx)
+          return ctx.vars.HolyPower == 5
         end,
 
         IsNotMoving=function(ctx)
@@ -537,40 +588,21 @@ function L2P:GetSpecData(ctx)
           return IsEquippedItemType("Shields")
         end,
 
-        HasConsecrationDebuff=function(ctx)
-          return ctx:GetDebuff(ctx.SPI.ConsecrationDebuff).active
-        end,
-
         IsDangerousFight=function(ctx)
           return ctx.vars.IsBossFight
-            or ctx.vars.IsPvp
-            or (ctx.vars.IsAoe 
-              and ctx.vars.HealthRate < 0 
-              and ctx.vars.HealthPercent < 0.7)
-            or (ctx.vars.HealthPercent < 0.5 
-              and ctx.vars.HealthRate < 0)
+          or ctx.vars.IsPvp
+          or (ctx.vars.IsAoe 
+            and ctx.vars.HealthRate < 0 
+            and ctx.vars.HealthPercent < 0.7)
+          or (ctx.vars.HealthPercent < 0.5 
+            and ctx.vars.HealthRate < 0)
         end,
 
-        WingsOn=function(ctx)
-          return ctx:GetBuff(ctx.SPI.AvengingWrath).active
-            or ctx:GetBuff(ctx.SPI.Crusade).active
-        end,
-
-        DivineTollOneEnemy=function(ctx)
-          local fr = ctx.vars.FinalRecogningActive;
-          local hp = ctx.vars.HolyPower; 
-          return ctx.vars.Enemies == 1 and (
-            (fr and hp < 3) or
-            (not fr and hp < 5)
-          )
-           
-        end,
-
-        DivineTollMoreEnemies=function(ctx)
-          return ctx.vars.Enemies > 1 
-            and not ctx.vars.FinalRecogningActive
-            and (ctx.vars.HolyPower + min(5, ctx.vars.Enemies)) < 6
-          
+        DivineToll=function(ctx)
+          return (
+            ctx.vars.HolyPower 
+            + (min(5, ctx.vars.Targets) * ctx.vars.HPMultiplier)
+          ) < 6 
         end,
 
       }
@@ -607,8 +639,8 @@ function L2P:GetSpecData(ctx)
         HammerOfWrath = 24275,
         HandOfHindrance = 183218,
         HolyAvenger = 105809,
-        Judgment = 275779,
         Judgment = 20271,
+        Judgment = 275779,
         LayOnHands = 633,
         MemoryOfLucidDreams = 299374,
         PurifyingBlast = 299347,
@@ -651,8 +683,7 @@ function L2P:GetSpecData(ctx)
           Primary=true, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsCritical 
-              and ctx.vars.IsBeingAttacked 
-              
+              and ctx.vars.IsBeingAttacked
           end
         },
 
@@ -835,7 +866,7 @@ function L2P:GetSpecData(ctx)
           Description="",
           RangeSpell=53595, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
+          Primary=false, Secondary=true,
           Condition=function(this, ctx)
             return ctx.vars.IsNotMoving
           end
@@ -945,19 +976,17 @@ function L2P:GetSpecData(ctx)
 
         DivineTollOneEnemy=function(ctx)
           local fr = ctx.vars.FinalRecogningActive;
-          local hp = ctx.vars.HolyPower; 
-          return ctx.vars.Enemies == 1 and (
-            (fr and hp < 3) or
-            (not fr and hp < 5)
-          )
-           
+                    local hp = ctx.vars.HolyPower; 
+                    return ctx.vars.Enemies == 1 and (
+          (fr and hp < 3) or
+          (not fr and hp < 5)
+                    )
         end,
 
         DivineTollMoreEnemies=function(ctx)
           return ctx.vars.Enemies > 1 
-            and not ctx.vars.FinalRecogningActive
-            and (ctx.vars.HolyPower + min(5, ctx.vars.Enemies)) < 6
-          
+          and not ctx.vars.FinalRecogningActive
+          and (ctx.vars.HolyPower + min(5, ctx.vars.Enemies)) < 6
         end,
 
         HasLessThan3HP=function(ctx)
@@ -974,8 +1003,8 @@ function L2P:GetSpecData(ctx)
 
         WillNotCapHP=function(ctx)
           return (ctx.vars.HolyAvengerActive 
-            and ctx.vars.HasLessThan3HP) 
-            or ctx.vars.HasLessThan5HP
+          and ctx.vars.HasLessThan3HP) 
+          or ctx.vars.HasLessThan5HP
         end,
 
         HasManyEnemies=function(ctx)
@@ -992,54 +1021,8 @@ function L2P:GetSpecData(ctx)
 
         SentinelActive=function(ctx)
           return ctx:GetBuff(ctx.SPI.SentinelBuff).active
-          
         end,
 
-      }
-    }
-
-  elseif ctx.vars.Spec == "DEATH-KNIGHT-1" then
-    return {
-      SPI = {
-      },
-
-      prios = {
-      },
-
-      slots={
-      },
-
-      code={
-      }
-    }
-
-  elseif ctx.vars.Spec == "MAGE-1" then
-    return {
-      SPI = {
-      },
-
-      prios = {
-      },
-
-      slots={
-      },
-
-      code={
-      }
-    }
-
-  elseif ctx.vars.Spec == "MAGE-2" then
-    return {
-      SPI = {
-      },
-
-      prios = {
-      },
-
-      slots={
-      },
-
-      code={
       }
     }
 
@@ -1069,10 +1052,10 @@ function L2P:GetSpecData(ctx)
         Overpower = 7384,
         Pummel = 6552,
         PurifyingBlast = 299347,
-        Rend = 772,
+        RendOld = 772,
         Skullsplitter = 260643,
         Slam = 1464,
-        SpearOfBastion = 307865,
+        SpearOfBastionOld = 307865,
         StormBolt = 107570,
         SweepingStrikes = 260708,
         TheUnboundForce = 298452,
@@ -1466,16 +1449,15 @@ function L2P:GetSpecData(ctx)
 
         WarbreakerEnabled=function(ctx)
           return ctx:HasTalent(5, 2) 
-            and ctx:GetSpell(ctx.SPI.Warbreaker).cooldown < ctx.vars.GCD
-          
+          and ctx:GetSpell(ctx.SPI.Warbreaker).cooldown < ctx.vars.GCD
         end,
 
         IsDangerousFight=function(ctx)
           return ctx.vars.IsBossFight
-            or ctx.vars.IsPvp
-            or ctx.vars.Attackers > 3 
-            or ctx.vars.Targets > 3
-            or ctx.vars.HealthPercent <= 0.6
+          or ctx.vars.IsPvp
+          or ctx.vars.Attackers > 3 
+          or ctx.vars.Targets > 3
+          or ctx.vars.HealthPercent <= 0.6
         end,
 
         DefensiveStanceOff=function(ctx)
@@ -1488,7 +1470,7 @@ function L2P:GetSpecData(ctx)
 
         TargetedByBoss=function(ctx)
           return ctx.vars.IsBossFight 
-            and UnitIsUnit("boss1target", "player") 
+          and UnitIsUnit("boss1target", "player")
         end,
 
         IsBeingDamaged=function(ctx)
@@ -1696,7 +1678,6 @@ function L2P:GetSpecData(ctx)
           Condition=function(this, ctx)
             return ctx.vars.HasManyEnemies
               or ctx.vars.HasFirstBloodTalent
-            
           end
         },
 
@@ -1914,56 +1895,52 @@ function L2P:GetSpecData(ctx)
   elseif ctx.vars.Spec == "WARRIOR-3" then
     return {
       SPI = {
-        AncientAftershock = 325886,
         Avatar = 107574,
         BattleShout = 6673,
+        BattleStance = 386164,
         BerserkerRage = 18499,
-        Bladestorm = 46924,
-        Bloodbath = 12292,
-        Cleave = 845,
-        CleaveBuff = 188923,
-        ColossusSmash = 167105,
-        ColossusSmashDebuff = 208086,
-        ConcentratedFlame = 295373,
-        Condemn = 317349,
-        ConquerorSBanner = 324143,
-        DeepWounds = 115767,
+        BerserkerShout = 384100,
+        BitterImmunity = 383762,
+        ChallengingShout = 1161,
+        DeepWounds = 262115,
+        DefensiveStance = 386208,
         DemoralizingShout = 1160,
         Devastate = 20243,
+        DisruptingShout = 386071,
         DragonRoar = 118000,
         Execute = 163201,
-        FocusedRage = 207982,
+        Hamstring = 1715,
         HeroicLeap = 6544,
-        HeroicThrow = 174529,
+        HeroicThrow = 57755,
         IgnorePain = 190456,
         ImpendingVictory = 202168,
         Intercept = 198304,
         IntimidatingShout = 5246,
         LastStand = 12975,
-        MortalStrike = 12294,
-        MortalWounds = 115804,
-        NeltharionSFury = 203524,
-        Overpower = 7384,
         Pummel = 6552,
         RallyingCry = 97462,
-        Ravager = 152277,
-        Recklessness = 1719,
-        Rend = 772,
+        Ravager = 228920,
+        Rend = 394062,
         Revenge = 6572,
+        ShatteringThrow = 64382,
         ShieldBlock = 2565,
         ShieldBlockBuff = 132404,
+        ShieldCharge = 385952,
         ShieldSlam = 23922,
         ShieldWall = 871,
         Shockwave = 46968,
         Slam = 1464,
-        SpearOfBastion = 307865,
+        SpearOfBastion = 376079,
+        SpellBlock = 392966,
+        SpellReflection = 23920,
         StormBolt = 107570,
-        SuddenDeath = 52437,
+        TalentDevastator = 236279,
         ThunderClap = 6343,
-        Victorious = 32216,
+        ThunderousRoar = 384318,
+        TitanicThrow = 384090,
         VictoryRush = 34428,
-        Warbreaker = 209577,
         Whirlwind = 1680,
+        WreckingThrow = 384110,
       },
 
       prios = {
@@ -2007,7 +1984,6 @@ function L2P:GetSpecData(ctx)
           Condition=function(this, ctx)
             return ctx.vars.HealthIsLow
               or (ctx.vars.HasVictoriusBuff and ctx.vars.HealthIsMedium)
-              
           end
         },
 
@@ -2035,23 +2011,13 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="condemn", SpellId=317349, Role={ "dps","spender","reaction", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
         {Key="execute", SpellId=163201, Role={ "dps","spender","reaction", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return true
+            return (ctx.vars.Rage - 20) > 49 
           end
         },
 
@@ -2081,15 +2047,56 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="revenge-dump-rage", SpellId=6572, Role={ "dps","spender", },
+        {Key="shield-charge", SpellId=385952, Role={ "dps","generator","hinder", },
           Description="",
-          RangeSpell=23922, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.Rage > 50
-              and ctx.vars.HealthIsOk
-            
+            return (ctx.vars.Rage + 20) < 101
+          end
+        },
+
+        {Key="ravager", SpellId=228920, Role={ "dps","generator","cooldown", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
+            and ((ctx.vars.Rage + 10) < 101)
+          end
+        },
+
+        {Key="thunderous-roar", SpellId=384318, Role={ "dps","generator","cooldown", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
+            and ((ctx.vars.Rage + 10) < 101)
+          end
+        },
+
+        {Key="dragon-roar", SpellId=118000, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="spear-of-bastion", SpellId=376079, Role={ "dps","generator","dot", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
+            and ((ctx.vars.Rage + 20) < 101)
           end
         },
 
@@ -2099,32 +2106,29 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.CanGenerate15Rage
+            return (ctx.vars.Rage + 15) < 101
           end
         },
 
-        {Key="ancient-aftershock", SpellId=325886, Role={ "dps","generator","hinder","dot", },
+        {Key="thunder-clap", SpellId=6343, Role={ "dps","spender","generator","hinder", },
           Description="",
           RangeSpell=23922, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsBossFight
-              or ctx.vars.IsPvp
-              or ctx.vars.IsAoE
-              or ctx.vars.HealthIsLow
-            
+            return (ctx.vars.Rage - 30) > 29
           end
         },
 
-        {Key="thunder-clap", SpellId=6343, Role={ "dps","generator","hinder", },
+        {Key="shockwave", SpellId=46968, Role={ "dps","generator","hinder", },
           Description="",
-          RangeSpell=23922, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return not ctx.vars.ThunderClapActive
-              and ctx.vars.CanGenerate5Rage
+            return ctx.vars.IsDangerousFight
+            and not ctx.vars.IsBossFight
+            and ((ctx.vars.Rage + 10) < 101)
           end
         },
 
@@ -2138,52 +2142,63 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="spear-of-bastion", SpellId=307865, Role={ "dps","dot", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.IsBossFight
-              or ctx.vars.IsPvp
-              or ctx.vars.IsAoE
-              or ctx.vars.HealthIsLow
-            
-          end
-        },
-
-        {Key="conqueror-s-banner", SpellId=324143, Role={ "survival","preparation", },
+        {Key="whirlwind", SpellId=1680, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsBossFight
-              or ctx.vars.IsPvp
-              or ctx.vars.IsAoE
-              or ctx.vars.HealthIsLow
-            
+            return (ctx.vars.Rage - 30) > 49
           end
         },
 
-        {Key="shockwave", SpellId=46968, Role={ "dps","hinder", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return not ctx.vars.IsBossFight
-              or ctx.vars.IsAoE
-          end
-        },
-
-        {Key="devastate", SpellId=20243, Role={ "dps", },
+        {Key="execute-filler", SpellId=163201, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return true
+          end
+        },
+
+        {Key="rend", SpellId=394062, Role={ "dps","spender","hinder", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return (ctx.vars.Rage - 30) > 29
+          end
+        },
+
+        {Key="devastate", SpellId=20243, Role={ "dps", },
+          Description="",
+          RangeSpell=23922, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.HasTalentDevastator
+          end
+        },
+
+        {Key="wrecking-throw", SpellId=384110, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="hamstring", SpellId=1715, Role={ "dps","dot", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.IsBossFight
           end
         },
 
@@ -2287,28 +2302,23 @@ function L2P:GetSpecData(ctx)
           return ctx:GetBuff(ctx.SPI.ShieldBlockBuff).active
         end,
 
-        IsAoE=function(ctx)
-          return ctx.vars.Enemies > 2
-        end,
-
         WillNotDepleteRage=function(ctx)
           return (ctx.vars.Rage / ctx.vars.RageMax) > 0.8
-        end,
-
-        HealthIsOk=function(ctx)
-          return ctx.vars.HealthPercent >= 0.75
         end,
 
         ThunderClapActive=function(ctx)
           return ctx:GetDebuff(ctx.SPI.ThunderClap).active
         end,
 
-        CanGenerate15Rage=function(ctx)
-          return ctx.vars.RageMax - ctx.vars.Rage >= 15
+        IsDangerousFight=function(ctx)
+          return ctx.vars.IsBossFight
+            or ctx.vars.IsPvp
+            or ctx.vars.IsAoE
+            or ctx.vars.HealthIsLow
         end,
 
-        CanGenerate5Rage=function(ctx)
-          return ctx.vars.RageMax - ctx.vars.Rage >= 5
+        HasTalentDevastator=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.TalentDevastator)
         end,
 
       }
@@ -2328,7 +2338,8 @@ function L2P:GetSpecData(ctx)
         Fracture = 263642,
         ImmolationAura = 258920,
         InfernalStrike = 189110,
-        Metamorphosis = 187827,
+        Metamorphosis = 191427,
+        MetamorphosisNew = 187827,
         RazelikhSDefilement = 337544,
         Shear = 203782,
         SigilOfFlame = 204596,
@@ -2338,7 +2349,8 @@ function L2P:GetSpecData(ctx)
         SoulFragments = 203981,
         SpiritBomb = 247454,
         TheHunt = 323639,
-        ThrowGlaive = 204157,
+        ThrowGlaive = 185123,
+        ThrowGlaiveNew = 204157,
       },
 
       prios = {
@@ -2573,11 +2585,11 @@ function L2P:GetSpecData(ctx)
 
         IsDangerousFoe=function(ctx)
           local uc = UnitClassification("target")
-          return (uc == "worldboss" 
-            or uc == "rareelite" 
-            or uc == "elite" 
-            or uc == "rare")
-            and UnitLevel("target") >= UnitLevel("player")
+                    return (uc == "worldboss" 
+          or uc == "rareelite" 
+          or uc == "elite" 
+          or uc == "rare")
+          and UnitLevel("target") >= UnitLevel("player")
         end,
 
         HealthIsLow=function(ctx)
@@ -2590,7 +2602,7 @@ function L2P:GetSpecData(ctx)
 
         IsDangerousFight=function(ctx)
           return ctx.vars.IsBeingDamaged
-            and ctx.vars.HealthIsLow
+          and ctx.vars.HealthIsLow
         end,
 
         HasSoulFragments=function(ctx)
@@ -2603,8 +2615,8 @@ function L2P:GetSpecData(ctx)
 
         InfernalStrikeHasTwoCharges=function(ctx)
           local sp = ctx:GetSpell(ctx.SPI.InfernalStrike)
-          return sp.charges > 1 
-            or (sp.charges == 1 and sp.NextCharge < 2)
+                    return sp.charges > 1 
+          or (sp.charges == 1 and sp.NextCharge < 2)
         end,
 
         WillNotCap2Souls=function(ctx)
