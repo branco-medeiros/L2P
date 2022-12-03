@@ -86,6 +86,8 @@ function Main:EnableEvents()
   self:RegisterEvent('UPDATE_SHAPESHIFT_FORM')
   self:RegisterEvent('PLAYER_TALENT_UPDATE')
 	self:RegisterEvent('ACTIVE_TALENT_GROUP_CHANGED')
+  self:RegisterEvent('ACTIVE_COMBAT_CONFIG_CHANGED')
+  self:RegisterEvent('TRAIT_CONFIG_UPDATED')
 end --  fn Main:EnableEvents
 
 --------------------------------------------------------------------------------
@@ -98,6 +100,8 @@ function Main:DisableEvents()
   self:UnregisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
   self:UnregisterEvent('PLAYER_TALENT_UPDATE')
 	self:UnregisterEvent('ACTIVE_TALENT_GROUP_CHANGED')
+  self:UnregisterEvent('ACTIVE_COMBAT_CONFIG_CHANGED')
+  self:UnregisterEvent('TRAIT_CONFIG_UPDATED')
 end -- fn Main:DisableEvents
 
 --------------------------------------------------------------------------------
@@ -148,11 +152,27 @@ function Main:PLAYER_TALENT_UPDATE(evt, ...)
 end
 
 --------------------------------------------------------------------------------
+function Main:ACTIVE_COMBAT_CONFIG_CHANGED(evt, ...)
+--------------------------------------------------------------------------------
+	self:DbgMsg("Active Combat Config Changed")
+	self.TalentsChanged = true
+end
+
+--------------------------------------------------------------------------------
+function Main:TRAIT_CONFIG_UPDATED(evt, ...)
+--------------------------------------------------------------------------------
+	self:DbgMsg("Talent Config Updated")
+	self.TalentsChanged = true
+end
+
+
+--------------------------------------------------------------------------------
 function Main:ACTIVE_TALENT_GROUP_CHANGED(evt, ...)
 --------------------------------------------------------------------------------
-	self:DbgMsg("Talent group change")
+	self:DbgMsg("Talent group changed")
 	self.SpecChanged = true
 end
+
 
 --------------------------------------------------------------------------------
 function Main:OnUpdate(evt, elapsed, ...)
@@ -167,6 +187,7 @@ function Main:OnUpdate(evt, elapsed, ...)
     self.SpecChanged = false
     self.TalentsChanged = false
     self:ResetEngine() -- reset engine may change our active status
+    self.LoadKeysNeeded = true
   end
 
   if self.Active then
