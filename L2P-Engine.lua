@@ -8,7 +8,6 @@ if not Engine then return end
 local Utils = LibStub("L2P-Framelets")
 local SPN = {
   Bloodlust       = GetSpellInfo(2825),
-  Bloodlust       = GetSpellInfo(2825),
   Heroism         = GetSpellInfo(32182),
   TimeWarp        = GetSpellInfo(80353),
   AncientHysteria = GetSpellInfo(90355),
@@ -484,10 +483,41 @@ function Engine:MapSpellsToBook()
 end
 
 -------------------------------------------------------------------------------
+function Engine:RefreshTalents()
+-------------------------------------------------------------------------------
+  l2p:Print("refreshing talents")
+  local talents = {}
+  self.talents = talents
+  local configID = C_ClassTalents.GetActiveConfigID()
+  local treeID = C_Traits.GetConfigInfo(configID).treeIDs[1]
+  local nodes = C_Traits.GetTreeNodes(treeID)
+  
+  for _, nodeID in ipairs(nodes) do
+    local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID)
+    if nodeInfo.currentRank and nodeInfo.currentRank > 0 and nodeInfo.activeEntry then
+      local entryInfo = C_Traits.GetEntryInfo(configID, nodeInfo.activeEntry.entryID)
+      local definitionInfo = entryInfo and entryInfo.definitionID and C_Traits.GetDefinitionInfo(entryInfo.definitionID)
+      local spellID = definitionInfo and definitionInfo.spellID
+      if spellID then
+        talents[tostring(spellID)] = nodeInfo.currentRank
+      end
+    end
+  end
+  return talents
+end
+
+-------------------------------------------------------------------------------
 function Engine:HasTalent(row, col)
 -------------------------------------------------------------------------------
 	local sg = GetActiveSpecGroup()
 	return (select(4, GetTalentInfo(row, col, sg)) and true) or false
+end
+
+-------------------------------------------------------------------------------
+function Engine:HasTalentByID(id)
+-------------------------------------------------------------------------------
+  if not self.talents then self:RefreshTalents() end
+  return (self.talents[tostring(id)] or 0) > 0
 end
 
 -------------------------------------------------------------------------------
@@ -650,6 +680,7 @@ function Engine:Init()
   self.Spec = GetSpecialization()
   self.vars = self.vars or {}
   self.vars.Spec = self.PlayerClass .. "-" .. self.Spec -- e.g. PALADIN-3
+  self.talents = nil
 end
 
 
@@ -710,6 +741,7 @@ function Engine:RefreshVars()
   vars.HealthRate = self.HealthChangingRate
   vars.HealthChangingRate = self.HealthChangingRate
   vars.LastCastSpell = self.LastCastSpell
+  vars.LastCastTime = self.LastCastTime
   vars.IsMoving = self.IsMoving
   vars.TargetIsMoving = self.TargetIsMoving
   vars.HasBloodLust = self.HasBloodLust
