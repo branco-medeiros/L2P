@@ -75,6 +75,7 @@ function L2P:GetSpecData(ctx)
         ExecutionSentence = 343527,
         Exorcism = 383185,
         FinalReckoning = 343721,
+        FiresOfJusticeBuff = 203316,
         FlashOfLight = 19750,
         FocusedAzeriteBeam = 299336,
         GuardianOfAzeroth = 299358,
@@ -82,7 +83,8 @@ function L2P:GetSpecData(ctx)
         HammerOfWrath = 24275,
         HandOfHindrance = 183218,
         HolyAvenger = 105809,
-        Judgment = 20271,
+        JudgmentOld = 20271,
+        JusticarSVengeance = 215661,
         LayOnHands = 633,
         MemoryOfLucidDreams = 299374,
         PurifyingBlast = 299347,
@@ -154,6 +156,16 @@ function L2P:GetSpecData(ctx)
           end
         },
 
+        {Key="justicars-vengeance-heal", SpellId=215661, Role={ "dps","spender","heal", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsMedium
+          end
+        },
+
         {Key="flash-of-light", SpellId=19750, Role={ "heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
@@ -191,9 +203,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.FinalReckoningActive or
-            ctx.vars.ExecutionSentenceActive or
-            ctx.vars.WingsOn
+            return not ctx.vars.SeraphimActive
           end
         },
 
@@ -224,7 +234,7 @@ function L2P:GetSpecData(ctx)
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.IsBossFight or 
-            ctx.vars.TargetNotDying
+            (ctx.vars.IsDangerousFight and ctx.vars.TargetNotDying)
           end
         },
 
@@ -255,7 +265,12 @@ function L2P:GetSpecData(ctx)
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.MultipleTargets and 
-            (ctx.vars.Has5HP or ctx.vars.ItsHpTime)
+            (ctx.vars.Has5HP or 
+              ctx.vars.WingsOn or
+              ctx.vars.HolyAvengerActive or
+              ctx.vars.DivinePurposeActive or
+              ctx.vars.FiresOfJusticeActive
+            )
             
           end
         },
@@ -266,8 +281,23 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.Has5HP 
-            or ctx.vars.ItsHpTime
+            return ctx.vars.Has5HP or 
+            ctx.vars.WingsOn or
+            ctx.vars.HolyAvengerActive or
+            ctx.vars.DivinePurposeActive or
+            ctx.vars.FiresOfJusticeActive
+            
+          end
+        },
+
+        {Key="consecration", SpellId=26573, Role={ "hinder", },
+          Description="",
+          RangeSpell=184575, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsNotMoving 
+            and ctx.vars.NeedsConsecration
           end
         },
 
@@ -278,7 +308,7 @@ function L2P:GetSpecData(ctx)
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.MultipleTargets and 
-            ctx.vars.DivineToll
+            ctx.vars.CanUseTargetBasedHPGenerator
           end
         },
 
@@ -288,10 +318,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return (
-              ctx.vars.HolyPower + 
-              (3 * ctx.vars.HPMultiplier)
-            ) < 6
+            return ctx.vars.CanUse3HPGenerator
             
           end
         },
@@ -302,10 +329,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return (
-              ctx.vars.HolyPower + 
-              (1 * ctx.vars.HPMultiplier)
-            ) < 6
+            return ctx.vars.CanUse1HPGenerator
             
           end
         },
@@ -316,10 +340,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return (
-              ctx.vars.HolyPower + 
-              (2 * ctx.vars.HPMultiplier)
-            ) < 6
+            return ctx.vars.CanUse2HPGenerator
             
           end
         },
@@ -330,10 +351,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return (
-              ctx.vars.HolyPower + 
-              (1 * ctx.vars.HPMultiplier)
-            ) < 6
+            return ctx.vars.CanUse1HPGenerator
             
           end
         },
@@ -344,10 +362,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return (
-              ctx.vars.HolyPower + 
-              (1 * ctx.vars.HPMultiplier)
-            ) < 6
+            return ctx.vars.CanUse1HPGenerator
             
           end
         },
@@ -358,7 +373,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.DivineToll
+            return ctx.vars.CanUseTargetBasedHPGenerator
           end
         },
 
@@ -389,17 +404,6 @@ function L2P:GetSpecData(ctx)
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return true
-          end
-        },
-
-        {Key="consecration", SpellId=26573, Role={ "hinder", },
-          Description="",
-          RangeSpell=184575, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.IsNotMoving 
-            and ctx.vars.NotHpTime
           end
         },
 
@@ -496,6 +500,13 @@ function L2P:GetSpecData(ctx)
       },
 
       code={
+        LastConsecrationTime=function(ctx)
+          return (
+            ctx.vars.LastCastSpell == ctx.SPI.Consecration and 
+            ctx.vars.LastCastTime
+          ) or ctx.vars.LastConsecrationTime or 0
+        end,
+
         WingsOn=function(ctx)
           return ctx:GetBuff(ctx.SPI.AvengingWrath).active
           or ctx:GetBuff(ctx.SPI.Crusade).active
@@ -530,18 +541,30 @@ function L2P:GetSpecData(ctx)
           return ctx:GetBuff(ctx.SPI.Consecration).active
         end,
 
+        FiresOfJusticeActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.FiresOfJusticeBuff).active
+        end,
+
+        SeraphimActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.Seraphim).active
+        end,
+
+        NeedsConsecration=function(ctx)
+          return (ctx.vars.Now - (ctx.vars.LastConsecrationTime or 0)) >= 11.5
+        end,
+
         HPMultiplier=function(ctx)
           return (ctx.vars.HolyAvengerActive and 3) or 1
         end,
 
-        ItsHpTime=function(ctx)
-          return ctx.vars.WingsOn
-          or ctx.vars.HolyAvengerActive
-          or ctx.vars.DivinePurposeActive
-        end,
-
         NotHpTime=function(ctx)
-          return not ctx.vars.ItsHpTime
+          return not (
+            ctx.vars.Has5HP or 
+            ctx.vars.WingsOn or
+            ctx.vars.HolyAvengerActive or
+            ctx.vars.DivinePurposeActive or
+            ctx.vars.FiresOfJusticeActive
+          )
         end,
 
         Has5HP=function(ctx)
@@ -598,11 +621,32 @@ function L2P:GetSpecData(ctx)
             and ctx.vars.HealthRate < 0)
         end,
 
-        DivineToll=function(ctx)
+        CanUse1HPGenerator=function(ctx)
           return (
-            ctx.vars.HolyPower 
-            + (min(5, ctx.vars.Targets) * ctx.vars.HPMultiplier)
-          ) < 6 
+            ctx.vars.HolyPower + 
+            (1 * ctx.vars.HPMultiplier)
+          ) < 6
+        end,
+
+        CanUse2HPGenerator=function(ctx)
+          return (
+            ctx.vars.HolyPower + 
+            (2 * ctx.vars.HPMultiplier)
+          ) < 6
+        end,
+
+        CanUse3HPGenerator=function(ctx)
+          return (
+            ctx.vars.HolyPower + 
+            (3 * ctx.vars.HPMultiplier)
+          ) < 6
+        end,
+
+        CanUseTargetBasedHPGenerator=function(ctx)
+          return (
+            ctx.vars.HolyPower + 
+            (min(5, ctx.vars.Targets) * ctx.vars.HPMultiplier)
+          ) < 6
         end,
 
       }
@@ -639,12 +683,14 @@ function L2P:GetSpecData(ctx)
         HammerOfWrath = 24275,
         HandOfHindrance = 183218,
         HolyAvenger = 105809,
-        Judgment = 20271,
         Judgment = 275779,
+        JudgmentOld = 20271,
         LayOnHands = 633,
         MemoryOfLucidDreams = 299374,
+        MomentOfGlory = 327193,
         PurifyingBlast = 299347,
         Rebuke = 96231,
+        SanctifiedWrath = 171648,
         SentinelBuff = 389539,
         Seraphim = 152262,
         ShieldOfTheRighteous = 53600,
@@ -683,7 +729,7 @@ function L2P:GetSpecData(ctx)
           Primary=true, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsCritical 
-              and ctx.vars.IsBeingAttacked
+              and ctx.vars.IsBeingDamaged
           end
         },
 
@@ -701,7 +747,7 @@ function L2P:GetSpecData(ctx)
         {Key="guardian-of-ancient-kings", SpellId=86659, Role={ "survival", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsLow and 
@@ -709,10 +755,10 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="word-of-glory", SpellId=85673, Role={ "heal", },
+        {Key="word-of-glory", SpellId=85673, Role={ "heal","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsMedium
@@ -726,8 +772,27 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HealthIsMedium
-              and ctx.vars.HasLessThan3HP
+            return ctx.vars.IsDangerousFight
+          end
+        },
+
+        {Key="bastion-shield-of-the-righteous", SpellId=53600, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=53595, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BastionOfLightActive
+          end
+        },
+
+        {Key="moment-of-glory", SpellId=327193, Role={ "dps","survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
           end
         },
 
@@ -741,18 +806,38 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="shield-of-the-righteous-5hp", SpellId=53600, Role={ "dps", },
+        {Key="divine-toll", SpellId=304971, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="shield-of-the-righteous-5hp", SpellId=53600, Role={ "dps","spender", },
           Description="",
           RangeSpell=53595, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.Has5Hp or 
-              ctx.vars.AvengingWrathActive or 
+            return ctx.vars.Has5Hp or
+              ctx.vars.WingsOn or
               ctx.vars.DivinePurposeActive or
               ctx.vars.HolyAvengerActive or
-              ctx.vars.SentinelActive or
-              ctx.vars.BastionOfLightActive
+              ctx.vars.SentinelActive
+          end
+        },
+
+        {Key="word-of-glory-free", SpellId=85673, Role={ "heal", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsNotFull and 
+              ctx.vars.ShiningLightActive
           end
         },
 
@@ -762,7 +847,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.NoConsecrationDebuff and
+            return ctx.vars.NeedsConsecration and
               ctx.vars.IsNotMoving
           end
         },
@@ -773,71 +858,61 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.Targets > 2
-          end
-        },
-
-        {Key="divine-toll", SpellId=304971, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return (ctx.vars.IsBossFight
-              or ctx.vars.HasManyEnemies
-              or ctx.vars.IsPvp)
-              and (ctx.vars.DivineTollOneEnemy
-              or ctx.vars.DivineTollMoreEnemies)
-          end
-        },
-
-        {Key="judgment", SpellId=275779, Role={ "preparation", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.WillNotCapHP
-          end
-        },
-
-        {Key="hammer-of-wrath", SpellId=24275, Role={ "preparation", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.WillNotCapHP
-          end
-        },
-
-        {Key="hammer-of-the-righteous", SpellId=53595, Role={ "preparation", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.WillNotCapHP
-          end
-        },
-
-        {Key="blessed-hammer", SpellId=204019, Role={ "generator","preparation", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.WillNotCapHP
-          end
-        },
-
-        {Key="avengers-shield", SpellId=31935, Role={ "preparation", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
             return true
+          end
+        },
+
+        {Key="judgment-2HP", SpellId=275779, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.WingsOn 
+            and ctx.vars.HasTalentSanctifiedWrath
+            and ctx.CanUse2HPGenerator 
+          end
+        },
+
+        {Key="judgment-1HP", SpellId=275779, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not (ctx.vars.WingsOn 
+            and ctx.vars.HasTalentSanctifiedWrath) 
+            and ctx.vars.CanUse1HPGenerator 
+          end
+        },
+
+        {Key="hammer-of-wrath", SpellId=24275, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.CanUse1HPGenerator
+          end
+        },
+
+        {Key="hammer-of-the-righteous", SpellId=53595, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.CanUse1HPGenerator
+          end
+        },
+
+        {Key="blessed-hammer", SpellId=204019, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.CanUse1HPGenerator
           end
         },
 
@@ -848,17 +923,6 @@ function L2P:GetSpecData(ctx)
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return true
-          end
-        },
-
-        {Key="word-of-glory-free", SpellId=85673, Role={ "heal", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HealthIsMedium and 
-              ctx.vars.HasShiningLightBuff
           end
         },
 
@@ -922,40 +986,11 @@ function L2P:GetSpecData(ctx)
       },
 
       code={
-        HealthIsCritical=function(ctx)
-          return ctx.vars.HealthPercent <= 0.2
-        end,
-
-        IsBeingDamaged=function(ctx)
-          return ctx.vars.HealthRate < 0
-        end,
-
-        HealthIsLow=function(ctx)
-          return ctx.vars.HealthPercent < 0.4
-        end,
-
-        HealthIsMedium=function(ctx)
-          return ctx.vars.HealthPercent < 0.75
-        end,
-
-        HasShiningLightBuff=function(ctx)
-          return ctx:GetBuff(ctx.SPI.ShiningLight).active
-        end,
-
-        IsBeingAttacked=function(ctx)
-          return ctx.vars.HealthRate < 0
-        end,
-
-        NoConsecrationDebuff=function(ctx)
-          return ctx:GetDebuff(ctx.SPI.ConsecrationDebuff).remaining <= 2
-        end,
-
-        IsNotMoving=function(ctx)
-          return not ctx.vars.IsMoving
-        end,
-
-        Has5Hp=function(ctx)
-          return ctx.vars.HolyPower == 5
+        LastConsecrationTime=function(ctx)
+          return (ctx.vars.LastCastSpell == ctx.SPI.Consecration 
+          and ctx.vars.LastCastTime) 
+          or ctx.vars.LastConsecrationTime 
+          or 0
         end,
 
         AvengingWrathActive=function(ctx)
@@ -966,61 +1001,99 @@ function L2P:GetSpecData(ctx)
           return ctx:GetBuff(ctx.SPI.DivinePurpose).active
         end,
 
-        HealthIsAlmostCritical=function(ctx)
-          return ctx.vars.HealthPercent <= 0.3
-        end,
-
-        NotInCombat=function(ctx)
-          return not UnitAffectingCombat("player")
-        end,
-
-        DivineTollOneEnemy=function(ctx)
-          local fr = ctx.vars.FinalRecogningActive;
-                    local hp = ctx.vars.HolyPower; 
-                    return ctx.vars.Enemies == 1 and (
-          (fr and hp < 3) or
-          (not fr and hp < 5)
-                    )
-        end,
-
-        DivineTollMoreEnemies=function(ctx)
-          return ctx.vars.Enemies > 1 
-          and not ctx.vars.FinalRecogningActive
-          and (ctx.vars.HolyPower + min(5, ctx.vars.Enemies)) < 6
-        end,
-
-        HasLessThan3HP=function(ctx)
-          return ctx.vars.HolyPower < 3
-        end,
-
-        HasLessThan5HP=function(ctx)
-          return ctx.vars.HolyPower < 5
-        end,
-
         HolyAvengerActive=function(ctx)
           return ctx:GetBuff(ctx.SPI.HolyAvenger).active
         end,
 
-        WillNotCapHP=function(ctx)
-          return (ctx.vars.HolyAvengerActive 
-          and ctx.vars.HasLessThan3HP) 
-          or ctx.vars.HasLessThan5HP
+        ShiningLightActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.ShiningLight).active
         end,
 
-        HasManyEnemies=function(ctx)
-          return ctx.vars.Enemies > 2
-        end,
-
-        ConsecrationBuffExpiring=function(ctx)
-          return false
+        SentinelActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.SentinelBuff).active
         end,
 
         BastionOfLightActive=function(ctx)
           return ctx:GetBuff(ctx.SPI.BastionOfLight).active
         end,
 
-        SentinelActive=function(ctx)
-          return ctx:GetBuff(ctx.SPI.SentinelBuff).active
+        HasTalentSanctifiedWrath=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.SanctifiedWrath)
+        end,
+
+        HPMultiplier=function(ctx)
+          return (ctx.vars.HolyAvengerActive and 3) or 1
+        end,
+
+        HealthIsCritical=function(ctx)
+          return ctx.vars.HealthPercent <= 0.2
+        end,
+
+        HealthIsAlmostCritical=function(ctx)
+          return ctx.vars.HealthPercent <= 0.3
+        end,
+
+        HealthIsLow=function(ctx)
+          return ctx.vars.HealthPercent < 0.4
+        end,
+
+        HealthIsMedium=function(ctx)
+          return ctx.vars.HealthPercent <= 0.65
+        end,
+
+        HealthIsNotFull=function(ctx)
+          return ctx.vars.HealthPercent <= 0.75
+        end,
+
+        IsBeingDamaged=function(ctx)
+          return ctx.vars.HealthRate < 0
+        end,
+
+        IsNotMoving=function(ctx)
+          return not ctx.vars.IsMoving
+        end,
+
+        Has5Hp=function(ctx)
+          return ctx.vars.HolyPower == 5
+        end,
+
+        NotInCombat=function(ctx)
+          return not UnitAffectingCombat("player")
+        end,
+
+        NeedsConsecration=function(ctx)
+          return (ctx.vars.Now - (ctx.vars.LastConsecrationTime or 0)) > 13.5
+        end,
+
+        IsDangerousFight=function(ctx)
+          return ctx.vars.IsBossFight
+          or ctx.vars.IsPvp
+          or (ctx.vars.IsAoe
+            and ctx.vars.HealthPercent < 0.7 
+            and ctx.vars.HealthRate < 0 )
+          or (ctx.vars.Targets == 1 
+            and ctx.vars.HealthPercent < 0.5 
+            and ctx.vars.HealthRate < 0)
+        end,
+
+        CanUse1HPGenerator=function(ctx)
+          return (ctx.vars.HolyPower +
+          (1 * ctx.vars.HPMultiplier)) < 6 
+        end,
+
+        CanUse2HPGenerator=function(ctx)
+          return (ctx.vars.HolyPower +
+          (2 * ctx.vars.HPMultiplier)) < 6 
+        end,
+
+        CanUseTargetBasedHPGenerator=function(ctx)
+          return (ctx.vars.HolyPower +
+          (min(ctx.vars.Targets, 5) * ctx.vars.HPMultiplier)) < 6 
+        end,
+
+        WingsOn=function(ctx)
+          return ctx.vars.AvengingWrathActive 
+          or ctx.vars.SentinelActive
         end,
 
       }

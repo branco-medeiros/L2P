@@ -1,6 +1,7 @@
 -- L2P
 local Main = LibStub("AceAddon-3.0"):NewAddon("L2P", "AceConsole-3.0", "AceEvent-3.0")
 local Frames = LibStub("L2P-Framelets")
+local AceGUI = LibStub("AceGUI-3.0")
 
 local DEFAULT_FREQUENCY = 15
 local DEFAULT_XICON_ROW_SIZE = 5
@@ -198,6 +199,7 @@ function Main:OnUpdate(evt, elapsed, ...)
 
     self.Engine:Update(elapsed)
     self:UpdateIcons()
+    self:ShowVars()
   else 
     self.MainFrame:Hide()
   end
@@ -216,6 +218,15 @@ function Main:UpdateIcons()
   self.CurSpellIcon.TooltipData = GetSpName(Ctx.CurSpell)
   self.NextSpellIcon.TooltipData = GetSpName(Ctx.NextSpell)
 end -- fn Main:UpdateIcons
+
+--------------------------------------------------------------------------------
+function Main:ShowVars()
+--------------------------------------------------------------------------------
+  if self.DebugFrame:IsVisible() then
+    self.DebugFrame:ShowVars(self.Engine.vars)
+  end
+end
+
 
 --------------------------------------------------------------------------------
 function Main:ResetFramePosition()
@@ -496,6 +507,59 @@ function Main:CreateSpellNames(ids)
 	return result
 end
 
+--------------------------------------------------------------------------------
+function Main:CreateDebugFrame()
+--------------------------------------------------------------------------------
+  if not self.DebugFrame then
+    local frame = AceGUI:Create("Window")
+    frame:SetCallback("OnClose", function(widget)
+      frame:Hide()
+    end)
+    
+    frame:Hide()
+    
+    self.DebugFrame = frame
+    frame:SetWidth(300)
+    frame:SetHeight(400)
+    frame:SetTitle("L2P vars")
+    frame:SetLayout("Fill")
+    
+    local scroll = AceGUI:Create("ScrollFrame")
+    scroll:SetLayout("Flow")
+    frame.VarsList = scroll
+    frame.Lines = {}
+    frame:AddChild(scroll)
+    
+    function frame:ClearVars()
+      self.VarsList:ReleaseChildren()
+      self.Lines = {}
+    end
+    
+    function frame:ShowVars(vars)
+      vars = vars or {}
+      local list = {}
+      for k, v in pairs(vars) do
+        table.insert(list, k .. ': ' .. tostring(v))
+      end
+      table.sort(list)
+      local varlist = self.Lines
+      for n, item in ipairs(list) do
+        if n > #varlist then 
+          local line = AceGUI:Create("Label")
+          table.insert(varlist, line)
+          self.VarsList:AddChild(line)
+        end
+        varlist[n]:SetText(item)
+      end
+      for n = #list + 1, #varlist do
+        varlist[n]:SetText("")
+      end    
+    end
+    
+  end
+  
+  
+end
 
 
 function Main:SetDebug(value)
@@ -576,10 +640,17 @@ function Main:cmd_debug(value)
 end
 
 --------------------------------------------------------------------------------
+function Main:cmd_showvars()
+--------------------------------------------------------------------------------
+  self.DebugFrame:Show()
+end
+
+--------------------------------------------------------------------------------
 function Main:cmd_debug_spells()
 --------------------------------------------------------------------------------
 	Main.Dbg:ShowSpells()
 end
+
 --------------------------------------------------------------------------------
 function Main:OnChatCommand(Text)
 --------------------------------------------------------------------------------
@@ -618,6 +689,9 @@ function Main:OnEnable()
 
   self:DbgMsg("Creating Icons")
   self:CreateIcons()
+  
+  self.DbgMsg("Creating the DebugFrame")
+  self:CreateDebugFrame()
   
   self:DbgMsg("Loading the Engine")
   self.Engine = LibStub("L2P-Engine"):SetFrame(sf)
