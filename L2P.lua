@@ -725,3 +725,74 @@ function Main:OnInitialize()
 end -- fn Initialize
 
 
+Main.utils = {
+  IndexOf = function(list, item)
+    for i, v in ipairs(list) do
+      if v == item then return i end
+    end
+  end,
+  
+  GetTable = function(theTable, noFn, maxlevels, ret, level, done)
+    ret = ret or {} 
+    level = (level or 0) + 1
+    done = done or {}
+    local spc = string.format("%".. (level*2) .. "s", " ")
+    
+    if type(theTable) ~= "table" then 
+      table.insert(ret, spc .. '[... not a table]')
+      return ret 
+    end
+    
+    maxlevels = maxlevels or 10
+    if maxlevels < 1 then
+      table.insert(ret, spc .. "[...too many levels]")
+      return ret
+    end
+    
+    if Main.utils.IndexOf(done, theTable) then
+      table.insert(ret, spc .. "[...]")
+      return ret
+    end 
+    
+    table.insert(done, theTable)
+    
+    local fn = {}
+    local keys = {}
+    for k, v in pairs(theTable) do
+      if type(v) == "function" then
+        table.insert(fn, spc .. k .. ": <function>")        
+      else
+        table.insert(keys, k)
+      end
+    end
+    
+    if not noFn then
+      table.sort(fn)
+      for _, v in ipairs(fn) do table.insert(ret, v) end
+    end
+    fn = nil
+    
+    table.sort(keys)
+    for _, k in ipairs(keys) do
+      local v = theTable[k]
+      local t = type(v)
+      if t == "table" then
+        table.insert(ret, spc .. k .. ":")
+        Main.utils.GetTable(v, noFn, maxlevels - 1, ret, level, done)
+      
+      elseif t ~= "function" then
+        table.insert(ret, spc .. k .. ': ' .. tostring(v))
+      end
+    end
+    keys = nil
+    if level == 1 then done = nil end
+    return ret
+  end,
+  
+  dumpTable = function(theTable, noFn, maxlevels)
+    local ret = Main.utils.GetTable(theTable, noFn, maxlevels)
+    for _, v in ipairs(ret) do print(v) end
+    return ret
+  end
+}
+
