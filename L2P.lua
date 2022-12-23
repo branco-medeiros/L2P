@@ -542,7 +542,8 @@ function Main:CreateDebugFrame()
       vars = vars or {}
       local list = {}
       for k, v in pairs(vars) do
-        table.insert(list, k .. ': ' .. tostring(v))
+        local str = (type(v) == "number" and math.floor(v) ~= v and string.format("%.4f", v )) or tostring(v)
+        table.insert(list, k .. ': ' .. str)
       end
       table.sort(list)
       local varlist = self.Lines
