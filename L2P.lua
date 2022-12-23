@@ -6,7 +6,6 @@ local AceGUI = LibStub("AceGUI-3.0")
 local DEFAULT_FREQUENCY = 15
 local DEFAULT_XICON_ROW_SIZE = 5
 
-
 --------------------------------------------------------------------------------
 local function L(text)
 --------------------------------------------------------------------------------
@@ -244,8 +243,11 @@ function Main:LoadKeys(show)
     -- sets the message for the spell based on the spell name
     -- or the action spell name (in cases such as in Pyroblast, where the actual spell cast
     -- when the effect procs is different from the spell in the action bar)
-	local key = klist[s.SpName] or (s.ActionSpell and klist[s.ActionSpell])
+    local t = klist[s.SpName] or (s.ActionSpell and klist[s.ActionSpell]) or {}
+    local key = t.key
+    local slot = t.slot
     s.Message = key and key:gsub("SHIFT%-", "s")
+    s.Slot = slot
     if show then self:Print(k, ":", s.Message or "") end
   end
 end
@@ -276,6 +278,7 @@ function Main:MapSpellKeys()
         local slot = button.action or button:GetAttribute('action') or 0
         if HasAction(slot) then
           local actionType, id = GetActionInfo(slot)
+          local isSpell = actionType == 'spell'
           if actionType == 'macro' then
             id = select(MACRO_SPELL_INDEX, GetMacroSpell(id))
 						if id then id = tonumber(id) end
@@ -283,7 +286,7 @@ function Main:MapSpellKeys()
           if id then
             id = GetSpellInfo(id)
             if id then
-							slist[id] = key
+							slist[id] = {key = key, slot = isSpell and slot or nil}
 						end
           end
         end
