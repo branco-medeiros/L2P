@@ -748,6 +748,7 @@ function Engine:RefreshVars()
   vars.CombatTick = self.CombatTick
   vars.CombatDamage = self.CombatDamage
   vars.PainPerTick = self.PainPerTick
+  vars.IsFighting = UnitAffectingCombat("player")
   
   for k, f in pairs(self.code) do
     vars[k] = f(self)
