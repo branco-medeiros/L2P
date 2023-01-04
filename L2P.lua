@@ -134,7 +134,7 @@ end
 --------------------------------------------------------------------------------
 function Main:UPDATE_SHAPESHIFT_FORM(evt, ...)
 --------------------------------------------------------------------------------
-  self.LoadKeysNeeded = true
+  --self.LoadKeysNeeded = true
 end
 
 --------------------------------------------------------------------------------
@@ -170,7 +170,7 @@ end
 function Main:ACTIVE_TALENT_GROUP_CHANGED(evt, ...)
 --------------------------------------------------------------------------------
 	self:DbgMsg("Talent group changed")
-	self.SpecChanged = true
+	--self.SpecChanged = true
 end
 
 
