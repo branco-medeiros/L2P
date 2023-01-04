@@ -90,6 +90,7 @@ function L2P:GetSpecData(ctx)
         PurifyingBlast = 299347,
         RadiantDecree = 384052,
         Rebuke = 96231,
+        Reckoning = 247676,
         SelflessHealer = 114250,
         Seraphim = 152262,
         ShieldOfTheRighteous = 53600,
@@ -197,7 +198,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="seraphin", SpellId=152262, Role={ "preparation","spender", },
+        {Key="seraphim", SpellId=152262, Role={ "preparation","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -500,6 +501,10 @@ function L2P:GetSpecData(ctx)
       },
 
       code={
+        IsAoe=function(ctx)
+          return ctx.vars.Targets > 1
+        end,
+
         LastConsecrationTime=function(ctx)
           return (
             ctx.vars.LastCastSpell == ctx.SPI.Consecration and 
@@ -531,10 +536,6 @@ function L2P:GetSpecData(ctx)
 
         DivinePurposeActive=function(ctx)
           return ctx:GetBuff(ctx.SPI.DivinePurposeBuff).active
-        end,
-
-        SeraphinActive=function(ctx)
-          return ctx:GetBuff(ctx.SPI.Seraphin).active
         end,
 
         ConsecrationActive=function(ctx)
@@ -870,7 +871,7 @@ function L2P:GetSpecData(ctx)
           Condition=function(this, ctx)
             return ctx.vars.WingsOn 
             and ctx.vars.HasTalentSanctifiedWrath
-            and ctx.CanUse2HPGenerator 
+            and ctx.vars.CanUse2HPGenerator 
           end
         },
 
@@ -942,7 +943,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.isPvp
+            return ctx.vars.IsPvp
           end
         },
 
@@ -952,7 +953,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.isPvp
+            return ctx.vars.IsPvp
           end
         },
 
@@ -986,6 +987,10 @@ function L2P:GetSpecData(ctx)
       },
 
       code={
+        IsAoe=function(ctx)
+          return ctx.vars.Targets > 1
+        end,
+
         LastConsecrationTime=function(ctx)
           return (ctx.vars.LastCastSpell == ctx.SPI.Consecration 
           and ctx.vars.LastCastTime) 
@@ -1104,9 +1109,13 @@ function L2P:GetSpecData(ctx)
       SPI = {
         AncientAftershock = 325886,
         Avatar = 107574,
+        BitterImmunity = 383762,
+        BlademastersTormentTalent = 390138,
         Bladestorm = 227847,
+        BloodAndThunderTalent = 384277,
         Cleave = 845,
         ColossusSmash = 167105,
+        ColossusSmashDebuff = 208086,
         Condemn = 317349,
         ConquerorSBanner = 324143,
         DeadlyCalm = 262228,
@@ -1114,30 +1123,48 @@ function L2P:GetSpecData(ctx)
         DefensiveStance = 197690,
         DieByTheSword = 118038,
         Execute = 163201,
+        ExecutionersPrecisionTalent = 386634,
+        FervorOfBattleTalent = 202316,
         FocusedAzeriteBeam = 299336,
         GuardianOfAzeroth = 299358,
         Hamstring = 1715,
         IgnorePain = 190456,
         ImpendingVictory = 202168,
+        InForTheKill = 248622,
         IntimidatingShout = 5246,
         MemoryOfLucidDreams = 299374,
         MortalStrike = 12294,
         Overpower = 7384,
         Pummel = 6552,
         PurifyingBlast = 299347,
-        RendOld = 772,
+        RendArms = 772,
+        RendDebuff = 388539,
         Skullsplitter = 260643,
         Slam = 1464,
+        SpearOfBastion = 376079,
         SpearOfBastionOld = 307865,
         StormBolt = 107570,
         SweepingStrikes = 260708,
-        TheUnboundForce = 298452,
+        ThunderClap = 6343,
+        ThunderClapArms = 396719,
+        ThunderousRoar = 384318,
+        TideOfBloodTalent = 386357,
         VictoryRush = 34428,
         Warbreaker = 262161,
         Whirlwind = 1680,
       },
 
       prios = {
+        {Key="bitter-immunity", SpellId=383762, Role={ "survival","heal", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsCritical
+          end
+        },
+
         {Key="impending-victory", SpellId=202168, Role={ "heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
@@ -1193,13 +1220,23 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="conquerors-banner", SpellId=324143, Role={ "preparation", },
+        {Key="thunder-clap", SpellId=396719, Role={ "dps","generator", },
           Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          RangeSpell=12294, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsDangerousFight
+            return ctx.vars.RendDebuffExpiring and ctx.vars.IsAoe
+          end
+        },
+
+        {Key="rend", SpellId=772, Role={ "preparation", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.RendDebuffExpiring
           end
         },
 
@@ -1235,13 +1272,23 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="rend", SpellId=772, Role={ "preparation", },
+        {Key="spear-of-bastion", SpellId=376079, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.RendDebuffExpiring
+            return ctx.vars.HasDebuffColossusSmash
+          end
+        },
+
+        {Key="skullsplitter", SpellId=260643, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HasDebuffColossusSmash
           end
         },
 
@@ -1251,7 +1298,7 @@ function L2P:GetSpecData(ctx)
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.IsAoe
+            return ctx.vars.IsAoe
               and (ctx.vars.DeepWoundsExpiring
               or ctx.vars.HasBuffOverpower)
           end
@@ -1267,32 +1314,50 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="mortal-strike-urgent", SpellId=12294, Role={ "dps", },
+        {Key="ancient-aftershock", SpellId=325886, Role={ "dps", },
+          Description="",
+          RangeSpell=12294, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HasDebuffColossusSmash
+          end
+        },
+
+        {Key="thunderous-roar-in-for-the-kill", SpellId=384318, Role={ "dps", },
+          Description="",
+          RangeSpell=12294, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HasBuffInForTheKill
+          end
+        },
+
+        {Key="mortal-strike-deep-wounds", SpellId=12294, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.DeepWoundsExpiring
-              or ctx.vars.HasBuffOverpower
           end
         },
 
-        {Key="skullsplitter", SpellId=260643, Role={ "dps", },
+        {Key="mortal-strike-executioners-precision", SpellId=12294, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.RageCanGrow20 
-              and ctx.vars.BladeStormOnCooldown
+            return ctx.vars.HasExecutionersPrecision
           end
         },
 
-        {Key="deadly-calm", SpellId=262228, Role={ "preparation", },
+        {Key="execute", SpellId=163201, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return true
@@ -1300,26 +1365,6 @@ function L2P:GetSpecData(ctx)
         },
 
         {Key="overpower", SpellId=7384, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="condemn", SpellId=317349, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="execute", SpellId=163201, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -1342,26 +1387,6 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="ancient-aftershock", SpellId=325886, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="spear-of-bastion", SpellId=307865, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
         {Key="mortal-strike", SpellId=12294, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
@@ -1380,7 +1405,7 @@ function L2P:GetSpecData(ctx)
           Condition=function(this, ctx)
             return ctx.vars.IsBossFight
               or ctx.vars.HasManyEnemies
-              or ctx.vars.HasBuffColossusSmash
+              or ctx.vars.HasDebuffColossusSmash
           end
         },
 
@@ -1392,6 +1417,16 @@ function L2P:GetSpecData(ctx)
           Condition=function(this, ctx)
             return ctx.vars.IsAoe
               or ctx.vars.HasTalentFervorOfTheBattle
+          end
+        },
+
+        {Key="cleave", SpellId=845, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=12294, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsAoe
           end
         },
 
@@ -1412,17 +1447,6 @@ function L2P:GetSpecData(ctx)
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return true
-          end
-        },
-
-        {Key="ignore-pain", SpellId=190456, Role={ "heal", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.IsBeingDamaged 
-              and ctx.vars.HealthIsMedium
           end
         },
 
@@ -1476,53 +1500,69 @@ function L2P:GetSpecData(ctx)
       },
 
       code={
-        DeepWoundsExpiring=function(ctx)
-          return ctx:GetDebuff(ctx.SPI.DeepWounds).remaining < 4
+        HasTalentFervorOfTheBattle=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.FervorOfBattleTalent)
         end,
 
-        HasManyEnemies=function(ctx)
-          return ctx.vars.Targets > 3 or ctx.vars.Attackers > 3
+        HasExecutionersPrecision=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.ExecutionersPrecisionTalent).active
         end,
 
-        HasBuffColossusSmash=function(ctx)
-          return ctx:GetBuff(ctx.SPI.ColossusSmash).active
-        end,
-
-        RageCanGrow20=function(ctx)
-          return (ctx.vars.Rage + 20) <= ctx.vars.RageMax
-        end,
-
-        BladeStormOnCooldown=function(ctx)
-          return ctx:GetSpell(ctx.SPI.Bladestorm).cooldown > 0
-        end,
-
-        IsAoe=function(ctx)
-          return ctx.vars.Targets > 1 or ctx.vars.Attackers> 1
+        HasDebuffColossusSmash=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.ColossusSmashDebuff).active
         end,
 
         HasBuffOverpower=function(ctx)
           return ctx:GetBuff(ctx.SPI.Overpower).active
         end,
 
-        HasTalentFervorOfTheBattle=function(ctx)
-          return ctx:HasTalent(3, 2)
+        HasBuffInForTheKill=function(ctx)
+          return ctx:GetBuff(ctx.SPI.InForTheKill).remaining > 0.5
         end,
 
-        RendDebuffExpiring=function(ctx)
-          return ctx:GetDebuff(ctx.SPI.Rend).remaining < 4
-        end,
-
-        HealthIsMedium=function(ctx)
-          return ctx.vars.HealthPercent <= 0.7
+        DeepWoundsExpiring=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.DeepWounds).remaining < 4
         end,
 
         ColossusSmashEnabled=function(ctx)
           return ctx:GetSpell(ctx.SPI.ColossusSmash).cooldown < ctx.vars.GCD
         end,
 
+        RendDebuffExpiring=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.RendDebuff).remaining < 4
+        end,
+
         WarbreakerEnabled=function(ctx)
-          return ctx:HasTalent(5, 2) 
+          return ctx:HasTalentByID(ctx.SPI.Warbreaker) 
           and ctx:GetSpell(ctx.SPI.Warbreaker).cooldown < ctx.vars.GCD
+        end,
+
+        HealthIsCritical=function(ctx)
+          return ctx.vars.HealthPercent < 0.3
+        end,
+
+        HealthIsLow=function(ctx)
+          return ctx.vars.HealthPercent < 0.45
+        end,
+
+        HealthIsMedium=function(ctx)
+          return ctx.vars.HealthPercent <= 0.7
+        end,
+
+        IsBeingDamaged=function(ctx)
+          return ctx.vars.HealthRate < 0
+        end,
+
+        HasManyEnemies=function(ctx)
+          return ctx.vars.Targets > 3 or ctx.vars.Attackers > 3
+        end,
+
+        RageCanGrow20=function(ctx)
+          return (ctx.vars.Rage + 20) <= ctx.vars.RageMax
+        end,
+
+        IsAoe=function(ctx)
+          return ctx.vars.Targets > 1 or ctx.vars.Attackers> 1
         end,
 
         IsDangerousFight=function(ctx)
@@ -1537,17 +1577,9 @@ function L2P:GetSpecData(ctx)
           return not ctx:GetBuff(ctx.SPI.DefensiveStance).active
         end,
 
-        HealthIsLow=function(ctx)
-          return ctx.vars.HealthPercent < 0.45
-        end,
-
         TargetedByBoss=function(ctx)
           return ctx.vars.IsBossFight 
           and UnitIsUnit("boss1target", "player")
-        end,
-
-        IsBeingDamaged=function(ctx)
-          return ctx.vars.HealthRate < 0
         end,
 
       }
@@ -1564,23 +1596,29 @@ function L2P:GetSpecData(ctx)
         ConsumeMagic = 278326,
         Darkness = 196718,
         DeathSweep = 210152,
+        DemonBlades = 203555,
         DemonSBite = 162243,
         Disrupt = 183752,
-        ElysianDecree = 306830,
+        ElysianDecree = 390163,
         EssenceBreak = 258860,
         EyeBeam = 198013,
         FelBarrage = 258925,
         Felblade = 232893,
         FelRush = 195072,
+        FirstBlood = 206416,
         FodderToTheFlame = 329554,
         GlaiveTempest = 342817,
         ImmolationAura = 258920,
+        Initiative = 391215,
         InnerDemons = 337548,
-        Metamorphosis = 191427,
+        Metamorphosis = 187827,
+        MetamorphosisOld = 191427,
+        Momentum = 206476,
         Netherwalk = 196555,
+        SigilOfFlame = 204596,
         SinfulBrand = 317009,
-        TheHunt = 323639,
-        ThrowGlaive = 185123,
+        TheHunt = 370965,
+        ThrowGlaive = 204157,
         UnboundChaos = 347462,
         VengefulRetreat = 198793,
       },
@@ -1593,7 +1631,7 @@ function L2P:GetSpecData(ctx)
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.AboutToDie and
-              ctx.vars.IsBeingDamaged
+              ctx.vars.IsFighting
           end
         },
 
@@ -1630,7 +1668,79 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="elysian-decree", SpellId=306830, Role={ "dps", },
+        {Key="fel-rush-back", SpellId=195072, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=true,
+          Condition=function(this, ctx)
+            return ctx.vars.LastCastSpell == ctx.SPI.FelRush
+          end
+        },
+
+        {Key="elysian-decree", SpellId=390163, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
+          end
+        },
+
+        {Key="the-hunt", SpellId=370965, Role={ "dps","heal", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="immolation-aura", SpellId=258920, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=183752, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return (ctx.vars.Fury + 20) <= ctx.vars.FuryMax
+          end
+        },
+
+        {Key="sigil-of-flame", SpellId=204596, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return (ctx.vars.Fury + 30) <= ctx.vars.FuryMax
+          end
+        },
+
+        {Key="chaos-nova", SpellId=179057, Role={ "dps","spender","hinder", },
+          Description="",
+          RangeSpell=183752, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HasMultipleTargets
+            or ctx.vars.IsPvp
+            or (ctx.vars.HealthIsLow and not ctx.vars.IsBossFight)
+          end
+        },
+
+        {Key="felblade", SpellId=232893, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return (ctx.vars.Fury + 40) <= ctx.vars.FuryMax
+          end
+        },
+
+        {Key="death-sweep", SpellId=210152, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -1640,121 +1750,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="sinful-brand", SpellId=317009, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="the-hunt", SpellId=323639, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="fodder-to-the-flame", SpellId=329554, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="fel-rush-umbounded", SpellId=195072, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.UnboundChaosActive
-          end
-        },
-
-        {Key="glaive-tempest", SpellId=342817, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="fel-rush-momentum", SpellId=195072, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HasMomentumTalent 
-              and ctx.vars.MomentumExpiring
-          end
-        },
-
-        {Key="vengeful-retreat-momentum", SpellId=198793, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HasMomentumTalent
-              and ctx.vars.FuryLevelCanGrow
-          end
-        },
-
-        {Key="essence-break", SpellId=258860, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.FuryLevelHigh
-          end
-        },
-
-        {Key="immolation-aura", SpellId=258920, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.FuryLevelCanGrow
-          end
-        },
-
-        {Key="death-sweep", SpellId=210152, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HasManyEnemies 
-              or ctx.vars.HasFirstBloodTalent
-          end
-        },
-
-        {Key="blade-dance", SpellId=188499, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HasManyEnemies
-              or ctx.vars.HasFirstBloodTalent
-          end
-        },
-
-        {Key="eye-beam", SpellId=198013, Role={ "dps", },
+        {Key="glaive-tempest", SpellId=342817, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -1767,6 +1763,26 @@ function L2P:GetSpecData(ctx)
         {Key="fel-barrage", SpellId=258925, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="eye-beam", SpellId=198013, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=183752, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
+          end
+        },
+
+        {Key="essence-break", SpellId=258860, Role={ "dps", },
+          Description="",
+          RangeSpell=183752, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
@@ -1774,57 +1790,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="felblade", SpellId=232893, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.FuryLevelCanGrow40
-          end
-        },
-
-        {Key="annihilation", SpellId=201427, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.FuryLevelCanGrow20
-          end
-        },
-
-        {Key="chaos-strike", SpellId=162794, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="throw-glaive-aoe", SpellId=185123, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HasMultipleTargets
-          end
-        },
-
-        {Key="demons-bite", SpellId=162243, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.FuryLessThan25
-          end
-        },
-
-        {Key="throw-glaive", SpellId=185123, Role={ "dps", },
+        {Key="blade-dance", SpellId=188499, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -1834,7 +1800,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="chaos-nova", SpellId=179057, Role={ "hinder", },
+        {Key="annihilation", SpellId=201427, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -1844,7 +1810,17 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="fel-rush", SpellId=195072, Role={ "dps", },
+        {Key="fel-rush-max-charges", SpellId=195072, Role={ "dps", },
+          Description="",
+          RangeSpell=183752, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.FelRushCharges > 1
+          end
+        },
+
+        {Key="chaos-strike", SpellId=162794, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -1854,7 +1830,28 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="metamorphosis", SpellId=191427, Role={ "slot", },
+        {Key="demons-bite", SpellId=162243, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.HasDemonBladesTalent
+            and (ctx.vars.Fury + 35) <= ctx.vars.FuryMax
+          end
+        },
+
+        {Key="throw-glaive", SpellId=204157, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="metamorphosis", SpellId=187827, Role={ "slot", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -1887,12 +1884,12 @@ function L2P:GetSpecData(ctx)
       },
 
       slots={
-        {Type="spell", Spell=191427, 
-          Description="Metamorphosis: your main cooldown",
+        {Type="spell", Spell=187827, 
+          Description="%s: your main cooldown",
           Icon="", Overlay=false, Charges=false
         },
         {Type="spell", Spell=278326, 
-          Description="Consume Magic: steal a magic effect from the target",
+          Description="%s: steal a magic effect from the target",
           Icon="", Overlay=false, Charges=false
         },
       },
@@ -1910,56 +1907,75 @@ function L2P:GetSpecData(ctx)
           return ctx.vars.HealthPercent < 0.8
         end,
 
-        MomentumExpiring=function(ctx)
-          return ctx:GetBuff(ctx.SPI.Momentum).remaining < 2.5
+        AboutToDie=function(ctx)
+          return ctx.vars.HealthPercent <= 0.2
         end,
 
         FuryLevelHigh=function(ctx)
           return ctx.vars.Fury >= 80
         end,
 
-        UnboundChaosActive=function(ctx)
-          return ctx:GetBuff(ctx.SPI.UnboundChaos).active
-        end,
-
         HasManyEnemies=function(ctx)
           return ctx.vars.Targets >= 3
-        end,
-
-        HasFirstBloodTalent=function(ctx)
-          return ctx:HasTalent(5, 2)
-        end,
-
-        HasMomentumTalent=function(ctx)
-          return ctx:HasTalent(7, 2)
-        end,
-
-        FuryLevelCanGrow20=function(ctx)
-          return (ctx.Power.Fury + 20) < ctx.Power.FuryMax
         end,
 
         HasMultipleTargets=function(ctx)
           return ctx.vars.Targets > 1
         end,
 
-        FuryLessThan25=function(ctx)
-          return (ctx.Power.Fury + 25) <= ctx.Power.FuryMax
-        end,
-
-        FuryLevelCanGrow=function(ctx)
-          return (ctx.Power.Fury + 15) < ctx.Power.FuryMax
-        end,
-
-        FuryLevelCanGrow40=function(ctx)
-          return (ctx.Power.Fury + 40) <= ctx.Power.FuryMax
-        end,
-
         IsBeingDamaged=function(ctx)
           return ctx.vars.HealthRate < 0
         end,
 
-        AboutToDie=function(ctx)
-          return ctx.vars.HealthPercent <= 0.2
+        IsDangerousFight=function(ctx)
+          return ctx.vars.IsBossFight
+          or ctx.vars.IsPvp
+          or ctx.vars.HasMultipleTargets
+          or ctx.vars.HealthIsLow
+        end,
+
+        UnboundChaosActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.UnboundChaos).active
+        end,
+
+        HasMomentumTalent=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.Momentum)
+        end,
+
+        EssenceBreakOnCooldown=function(ctx)
+          return ctx:GetSpell(ctx.SPI.EssenceBreak).cooldown >= 3
+        end,
+
+        BladeDanceAvailable=function(ctx)
+          return ctx:GetSpell(ctx.SPI.BladeDance).cooldown == 0
+        end,
+
+        EyeBeamAvailable=function(ctx)
+          return ctx:GetSpell(ctx.SPI.EyeBeam).cooldown == 0
+        end,
+
+        DeathSweepAvailable=function(ctx)
+          return ctx:GetSpell(ctx.SPI.DeathSweep).cooldown == 0
+        end,
+
+        TargetHasEssenceBreak=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.EssenceBreak).active
+        end,
+
+        MomentumActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.Momentum).active
+        end,
+
+        HasDemonBladesTalent=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.DemonBlades)
+        end,
+
+        TargetHasInitiative=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.Initiative).active
+        end,
+
+        FelRushCharges=function(ctx)
+          return ctx:GetSpell(ctx.SPI.FelRush).charges
         end,
 
       }
@@ -2400,50 +2416,56 @@ function L2P:GetSpecData(ctx)
   elseif ctx.vars.Spec == "DEMONHUNTER-2" then
     return {
       SPI = {
+        ChaosNova = 179057,
         ConsumeMagic = 278326,
+        Darkness = 196718,
         DemonSpikes = 203720,
+        DemonSpikesBuff = 203819,
         Disrupt = 183752,
-        ElysianDecree = 306830,
+        ElysianDecree = 390163,
         Felblade = 232893,
         FelDevastation = 212084,
         FieryBrand = 204021,
-        FodderToTheFlame = 329554,
         Fracture = 263642,
         ImmolationAura = 258920,
         InfernalStrike = 189110,
-        Metamorphosis = 191427,
-        MetamorphosisNew = 187827,
+        Metamorphosis = 187827,
         RazelikhSDefilement = 337544,
-        Shear = 203782,
+        Shear = 203783,
+        ShearOld = 203782,
         SigilOfFlame = 204596,
+        SigilOfMisery = 207684,
+        SigilOfSilence = 202137,
         SinfulBrand = 317009,
         SoulBarrier = 263648,
+        SoulCarver = 207407,
         SoulCleave = 228477,
         SoulFragments = 203981,
         SpiritBomb = 247454,
-        TheHunt = 323639,
-        ThrowGlaive = 185123,
-        ThrowGlaiveNew = 204157,
+        TheHunt = 370965,
+        TheHuntDebuff = 323639,
+        ThrowGlaive = 204157,
+        VengefulRetreat = 198793,
       },
 
       prios = {
-        {Key="elysian-decree-pull", SpellId=306830, Role={ "reaction", },
+        {Key="elysian-decree-pull", SpellId=390163, Role={ "dps","heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=true, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return not ctx.vars.InCombat
+            return not ctx.vars.IsFighting
           end
         },
 
-        {Key="infernal-strike-pull", SpellId=189110, Role={ "reaction", },
+        {Key="infernal-strike-pull", SpellId=189110, Role={ "dps", },
           Description="",
           RangeSpell=204157, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return not ctx.vars.InCombat
+            return not ctx.vars.IsFighting
           end
         },
 
@@ -2454,7 +2476,17 @@ function L2P:GetSpecData(ctx)
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.HealthIsCritical
-              and ctx.vars.IsBeingDamaged
+              and ctx.vars.IsFighting
+          end
+        },
+
+        {Key="spirit-bom-heals", SpellId=247454, Role={ "heal","dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsLow and ctx.vars.IsFighting
           end
         },
 
@@ -2464,31 +2496,111 @@ function L2P:GetSpecData(ctx)
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsBeingDamaged
-              and ctx.vars.HealthIsLow
+            return ctx.vars.HealthIsLow and ctx.vars.IsFighting
           end
         },
 
-        {Key="fiery-brand", SpellId=204021, Role={ "hinder", },
+        {Key="fiery-brand", SpellId=204021, Role={ "dps","hinder", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=true, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsBossFight
-              or ctx.vars.IsPvp
-              or ctx.vars.IsDangerousFoe
-              or ctx.vars.IsDangerousFight
+            return ctx.vars.IsDangerousFight
           end
         },
 
-        {Key="demon-spikes", SpellId=203720, Role={ "survival", },
+        {Key="demon-spikes", SpellId=203720, Role={ "survival","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsBeingDamaged
+            return ctx.vars.IsDangerousFight
+            and not ctx.vars.HasDemonSpikes
+          end
+        },
+
+        {Key="spirit-bomb", SpellId=247454, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HasSoulFragments
+          end
+        },
+
+        {Key="soul-cleave", SpellId=228477, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsMedium
+            or ctx.vars.FuryPercent >= 0.9
+          end
+        },
+
+        {Key="elysian-decree", SpellId=390163, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="the-hunt", SpellId=370965, Role={ "dps","heal", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsMedium
+            or ctx.vars.IsDangerousFight
+          end
+        },
+
+        {Key="soul-carver", SpellId=207407, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="fel-devastation", SpellId=212084, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsMedium
+            or ctx.vars.FuryPercent >= 0.9
+          end
+        },
+
+        {Key="sigil-of-flame", SpellId=204596, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return (ctx.vars.Fury + 30 - 10) <= ctx.vars.FuryMax
+          end
+        },
+
+        {Key="immolation-aura", SpellId=258920, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=183752, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return (ctx.vars.Fury + 20 - 10) <= ctx.vars.FuryMax
           end
         },
 
@@ -2502,115 +2614,46 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="elysian-decree", SpellId=306830, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=true, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.TargetIsNear
-          end
-        },
-
-        {Key="sinful-brand", SpellId=317009, Role={ "hinder", },
+        {Key="felblade", SpellId=232893, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return true
+            return (ctx.vars.Fury + 40 - 10) <= ctx.vars.FuryMax
           end
         },
 
-        {Key="the-hunt", SpellId=323639, Role={ "dps", },
+        {Key="fracture", SpellId=263642, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return true
+            return ((ctx.vars.Fury + 25 - 10) <= ctx.vars.FuryMax)
+            and (ctx.vars.FracturedSouls < 4)
           end
         },
 
-        {Key="fodder-to-the-flame", SpellId=329554, Role={ "dps", },
+        {Key="shear", SpellId=203783, Role={ "dps","survival", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return true
+            return not ctx.vars.HasFractureTalent
           end
         },
 
-        {Key="spirit-bomb", SpellId=247454, Role={ "dps", },
+        {Key="chaos-nova", SpellId=179057, Role={ "dps","spender","hinder", },
           Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=183752, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HasSoulFragments
-          end
-        },
-
-        {Key="fel-devastation", SpellId=212084, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="soul-cleave", SpellId=228477, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HasAtLeast60Fury
-          end
-        },
-
-        {Key="fracture", SpellId=263642, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.WillNotCap2Souls 
-              and ctx.vars.WillNotCap25Fury
-          end
-        },
-
-        {Key="immolation-aura", SpellId=258920, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=true, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.WillNotCap20Fury
-              and ctx.vars.TargetIsNear
-          end
-        },
-
-        {Key="sigil-of-flame", SpellId=204596, Role={ "preparation", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="shear", SpellId=203782, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
+            return ctx.vars.HasMultipleTargets
+            or ctx.vars.IsPvp
+            or (ctx.vars.HealthIsLow and not ctx.vars.IsBossFight)
           end
         },
 
@@ -2637,23 +2680,47 @@ function L2P:GetSpecData(ctx)
       },
 
       slots={
+        {Type="spell", Spell=187827, 
+          Description="%s: Your main cooldown",
+          Icon="", Overlay=false, Charges=false
+        },
+        {Type="spell", Spell=278326, 
+          Description="%s: steal a magic buff from the target",
+          Icon="", Overlay=false, Charges=false
+        },
       },
 
       code={
-        InCombat=function(ctx)
-          return UnitAffectingCombat("player")
+        HasFractureTalent=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.Fracture)
         end,
 
-        WillNotCap25Fury=function(ctx)
-          return (ctx.vars.Fury + 25) <= ctx.vars.FuryMax
+        HasDemonSpikes=function(ctx)
+          return ctx:GetBuff(ctx.SPI.DemonSpikesBuff).active
         end,
 
-        WillNotCap20Fury=function(ctx)
-          return (ctx.vars.Fury + 20) <= ctx.vars.FuryMax
+        FracturedSouls=function(ctx)
+          return ctx:GetBuff(ctx.SPI.SoulFragments).charges
+        end,
+
+        HealthIsCritical=function(ctx)
+          return ctx.vars.HealthPercent < 0.35
+        end,
+
+        HealthIsLow=function(ctx)
+          return ctx.vars.HealthPercent < 0.5
+        end,
+
+        HealthIsMedium=function(ctx)
+          return ctx.vars.HealthPercent < 0.85
         end,
 
         IsBeingDamaged=function(ctx)
           return ctx.vars.HealthRate < 0
+        end,
+
+        HasMultipleTargets=function(ctx)
+          return ctx.vars.Targets > 1 or ctx.vars.Enemies > 2
         end,
 
         IsDangerousFoe=function(ctx)
@@ -2665,43 +2732,356 @@ function L2P:GetSpecData(ctx)
           and UnitLevel("target") >= UnitLevel("player")
         end,
 
-        HealthIsLow=function(ctx)
-          return ctx.vars.HealthPercent < 0.5
-        end,
-
-        HealthIsCritical=function(ctx)
-          return ctx.vars.HealthPercent < 0.35
-        end,
-
         IsDangerousFight=function(ctx)
-          return ctx.vars.IsBeingDamaged
-          and ctx.vars.HealthIsLow
+          return ctx.vars.IsDangerousFoe
+          or ctx.vars.IsBossFight
+          or ctx.vars.IsPvp
+          or ctx.vars.HasMultipleTargets
+          or (ctx.vars.HealthIsLow
+          and ctx.vars.IsBeingDamaged)
         end,
 
         HasSoulFragments=function(ctx)
-          return ctx:GetBuff(ctx.SPI.SoulFragments).charges > 3
-        end,
-
-        HealthIsMedium=function(ctx)
-          return ctx.vars.HealthPercent < 0.85
+          return (ctx.vars.FracturedSouls or 0) > 3
         end,
 
         InfernalStrikeHasTwoCharges=function(ctx)
-          local sp = ctx:GetSpell(ctx.SPI.InfernalStrike)
-                    return sp.charges > 1 
-          or (sp.charges == 1 and sp.NextCharge < 2)
+          return ctx:GetSpell(ctx.SPI.InfernalStrike).charges > 1
         end,
 
-        WillNotCap2Souls=function(ctx)
-          return ctx:GetBuff(ctx.SPI.SoulFragments).charges < 4
+      }
+    }
+
+  elseif ctx.vars.Spec == "EVOKER-1" then
+    return {
+      SPI = {
+        AzureStrike = 362969,
+        BlessingOfTheBronze = 364342,
+        CauterizingFlame = 374251,
+        DeepBreath = 357210,
+        Disintegrate = 356995,
+        Dragonrage = 375087,
+        EmeraldBlossom = 355913,
+        EssenceBurst = 359565,
+        EternitySurge = 359073,
+        Expunge = 365585,
+        FireBreath = 357208,
+        Firestorm = 368847,
+        FuryOfTheAspects = 390386,
+        Hover = 358267,
+        Landslide = 358385,
+        LivingFlame = 361469,
+        ObsidianScales = 363916,
+        OppressingRoar = 372048,
+        Pyre = 357211,
+        Quell = 351338,
+        RenewingBlaze = 374348,
+        Rescue = 370665,
+        ShatteringStar = 370452,
+        SleepWalk = 360806,
+        Soar = 381322,
+        SourceOfMagic = 369459,
+        TailSwipe = 368970,
+        TimeSpiral = 374968,
+        TipTheScales = 370553,
+        Unravel = 368432,
+        VerdantEmbrace = 360995,
+        WingBuffet = 357214,
+        Zephyr = 374227,
+      },
+
+      prios = {
+        {Key="emerald-blossom", SpellId=355913, Role={ "heal", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsLow
+          end
+        },
+
+        {Key="obsidian-scales", SpellId=363916, Role={ "survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsFighting and ctx.vars.HealthIsLow
+          end
+        },
+
+        {Key="renewing-blaze", SpellId=374348, Role={ "heal","survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsFighting and cttx.vars.HealthIsMedium
+          end
+        },
+
+        {Key="zephyr", SpellId=374227, Role={ "survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsFighting and ctx.vars.HealthIsLow
+          end
+        },
+
+        {Key="firestorm-pull", SpellId=368847, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.IsFighting
+          end
+        },
+
+        {Key="living-flame-pull", SpellId=361469, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.IsFighting
+          end
+        },
+
+        {Key="eternity-surge-instant", SpellId=359073, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffTipTheScalesActive
+            and ctx.vars.HasManyTargets
+          end
+        },
+
+        {Key="fire-breath-instant", SpellId=357208, Role={ "dps", },
+          Description="",
+          RangeSpell=359073, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffTipTheScalesActive
+          end
+        },
+
+        {Key="dragonrage", SpellId=375087, Role={ "dps","cooldown", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
+          end
+        },
+
+        {Key="tip-the-scales", SpellId=370553, Role={ "preparation","cooldown", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
+          end
+        },
+
+        {Key="shattering-star", SpellId=370452, Role={ "preparation", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="pyre-no-essence", SpellId=357211, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffEssenceBurstActive 
+            and ctx.vars.HasManyTargets
+          end
+        },
+
+        {Key="disintegrate-no-essence", SpellId=356995, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffEssenceBurstActive
+          end
+        },
+
+        {Key="fire-breath", SpellId=357208, Role={ "dps", },
+          Description="",
+          RangeSpell=359073, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="eternity-surge", SpellId=359073, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="living-flame", SpellId=361469, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="deep-breath", SpellId=357210, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="firestorm", SpellId=368847, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="pyre", SpellId=357211, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HasManyTargets
+          end
+        },
+
+        {Key="disintegrate", SpellId=356995, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="tail-swipe", SpellId=368970, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.EnemyIsNear
+          end
+        },
+
+        {Key="wing-buffet", SpellId=357214, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.EnemyIsNear
+          end
+        },
+
+        {Key="azure-strike", SpellId=362969, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="quell", SpellId=351338, Role={ "interrupt", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="oppressing-roar", SpellId=372048, Role={ "slot", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+      },
+
+      slots={
+        {Type="spell", Spell=390386, 
+          Description="",
+          Icon="", Overlay=false, Charges=false
+        },
+        {Type="spell", Spell=372048, 
+          Description="",
+          Icon="", Overlay=false, Charges=false
+        },
+      },
+
+      code={
+        HealthIsLow=function(ctx)
+          return ctx.vars.HealthPercent <= 0.5
         end,
 
-        TargetIsNear=function(ctx)
-          return ctx:CheckEnemyIsClose()
+        BuffEssenceBurstActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.EssenceBurst).active
         end,
 
-        HasAtLeast60Fury=function(ctx)
-          return ctx.vars.Fury >= 60
+        BuffTipTheScalesActive=function(ctx)
+          return ctx:GetBuff(ctx.SPI.TipTheScales).active
+        end,
+
+        HasManyTargets=function(ctx)
+          return ctx.vars.Targets > 1
+        end,
+
+        EnemyIsNear=function(ctx)
+          return ctx:CheckEnemyIsNear()
+        end,
+
+        IsDangerousFight=function(ctx)
+          return ctx.vars.IsBossFight
+          or ctx.vars.IsPvp
+          or ctx.vars.HasManyTargets
+          or ctx.vars.HealthIsLow
         end,
 
       }
