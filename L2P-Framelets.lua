@@ -166,11 +166,11 @@ local function Spell_Update(this, Ctx)
   this.Valid = false
   this.Enabled = false
   this.NoMana = true
-  if not this.SpName then return false end
-  if not this:IsValidSpell() then return false end
-  
+  this.InvalidSpell = not this.SpName or not this:IsValidSpell()
+  if this.InvalidSpell then return false end
+    
   local cast = select(SPELL_CAST_TIME, GetSpellInfo(this.SpName))
-  local ok = ((cast and cast <= 0) or this.NoInstant) and this:IsUsable()
+  local ok = ((cast and cast <= 0) or this.NotInstant) and this:IsUsable()
 	this.Charges, this.MaxCharges = GetSpellCharges(this.SpName)
 
   if ok and this.Condition then
@@ -220,6 +220,7 @@ local function Spell_CheckRange(this)
 -------------------------------------------------------------------------------
   this.InRange = this.NoTarget or
     this.NoRange or
+    (this.Slot and ActionHasRange(this.Slot) and IsActionInRange(this.Slot)) or
     not this.SpellBookIndexForRange or
     IsSpellInRange(this.SpellBookIndexForRange, BOOKTYPE_SPELL, "target") == 1
     or false
@@ -298,6 +299,7 @@ local function InterruptSpell_Create(SpellOrKey, SpName, Caption)
   local Condition = function(this, Ctx)
     local casting, _, _, _, _, _, _, CantInterrupt = UnitCastingInfo("target")
     if not casting then
+      -- argument count is different!
       casting, _, _, _, _, _, CantInterrupt = UnitChannelInfo("target")
     end
     return (casting ~= 'Starblast') and (casting and CantInterrupt == false and true) or false
