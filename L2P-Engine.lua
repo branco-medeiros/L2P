@@ -39,19 +39,32 @@ function Engine:GetSpell(spell)
 --[[ returns information about a give spell: 
   - ready: true if the spell can be used, 
   - charges: the number of charges (0 if the spell doesn't have charges)
+  - max: the maximum number of charges (0 if the spell doesn't have charges)
   - cooldown: how long it will take for the cooldown to finish
   - NextCharge: how long it will take for the next charge to load
 ]]
 ------------------------------------------------------------------------------
-  local ret = {ready = false, charges = 0, cooldown = 0, NextCharge = 0} 
+  local ret = {ready = false, charges = 0, max = 0, cooldown = 0, NextCharge = 0, duration = 0} 
   local c, m, s, d = GetSpellCharges(spell)
   if c then ret.charges = c end
+  if m then ret.max = m end
   if s then ret.NextCharge = s + d - self.Now end
   local e
   s, d, e = GetSpellCooldown(spell)
   ret.ready = d == 0 or e == 0
+  ret.duration = d
   if s then ret.cooldown = s + d - self.Now end
   return ret
+end
+
+
+------------------------------------------------------------------------------
+function Engine:IsBoss(target)
+------------------------------------------------------------------------------
+-- returns true if target is a boss
+------------------------------------------------------------------------------
+  local level = UnitLevel(target) or 0
+  return level < 0 or (level > (UnitLevel("player") + 2))  
 end
 
 ------------------------------------------------------------------------------
@@ -79,11 +92,12 @@ function Engine:GetBuff(spell, target)
   - remaining: how much time remains until the debuff expires
 ]]
 ------------------------------------------------------------------------------
-  local charges, remaining, duration, name, id = self:CheckBuffOrDebuffAuto(spell, false, target)
-  --count, expires, duration, name, id, xp
+  local charges, remaining, duration, name, _, _, max = self:CheckBuffOrDebuffAuto(spell, false, target)
+  --count, expires, duration, name, id, xp max
   return {
     active = charges > 0,
     charges = charges,
+    max = max,
     remaining = remaining,
     duration = duration,
     name = name
@@ -99,16 +113,40 @@ function Engine:GetDebuff(spell, target)
   - remaining: how much time remains until the debuff expires
 ]]
 ------------------------------------------------------------------------------
-  local charges, remaining, duration, name, id = self:CheckBuffOrDebuffAuto(spell, true, target)
+  local charges, remaining, duration, name, _, _, max = self:CheckBuffOrDebuffAuto(spell, true, target)
   
   return {
     active = charges > 0,
     charges = charges,
+    max = max,
     remaining = remaining,
     duration = duration,
     name = name
   }
 end
+
+------------------------------------------------------------------------------
+function Engine:GetCastingInfo(target)
+------------------------------------------------------------------------------
+--[[ rturns information about the target casting/channelling. if target is not
+  provided it defaults to the current target
+  - spell: the spell id being cast
+  - interruptible: true if the cast can be interrupted
+  - remaining: seconds remaining to finish the cast
+]]
+------------------------------------------------------------------------------
+  local casting, _, _, startTimeMS, endTimeMS, _, _, CantInterrupt, spellId = UnitCastingInfo(target or "target")
+  if not casting then
+  -- notice that argument count is different!
+    casting, _, _, startTimeMS, endTimeMS, _, CantInterrupt, spellId = UnitChannelInfo(target or "target")
+  end
+  return {
+    spell = spellId
+    interruptible = (casting and CantInterrupt == false and true) or false
+    remaining = (casting and (endTimeMS - startTimeMS) / 1000) or 0
+  }
+end
+
 
 ------------------------------------------------------------------------------
 function Engine:ShowHideFrame()
@@ -248,6 +286,16 @@ function Engine:UpdateState(elapsed)
   self.Now = GetTime()
   self.Elapsed = elapsed
   
+  if not self.CombatTick or self.CombatTick == 0 then
+    self.CombatTick = 0
+    self.CombatStart = self.Now
+    self.HealthChangingRate = 0
+    self.CombatDamage = 0
+    self.PainPerTick = 0
+    self.BossInFight = false
+    self.PvpInFight = false
+  end
+  
   local target = UnitGUID("target")
   if target then self.MobList:Add(target) end
   
@@ -258,17 +306,36 @@ function Engine:UpdateState(elapsed)
   self.Enemies = self.Attackers
   
   for k, i in pairs(self.MobList.Items) do
+    if not self.BossInFight and self:IsBoss(k) then self.BossInFight = true end
+    if not self.PvpInFight and UnitIsPlayer(k) then self.PvpInFight = true end
     if not self.AttackerList.Items[k] then self.Enemies = self.Enemies + 1 end
   end
+  
+  if not self.BossInFight or not self.PvpInFight then
+    local done = (self.BossInFight and 1 or 0) + (self.PvpInFight and 1 or 0)
+    for k, i in pairs(self.AttackerList.Items) do
+      if not self.BossInFight and self:IsBoss(k) then 
+        self.BossInFight = true;
+        done = done + 1
+      end
+      
+      if not self.PvpInFight and UnitIsPlayer(k) then
+        self.PvpInFight = true
+        done = done + 1
+      end
+      
+      if done == 2 then break end
+    end
+  end
+  
 
   self:CalcGCD()
   self:CalcLag()
 
-  -- refreshes variables used by spec calculators
-  local TLevel = UnitLevel("target") or 0
-  
-  self.IsBossFight = (TLevel < 0) or (TLevel > (UnitLevel("player") + 2)) or UnitIsPlayer("target")
+  self.IsBossFight = self:IsBoss("target")
 	self.IsPvp = UnitIsPlayer("target") 
+  
+  self.TargetLvel = UnitLevel("target") or 0
   
   self.WeAreBeingAttacked = self.Attackers > 0
 
@@ -282,14 +349,6 @@ function Engine:UpdateState(elapsed)
   self.HealthMax = HealthMax
   self.HealthPercent = Health/HealthMax
 
-  if not self.CombatTick or self.CombatTick == 0 then
-    self.CombatTick = 0
-    self.PrevHealth = Health
-    self.HealthChangingRate = 0
-    self.CombatDamage = 0
-    self.PainPerTick = 0
-  end
-  
   self.CombatTick = self.CombatTick + 1
   
   if self.ElapsedDamage > 0 then 
@@ -303,13 +362,26 @@ function Engine:UpdateState(elapsed)
   end
   
 	
-  self.HasBloodLust = (self:CheckBuff({SPN.Bloodlust, SPN.Heroism, SPN.TimeWarp, SPN.AncientHysteria}) > 0)
+  self.HasBloodLust = (self:CheckBuff({
+    SPN.Bloodlust, 
+    SPN.Heroism, 
+    SPN.TimeWarp, 
+    SPN.AncientHysteria
+  }) > 0)
+  
   self.IsMoving = GetUnitSpeed("player") > 0
   self.TargetIsMoving = GetUnitSpeed("target") > 0
   
   self.TargetHealthMax = UnitHealthMax("target") or 0
   self.TargetHealth = UnitHealth("target") or 0
   self.TargetHealthPercent = (self.TargetHealthMax > 0 and self.TargetHealth/self.TargetHealthMax) or 0; 
+  
+  local ci = self:GetCastingInfo("target")
+  self.TargetIsCasting = ci.remaining > 0
+  self.TargetCastingSpell = ci.spell
+  self.TargetInterruptible = ci.interruptible
+  
+  self.CombatDuration = self.Now - (self.CombatStart or self.Now)
   
   self.Power = {}
   
@@ -541,7 +613,7 @@ function Engine:CheckBuffOrDebuffAuto(What, isDebuff, target)
 -------------------------------------------------------------------------------
   if not self.Now or self.Now == 0 then self.Now = GetTime() end
   local Getter
-	if	isDebuff then
+	if isDebuff then
 		target = target or "target"
 		local src = (target ~= "PLAYER" and "PLAYER") or nil 
 		Getter = function(i) return UnitDebuff(target, i, src) end
@@ -565,7 +637,8 @@ function Engine:CheckBuffOrDebuffAuto(What, isDebuff, target)
 					expires = expires - self.Now 
 				end
         
-				return count, expires, duration, name, id, xp
+        local _, m, _, _ = GetSpellCharges(id)
+				return count, expires, duration, name, id, xp, m or 0
 			end
 		end
   end
@@ -612,7 +685,7 @@ function Engine:CheckEnemyDistance(distance)
 end
 
 -------------------------------------------------------------------------------
-function Engine:CheckEnemyIsClose()
+function Engine:CheckEnemyIsNear()
 -------------------------------------------------------------------------------
   return self:CheckEnemyDistance(3)
 end
@@ -738,6 +811,8 @@ function Engine:RefreshVars()
   vars.IsBossFight = self.IsBossFight
   vars.IsPvp = self.IsPvp
   vars.GCD = self.GCD
+  vars.BossInFight = self.BossInFight
+  vars.PvpInFight = self.PvpInFight
   vars.HealthRate = self.HealthChangingRate
   vars.HealthChangingRate = self.HealthChangingRate
   vars.LastCastSpell = self.LastCastSpell
@@ -749,7 +824,19 @@ function Engine:RefreshVars()
   vars.CombatDamage = self.CombatDamage
   vars.PainPerTick = self.PainPerTick
   vars.IsFighting = UnitAffectingCombat("player")
+  vars.CombatStart = self.CombatStart
+  vars.Mobs = self.Mobs
+  vars.PvpInfFight = self.PvpInfFight
+  vars.TargetLvel = self.TargetLvel
+  vars.WeAreBeingAttacked = self.WeAreBeingAttacked
+  vars.PrevHealth = self.PrevHealth
+  vars.ElapsedDamage = self.ElapsedDamage
+  vars.TargetIsCasting = self.TargetIsCasting
+  vars.TargetCastingSpell = self.TargetCastingSpell
+  vars.TargetInterruptible = self.TargetInterruptible
+  vars.CombatDuration = self.CombatDuration
   
+
   for k, f in pairs(self.code) do
     vars[k] = f(self)
   end
