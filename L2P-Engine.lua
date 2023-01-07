@@ -11,6 +11,8 @@ local SPN = {
   Heroism         = GetSpellInfo(32182),
   TimeWarp        = GetSpellInfo(80353),
   AncientHysteria = GetSpellInfo(90355),
+  TimeWarp        = GetSpellInfo(80353),
+  FuryOfTheAspects = GetTalentInfo(390386)
 }
 
 
@@ -57,6 +59,12 @@ function Engine:GetSpell(spell)
   return ret
 end
 
+------------------------------------------------------------------------------
+function Engine:bool(value)
+------------------------------------------------------------------------------
+  if not value or value == 0 then return false end
+  return true
+end
 
 ------------------------------------------------------------------------------
 function Engine:IsBoss(target)
@@ -141,8 +149,8 @@ function Engine:GetCastingInfo(target)
     casting, _, _, startTimeMS, endTimeMS, _, CantInterrupt, spellId = UnitChannelInfo(target or "target")
   end
   return {
-    spell = spellId
-    interruptible = (casting and CantInterrupt == false and true) or false
+    spell = spellId,
+    interruptible = (casting and CantInterrupt == false and true) or false,
     remaining = (casting and (endTimeMS - startTimeMS) / 1000) or 0
   }
 end
@@ -340,10 +348,11 @@ function Engine:UpdateState(elapsed)
   self.WeAreBeingAttacked = self.Attackers > 0
 
   --calcs health and pain
-  self.PrevHealth = self.Health
+  self.PrevHealth = self.Health 
   
   local Health = UnitHealth("player")
   local HealthMax = UnitHealthMax("player")
+  if not self.PrevHealth then self.PrevHealth = Health end
   
   self.Health = Health
   self.HealthMax = HealthMax
@@ -357,7 +366,7 @@ function Engine:UpdateState(elapsed)
   end
   
   if Health ~= self.PrevHealth then 
-    self.HealthChangingRate = (Health - self.PrevHealth) / self.PrevHealth
+    self.HealthChangingRate = (Health - self.PrevHealth ) / self.PrevHealth
     self.PrevHealth = Health
   end
   
@@ -366,7 +375,8 @@ function Engine:UpdateState(elapsed)
     SPN.Bloodlust, 
     SPN.Heroism, 
     SPN.TimeWarp, 
-    SPN.AncientHysteria
+    SPN.AncientHysteria,
+    SPN.FuryOfTheAspects
   }) > 0)
   
   self.IsMoving = GetUnitSpeed("player") > 0
@@ -374,12 +384,15 @@ function Engine:UpdateState(elapsed)
   
   self.TargetHealthMax = UnitHealthMax("target") or 0
   self.TargetHealth = UnitHealth("target") or 0
-  self.TargetHealthPercent = (self.TargetHealthMax > 0 and self.TargetHealth/self.TargetHealthMax) or 0; 
+  self.TargetHealthPercent = (self.TargetHealthMax > 0 and self.TargetHealth/self.TargetHealthMax) or 0;
+
+  self.IsLosing = (self.TargetHealthPercent - self.HealthPercent) > 0.09
   
   local ci = self:GetCastingInfo("target")
   self.TargetIsCasting = ci.remaining > 0
   self.TargetCastingSpell = ci.spell
   self.TargetInterruptible = ci.interruptible
+  self.TargetCastingRemaining = ci.remaining
   
   self.CombatDuration = self.Now - (self.CombatStart or self.Now)
   
