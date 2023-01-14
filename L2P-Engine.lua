@@ -291,44 +291,60 @@ function Engine:UpdateState(elapsed)
 ------------------------------------------------------------------------------
 -- colects the information needed to select the spells
 ------------------------------------------------------------------------------
-  self.Now = GetTime()
-  self.Elapsed = elapsed
+  self.vars = self.vars or {}
+  local v = self.vars
   
-  if not self.CombatTick or self.CombatTick == 0 then
-    self.CombatTick = 0
-    self.CombatStart = self.Now
-    self.HealthChangingRate = 0
-    self.CombatDamage = 0
-    self.PainPerTick = 0
-    self.BossInFight = false
-    self.PvpInFight = false
+  self.Now = GetTime()
+  v.Now = self.Now
+  
+  v.Elapsed = elapsed
+  if not self.ElapsedDamage then self.ElapsedDamage = 0 end
+  if not self.CombatTick then self.CombatTick = 0 end
+  v.ElapsedDamage = self.ElapsedDamage
+  v.LastCastSpell = self.LastCastSpell
+  v.LastCastTime = self.LastCastTime
+  v.IsFighting = UnitAffectingCombat("player")
+  v.GCD = self.GCD
+
+  
+  if self.CombatTick == 0 then
+  -- prime vars, since the fight just started
+    v.CombatStart = v.Now
+    v.HealthChangingRate = 0
+    v.CombatDamage = 0
+    v.PainPerTick = 0
+    v.BossInFight = false
+    v.PvpInFight = false
   end
+  v.CombatTick = self.CombatTick
+  v.CombatDuration = v.Now - (v.CombatStart or v.Now)
   
   local target = UnitGUID("target")
   if target then self.MobList:Add(target) end
   
   self.Mobs = self.MobList:Refresh()
-  self.Targets = self.Mobs
+  v.Mobs = self.Mobs
+  v.Targets = v.Mobs
 	
-  self.Attackers = self.AttackerList:Refresh()
-  self.Enemies = self.Attackers
+  v.Attackers = self.AttackerList:Refresh()
+  v.Enemies = v.Attackers
   
   for k, i in pairs(self.MobList.Items) do
-    if not self.BossInFight and self:IsBoss(k) then self.BossInFight = true end
-    if not self.PvpInFight and UnitIsPlayer(k) then self.PvpInFight = true end
-    if not self.AttackerList.Items[k] then self.Enemies = self.Enemies + 1 end
+    if not v.BossInFight and self:IsBoss(k) then v.BossInFight = true end
+    if not v.PvpInFight and UnitIsPlayer(k) then v.PvpInFight = true end
+    if not self.AttackerList.Items[k] then v.Enemies = v.Enemies + 1 end
   end
   
-  if not self.BossInFight or not self.PvpInFight then
-    local done = (self.BossInFight and 1 or 0) + (self.PvpInFight and 1 or 0)
+  if not v.BossInFight or not v.PvpInFight then
+    local done = (v.BossInFight and 1 or 0) + (v.PvpInFight and 1 or 0)
     for k, i in pairs(self.AttackerList.Items) do
-      if not self.BossInFight and self:IsBoss(k) then 
-        self.BossInFight = true;
+      if not v.BossInFight and self:IsBoss(k) then 
+        v.BossInFight = true;
         done = done + 1
       end
       
-      if not self.PvpInFight and UnitIsPlayer(k) then
-        self.PvpInFight = true
+      if not v.PvpInFight and UnitIsPlayer(k) then
+        v.PvpInFight = true
         done = done + 1
       end
       
@@ -340,38 +356,34 @@ function Engine:UpdateState(elapsed)
   self:CalcGCD()
   self:CalcLag()
 
-  self.IsBossFight = self:IsBoss("target")
-	self.IsPvp = UnitIsPlayer("target") 
+  v.IsBossFight = self:IsBoss("target")
+	v.IsPvp = UnitIsPlayer("target") 
   
-  self.TargetLvel = UnitLevel("target") or 0
+  v.TargetLevel = UnitLevel("target") or 0
   
-  self.WeAreBeingAttacked = self.Attackers > 0
+  v.WeAreBeingAttacked = v.Attackers > 0
 
   --calcs health and pain
-  self.PrevHealth = self.Health 
-  
   local Health = UnitHealth("player")
   local HealthMax = UnitHealthMax("player")
-  if not self.PrevHealth then self.PrevHealth = Health end
-  
-  self.Health = Health
-  self.HealthMax = HealthMax
-  self.HealthPercent = Health/HealthMax
+  v.PrevHealth = v.Health or Health
+  v.Health = Health
+  v.HealthMax = HealthMax
+  v.HealthPercent = Health/HealthMax
+  if Health ~= v.PrevHealth then 
+    v.HealthChangingRate = (Health - v.PrevHealth ) / v.PrevHealth
+    v.PrevHealth = Health
+  end
+  v.HealthRate = v.HealthChangingRate
 
-  self.CombatTick = self.CombatTick + 1
-  
-  if self.ElapsedDamage > 0 then 
-    self.CombatDamage = self.CombatDamage + self.ElapsedDamage
-    self.PainPerTick = self.CombatDamage / self.CombatTick / HealthMax * 100
+  if v.ElapsedDamage > 0 then 
+    v.CombatDamage = v.CombatDamage + v.ElapsedDamage
+    v.PainPerTick = v.CombatDamage / v.CombatTick / HealthMax * 100
   end
   
-  if Health ~= self.PrevHealth then 
-    self.HealthChangingRate = (Health - self.PrevHealth ) / self.PrevHealth
-    self.PrevHealth = Health
-  end
   
 	
-  self.HasBloodLust = (self:CheckBuff({
+  v.HasBloodLust = (self:CheckBuff({
     SPN.Bloodlust, 
     SPN.Heroism, 
     SPN.TimeWarp, 
@@ -379,40 +391,41 @@ function Engine:UpdateState(elapsed)
     SPN.FuryOfTheAspects
   }) > 0)
   
-  self.IsMoving = GetUnitSpeed("player") > 0
-  self.TargetIsMoving = GetUnitSpeed("target") > 0
+  v.IsMoving = GetUnitSpeed("player") > 0
+  v.TargetIsMoving = GetUnitSpeed("target") > 0
   
-  self.TargetHealthMax = UnitHealthMax("target") or 0
-  self.TargetHealth = UnitHealth("target") or 0
-  self.TargetHealthPercent = (self.TargetHealthMax > 0 and self.TargetHealth/self.TargetHealthMax) or 0;
+  v.TargetHealthMax = UnitHealthMax("target") or 0
+  v.TargetHealth = UnitHealth("target") or 0
+  v.TargetHealthPercent = (v.TargetHealthMax > 0 and v.TargetHealth/v.TargetHealthMax) or 0;
 
-  self.IsLosing = (self.TargetHealthPercent - self.HealthPercent) > 0.09
+  v.IsLosing = (v.TargetHealthPercent - v.HealthPercent) > 0.09
   
   local ci = self:GetCastingInfo("target")
-  self.TargetIsCasting = ci.remaining > 0
-  self.TargetCastingSpell = ci.spell
-  self.TargetInterruptible = ci.interruptible
-  self.TargetCastingRemaining = ci.remaining
+  v.TargetIsCasting = ci.remaining > 0
+  v.TargetCastingSpell = ci.spell
+  v.TargetInterruptible = ci.interruptible
+  v.TargetCastingRemaining = ci.remaining
   
-  self.CombatDuration = self.Now - (self.CombatStart or self.Now)
-  
-  self.Power = {}
-  
-  for k, v in pairs(Enum.PowerType) do
-    if v >= 0 and k ~= "NumPowerTypes" then 
-      local maxPower = UnitPowerMax("player", v)
+  for k, p in pairs(Enum.PowerType) do
+    if p >= 0 and k ~= "NumPowerTypes" then 
+      local maxPower = UnitPowerMax("player", p)
       if maxPower > 0 then 
-        local power = UnitPower("player", v) or 0
-        self.Power[k] = power 
-        self.Power[k .. "Max"] = maxPower
-        self.Power[k .. "Percent"] = power/maxPower
+        local power = UnitPower("player", p) or 0
+        v[k] = power 
+        v[k .. "Max"] = maxPower
+        v[k .. "Percent"] = power/maxPower
+        v[k .. "Pct"] = (power/maxPower) * 100
       end
     end
   end
   
-  self.ElapsedDamage = 0
+  for k, f in pairs(self.code) do
+    v[k] = f(self)
+  end
   
-  self:RefreshVars()
+  self.ElapsedDamage = 0
+  self.CombatTick = self.CombatTick + 1
+  
 end -- fn Engine_UpdateState
 
 ------------------------------------------------------------------------------
@@ -678,7 +691,7 @@ function Engine:CheckEnemyDistance(distance)
 -------------------------------------------------------------------------------
   distance = distance or 3
   local result = CheckInteractDistance("target", distance) or false
-  if not result and self.Attackers > 0 then
+  if not result then
     for k, n in pairs(self.AttackerList) do
       if CheckInteractDistance(k, distance) then
         result = true
@@ -686,7 +699,7 @@ function Engine:CheckEnemyDistance(distance)
       end
     end
   end
-  if not result and self.Mobs > 0 then
+  if not result then
     for k, n in pairs(self.MobList) do
       if CheckInteractDistance(k, distance) then
         result = true
@@ -797,62 +810,6 @@ function Engine:Dump()
 	for n, v in ipairs(temp) do
     print(v)
 	end
-end
-
--------------------------------------------------------------------------------
-function Engine:RefreshVars()
--------------------------------------------------------------------------------
--- loads value sinto Engine.vars (which will be used by the current spec-handler)
--------------------------------------------------------------------------------
-  local vars = self.vars or {}
-  self.vars = vars
-  
-  for k, v in pairs(self.Power) do
-    vars[k] = v
-  end
-  
-  vars.Health = self.Health
-  vars.HealthMax = self.HealthMax
-  vars.HealthPercent = self.HealthPercent
-  vars.TargetHealth = self.TargetHealth
-  vars.TargetHealthMax = self.TargetHealthMax
-  vars.TargetHealthPercent = self.TargetHealthPercent
-  vars.Attackers = self.Attackers
-  vars.Targets = self.Targets
-  vars.Enemies = self.Enemies
-  vars.Now = self.Now
-  vars.IsBossFight = self.IsBossFight
-  vars.IsPvp = self.IsPvp
-  vars.GCD = self.GCD
-  vars.BossInFight = self.BossInFight
-  vars.PvpInFight = self.PvpInFight
-  vars.HealthRate = self.HealthChangingRate
-  vars.HealthChangingRate = self.HealthChangingRate
-  vars.LastCastSpell = self.LastCastSpell
-  vars.LastCastTime = self.LastCastTime
-  vars.IsMoving = self.IsMoving
-  vars.TargetIsMoving = self.TargetIsMoving
-  vars.HasBloodLust = self.HasBloodLust
-  vars.CombatTick = self.CombatTick
-  vars.CombatDamage = self.CombatDamage
-  vars.PainPerTick = self.PainPerTick
-  vars.IsFighting = UnitAffectingCombat("player")
-  vars.CombatStart = self.CombatStart
-  vars.Mobs = self.Mobs
-  vars.PvpInfFight = self.PvpInfFight
-  vars.TargetLvel = self.TargetLvel
-  vars.WeAreBeingAttacked = self.WeAreBeingAttacked
-  vars.PrevHealth = self.PrevHealth
-  vars.ElapsedDamage = self.ElapsedDamage
-  vars.TargetIsCasting = self.TargetIsCasting
-  vars.TargetCastingSpell = self.TargetCastingSpell
-  vars.TargetInterruptible = self.TargetInterruptible
-  vars.CombatDuration = self.CombatDuration
-  
-
-  for k, f in pairs(self.code) do
-    vars[k] = f(self)
-  end
 end
 
 -------------------------------------------------------------------------------
