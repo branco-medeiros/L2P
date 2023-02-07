@@ -245,7 +245,7 @@ function Engine:OnCombatLog()
 		-- if self is one of our own events then
 		-- adds the mob to our list, scheduling it to be removed if we dont hear
 		-- from it in a short while
-		self.MobList:Add(dest)
+		if dest ~= self.PlayerGUID then self.MobList:Add(dest) end
 
 	elseif self.PlayerGUID == dest then
 		-- otherwise, if is someone attacking us
@@ -614,9 +614,16 @@ end
 -------------------------------------------------------------------------------
 function Engine:HasTalentByID(id)
 -------------------------------------------------------------------------------
-  if not self.talents then self:RefreshTalents() end
-  return (self.talents[tostring(id)] or 0) > 0
+  return self:GetTalentRank(id) > 0
 end
+
+-------------------------------------------------------------------------------
+function Engine:GetTalentRank(id)
+-------------------------------------------------------------------------------
+  if not self.talents then self:RefreshTalents() end
+  return self.talents[tostring(id)] or 0
+end
+
 
 -------------------------------------------------------------------------------
 function Engine:CheckBuffDebuff(Getter, Comparer)
