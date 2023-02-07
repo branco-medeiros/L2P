@@ -6,6 +6,20 @@ function L2P:GetSpecData(ctx)
   elseif ctx.vars.Spec == "DEATH-KNIGHT-1" then
     return {
       SPI = {
+        Animosity = 375797,
+        BlastFurnace = 375510,
+        Burnout = 375801,
+        ChargedBlast = 370455,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
+        EverburningFlame = 370819,
+        FeedTheFlames = 369846,
+        FontOfMagic = 375783,
+        LeapingFlames = 369939,
+        RubyEmbers = 365937,
+        Scintillation = 370821,
+        Snapfire = 370783,
+        Volatility = 369089,
       },
 
       prios = {
@@ -21,6 +35,20 @@ function L2P:GetSpecData(ctx)
   elseif ctx.vars.Spec == "MAGE-1" then
     return {
       SPI = {
+        Animosity = 375797,
+        BlastFurnace = 375510,
+        Burnout = 375801,
+        ChargedBlast = 370455,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
+        EverburningFlame = 370819,
+        FeedTheFlames = 369846,
+        FontOfMagic = 375783,
+        LeapingFlames = 369939,
+        RubyEmbers = 365937,
+        Scintillation = 370821,
+        Snapfire = 370783,
+        Volatility = 369089,
       },
 
       prios = {
@@ -36,6 +64,20 @@ function L2P:GetSpecData(ctx)
   elseif ctx.vars.Spec == "MAGE-2" then
     return {
       SPI = {
+        Animosity = 375797,
+        BlastFurnace = 375510,
+        Burnout = 375801,
+        ChargedBlast = 370455,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
+        EverburningFlame = 370819,
+        FeedTheFlames = 369846,
+        FontOfMagic = 375783,
+        LeapingFlames = 369939,
+        RubyEmbers = 365937,
+        Scintillation = 370821,
+        Snapfire = 370783,
+        Volatility = 369089,
       },
 
       prios = {
@@ -51,16 +93,20 @@ function L2P:GetSpecData(ctx)
   elseif ctx.vars.Spec == "PALADIN-3" then
     return {
       SPI = {
+        Animosity = 375797,
         ArcaneTorrent = 155145,
         AshenHallow = 316958,
         AvengingWrath = 31884,
         BladeOfJustice = 184575,
+        BlastFurnace = 375510,
         BlessingOfAutumn = 328622,
         BlessingOfSpring = 328282,
         BlessingOfSummer = 328620,
         BlessingOfWinter = 328281,
         BlindingLight = 115750,
         BloodOfTheEnemy = 297108,
+        Burnout = 375801,
+        ChargedBlast = 370455,
         ConcentratedFlame = 295373,
         Consecration = 26573,
         ConsecrationDebuff = 204242,
@@ -72,12 +118,17 @@ function L2P:GetSpecData(ctx)
         DivineStorm = 53385,
         DivineToll = 304971,
         EmpyreanPower = 326733,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
+        EverburningFlame = 370819,
         ExecutionSentence = 343527,
         Exorcism = 383185,
+        FeedTheFlames = 369846,
         FinalReckoning = 343721,
         FiresOfJusticeBuff = 203316,
         FlashOfLight = 19750,
         FocusedAzeriteBeam = 299336,
+        FontOfMagic = 375783,
         GuardianOfAzeroth = 299358,
         HammerOfJustice = 853,
         HammerOfWrath = 24275,
@@ -86,19 +137,24 @@ function L2P:GetSpecData(ctx)
         JudgmentOld = 20271,
         JusticarSVengeance = 215661,
         LayOnHands = 633,
+        LeapingFlames = 369939,
         MemoryOfLucidDreams = 299374,
         PurifyingBlast = 299347,
         RadiantDecree = 384052,
         Rebuke = 96231,
         Reckoning = 247676,
+        RubyEmbers = 365937,
+        Scintillation = 370821,
         SelflessHealer = 114250,
         Seraphim = 152262,
         ShieldOfTheRighteous = 53600,
         ShieldOfVengeance = 184662,
+        Snapfire = 370783,
         TemplarSVerdict = 85256,
         TheUnboundForce = 298452,
         VanquisherSHammer = 328204,
         VisionOfPerfection = 303344,
+        Volatility = 369089,
         WakeOfAshes = 255937,
         WordOfGlory = 85673,
       },
@@ -656,15 +712,19 @@ function L2P:GetSpecData(ctx)
   elseif ctx.vars.Spec == "PALADIN-2" then
     return {
       SPI = {
+        Animosity = 375797,
         ArcaneTorrent = 155145,
         ArdentDefender = 31850,
         AshenHallow = 316958,
         AvengerSShield = 31935,
         AvengingWrath = 31884,
         BastionOfLight = 378974,
+        BlastFurnace = 375510,
         BlessedHammer = 204019,
         BlessingOfSummer = 328620,
         BloodOfTheEnemy = 297108,
+        Burnout = 375801,
+        ChargedBlast = 370455,
         ConcentratedFlame = 295373,
         Consecration = 26573,
         ConsecrationBuff = 188370,
@@ -673,10 +733,15 @@ function L2P:GetSpecData(ctx)
         DivinePurpose = 223817,
         DivineShield = 642,
         DivineToll = 304971,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
+        EverburningFlame = 370819,
         ExecutionSentence = 343527,
         EyeOfTyr = 387174,
+        FeedTheFlames = 369846,
         FlashOfLight = 19750,
         FocusedAzeriteBeam = 299336,
+        FontOfMagic = 375783,
         GuardianOfAncientKings = 86659,
         GuardianOfAzeroth = 299358,
         HammerOfJustice = 853,
@@ -687,16 +752,21 @@ function L2P:GetSpecData(ctx)
         Judgment = 275779,
         JudgmentOld = 20271,
         LayOnHands = 633,
+        LeapingFlames = 369939,
         MemoryOfLucidDreams = 299374,
         MomentOfGlory = 327193,
         PurifyingBlast = 299347,
         Rebuke = 96231,
+        RubyEmbers = 365937,
         SanctifiedWrath = 171648,
+        Scintillation = 370821,
         SentinelBuff = 389539,
         Seraphim = 152262,
         ShieldOfTheRighteous = 53600,
         ShiningLight = 321136,
+        Snapfire = 370783,
         VanquisherSHammer = 328204,
+        Volatility = 369089,
         WakeOfAshes = 255937,
         WordOfGlory = 85673,
       },
@@ -1108,11 +1178,15 @@ function L2P:GetSpecData(ctx)
     return {
       SPI = {
         AncientAftershock = 325886,
+        Animosity = 375797,
         Avatar = 107574,
         BitterImmunity = 383762,
         BlademastersTormentTalent = 390138,
         Bladestorm = 227847,
+        BlastFurnace = 375510,
         BloodAndThunderTalent = 384277,
+        Burnout = 375801,
+        ChargedBlast = 370455,
         Cleave = 845,
         ColossusSmash = 167105,
         ColossusSmashDebuff = 208086,
@@ -1122,16 +1196,22 @@ function L2P:GetSpecData(ctx)
         DeepWounds = 262115,
         DefensiveStance = 197690,
         DieByTheSword = 118038,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
+        EverburningFlame = 370819,
         Execute = 163201,
         ExecutionersPrecisionTalent = 386634,
+        FeedTheFlames = 369846,
         FervorOfBattleTalent = 202316,
         FocusedAzeriteBeam = 299336,
+        FontOfMagic = 375783,
         GuardianOfAzeroth = 299358,
         Hamstring = 1715,
         IgnorePain = 190456,
         ImpendingVictory = 202168,
         InForTheKill = 248622,
         IntimidatingShout = 5246,
+        LeapingFlames = 369939,
         MemoryOfLucidDreams = 299374,
         MortalStrike = 12294,
         Overpower = 7384,
@@ -1139,8 +1219,11 @@ function L2P:GetSpecData(ctx)
         PurifyingBlast = 299347,
         RendArms = 772,
         RendDebuff = 388539,
+        RubyEmbers = 365937,
+        Scintillation = 370821,
         Skullsplitter = 260643,
         Slam = 1464,
+        Snapfire = 370783,
         SpearOfBastion = 376079,
         SpearOfBastionOld = 307865,
         StormBolt = 107570,
@@ -1150,6 +1233,7 @@ function L2P:GetSpecData(ctx)
         ThunderousRoar = 384318,
         TideOfBloodTalent = 386357,
         VictoryRush = 34428,
+        Volatility = 369089,
         Warbreaker = 262161,
         Whirlwind = 1680,
       },
@@ -1588,11 +1672,15 @@ function L2P:GetSpecData(ctx)
   elseif ctx.vars.Spec == "DEMONHUNTER-1" then
     return {
       SPI = {
+        Animosity = 375797,
         Annihilation = 201427,
         BladeDance = 188499,
+        BlastFurnace = 375510,
         Blur = 198589,
+        Burnout = 375801,
         ChaosNova = 179057,
         ChaosStrike = 162794,
+        ChargedBlast = 370455,
         ConsumeMagic = 278326,
         Darkness = 196718,
         DeathSweep = 210152,
@@ -1601,26 +1689,36 @@ function L2P:GetSpecData(ctx)
         Disrupt = 183752,
         ElysianDecree = 390163,
         EssenceBreak = 258860,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
+        EverburningFlame = 370819,
         EyeBeam = 198013,
+        FeedTheFlames = 369846,
         FelBarrage = 258925,
         Felblade = 232893,
         FelRush = 195072,
         FirstBlood = 206416,
         FodderToTheFlame = 329554,
+        FontOfMagic = 375783,
         GlaiveTempest = 342817,
         ImmolationAura = 258920,
         Initiative = 391215,
         InnerDemons = 337548,
+        LeapingFlames = 369939,
         Metamorphosis = 187827,
         MetamorphosisOld = 191427,
         Momentum = 206476,
         Netherwalk = 196555,
+        RubyEmbers = 365937,
+        Scintillation = 370821,
         SigilOfFlame = 204596,
         SinfulBrand = 317009,
+        Snapfire = 370783,
         TheHunt = 370965,
         ThrowGlaive = 204157,
         UnboundChaos = 347462,
         VengefulRetreat = 198793,
+        Volatility = 369089,
       },
 
       prios = {
@@ -1984,20 +2082,29 @@ function L2P:GetSpecData(ctx)
   elseif ctx.vars.Spec == "WARRIOR-3" then
     return {
       SPI = {
+        Animosity = 375797,
         Avatar = 107574,
         BattleShout = 6673,
         BattleStance = 386164,
         BerserkerRage = 18499,
         BerserkerShout = 384100,
         BitterImmunity = 383762,
+        BlastFurnace = 375510,
+        Burnout = 375801,
         ChallengingShout = 1161,
+        ChargedBlast = 370455,
         DeepWounds = 262115,
         DefensiveStance = 386208,
         DemoralizingShout = 1160,
         Devastate = 20243,
         DisruptingShout = 386071,
         DragonRoar = 118000,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
+        EverburningFlame = 370819,
         Execute = 163201,
+        FeedTheFlames = 369846,
+        FontOfMagic = 375783,
         Hamstring = 1715,
         HeroicLeap = 6544,
         HeroicThrow = 57755,
@@ -2006,11 +2113,14 @@ function L2P:GetSpecData(ctx)
         Intercept = 198304,
         IntimidatingShout = 5246,
         LastStand = 12975,
+        LeapingFlames = 369939,
         Pummel = 6552,
         RallyingCry = 97462,
         Ravager = 228920,
         Rend = 394062,
         Revenge = 6572,
+        RubyEmbers = 365937,
+        Scintillation = 370821,
         ShatteringThrow = 64382,
         ShieldBlock = 2565,
         ShieldBlockBuff = 132404,
@@ -2019,6 +2129,7 @@ function L2P:GetSpecData(ctx)
         ShieldWall = 871,
         Shockwave = 46968,
         Slam = 1464,
+        Snapfire = 370783,
         SpearOfBastion = 376079,
         SpellBlock = 392966,
         SpellReflection = 23920,
@@ -2028,6 +2139,7 @@ function L2P:GetSpecData(ctx)
         ThunderousRoar = 384318,
         TitanicThrow = 384090,
         VictoryRush = 34428,
+        Volatility = 369089,
         Whirlwind = 1680,
         WreckingThrow = 384110,
       },
@@ -2416,27 +2528,40 @@ function L2P:GetSpecData(ctx)
   elseif ctx.vars.Spec == "DEMONHUNTER-2" then
     return {
       SPI = {
+        Animosity = 375797,
+        BlastFurnace = 375510,
+        Burnout = 375801,
         ChaosNova = 179057,
+        ChargedBlast = 370455,
         ConsumeMagic = 278326,
         Darkness = 196718,
         DemonSpikes = 203720,
         DemonSpikesBuff = 203819,
         Disrupt = 183752,
         ElysianDecree = 390163,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
+        EverburningFlame = 370819,
+        FeedTheFlames = 369846,
         Felblade = 232893,
         FelDevastation = 212084,
         FieryBrand = 204021,
+        FontOfMagic = 375783,
         Fracture = 263642,
         ImmolationAura = 258920,
         InfernalStrike = 189110,
+        LeapingFlames = 369939,
         Metamorphosis = 187827,
         RazelikhSDefilement = 337544,
+        RubyEmbers = 365937,
+        Scintillation = 370821,
         Shear = 203783,
         ShearOld = 203782,
         SigilOfFlame = 204596,
         SigilOfMisery = 207684,
         SigilOfSilence = 202137,
         SinfulBrand = 317009,
+        Snapfire = 370783,
         SoulBarrier = 263648,
         SoulCarver = 207407,
         SoulCleave = 228477,
@@ -2446,6 +2571,7 @@ function L2P:GetSpecData(ctx)
         TheHuntDebuff = 323639,
         ThrowGlaive = 204157,
         VengefulRetreat = 198793,
+        Volatility = 369089,
       },
 
       prios = {
@@ -2752,24 +2878,33 @@ function L2P:GetSpecData(ctx)
       }
     }
 
-  elseif ctx.vars.Spec == "EVOKER-1" then
+  elseif ctx.vars.Spec == "EVOKER-01" then
     return {
       SPI = {
+        Animosity = 375797,
         AzureStrike = 362969,
+        BlastFurnace = 375510,
         BlessingOfTheBronze = 364342,
+        Burnout = 375801,
         CauterizingFlame = 374251,
+        ChargedBlast = 370455,
         DeepBreath = 357210,
         Disintegrate = 356995,
         Dragonrage = 375087,
         EmeraldBlossom = 355913,
-        EssenceBurst = 359565,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
         EternitySurge = 359073,
+        EverburningFlame = 370819,
         Expunge = 365585,
+        FeedTheFlames = 369846,
         FireBreath = 357208,
         Firestorm = 368847,
+        FontOfMagic = 375783,
         FuryOfTheAspects = 390386,
         Hover = 358267,
         Landslide = 358385,
+        LeapingFlames = 369939,
         LivingFlame = 361469,
         ObsidianScales = 363916,
         OppressingRoar = 372048,
@@ -2777,8 +2912,11 @@ function L2P:GetSpecData(ctx)
         Quell = 351338,
         RenewingBlaze = 374348,
         Rescue = 370665,
+        RubyEmbers = 365937,
+        Scintillation = 370821,
         ShatteringStar = 370452,
         SleepWalk = 360806,
+        Snapfire = 370783,
         Soar = 381322,
         SourceOfMagic = 369459,
         TailSwipe = 368970,
@@ -2786,6 +2924,7 @@ function L2P:GetSpecData(ctx)
         TipTheScales = 370553,
         Unravel = 368432,
         VerdantEmbrace = 360995,
+        Volatility = 369089,
         WingBuffet = 357214,
         Zephyr = 374227,
       },
@@ -3082,6 +3221,576 @@ function L2P:GetSpecData(ctx)
           or ctx.vars.IsPvp
           or ctx.vars.HasManyTargets
           or ctx.vars.HealthIsLow
+        end,
+
+      }
+    }
+
+  elseif ctx.vars.Spec == "EVOKER-1" then
+    return {
+      SPI = {
+        Animosity = 375797,
+        AzureStrike = 362969,
+        BlastFurnace = 375510,
+        Burnout = 375801,
+        ChargedBlast = 370455,
+        DeepBreath = 357210,
+        Disintegrate = 356995,
+        Dragonrage = 375087,
+        EmeraldBlossom = 355913,
+        EssenceBurst = 359618,
+        EternitySSpan = 375757,
+        EternitySurge = 359073,
+        EverburningFlame = 370819,
+        FeedTheFlames = 369846,
+        FireBreath = 357208,
+        Firestorm = 368847,
+        FontOfMagic = 375783,
+        LeapingFlames = 369939,
+        LivingFlame = 361469,
+        ObsidianScales = 363916,
+        Pyre = 357211,
+        RenewingBlaze = 374348,
+        RubyEmbers = 365937,
+        Scintillation = 370821,
+        ShatteringStar = 370452,
+        Snapfire = 370783,
+        TipTheScales = 370553,
+        Volatility = 369089,
+      },
+
+      prios = {
+        {Key="PreCombat_Firestorm", SpellId=368847, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModePreCombat and ctx.vars.HasTalentFirestorm
+          end
+        },
+
+        {Key="PreCombat_LivingFlame", SpellId=361469, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModePreCombat and 
+            not ctx.vars.HasTalentFirestorm
+          end
+        },
+
+        {Key="Survival_EmeraldBlossom", SpellId=355913, Role={ "survival","heal", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsDropping
+          end
+        },
+
+        {Key="Survival_RenewingBlaze", SpellId=374348, Role={ "survival","heal", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsMedium
+          end
+        },
+
+        {Key="Survival_ObsidianScales", SpellId=363916, Role={ "survival","heal", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsMedium and 
+            not ctx.vars.BuffRenewingBlaze.active
+          end
+        },
+
+        {Key="Instant_FireBreath", SpellId=357208, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe
+          end
+        },
+
+        {Key="Instant_EternitySurge", SpellId=359073, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Instant_Firestorm", SpellId=368847, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Aoe_Dragonrage", SpellId=375087, Role={ "dps","cooldown", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and (ctx.vars.SpellFireBreath.cooldown <= ctx.vars.GCD and ctx.vars.SpellEternitySurge.cooldown < 3 * ctx.vars.GCD)
+          end
+        },
+
+        {Key="Aoe_TipTheScales", SpellId=370553, Role={ "preparation","cooldown", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and (ctx.vars.BuffDragonrage.active and 
+            (ctx.vars.Targets <= 6 or 
+            not ctx.vars.SpellFireBreath.ready))
+          end
+        },
+
+        {Key="Aoe_FireBreath", SpellId=357208, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and (ctx.vars.SpellDragonrage.cooldown > 10)
+          end
+        },
+
+        {Key="Aoe_EternitySurge", SpellId=359073, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and
+            (not ctx.vars.HasTalentDragonrage or ctx.vars.SpellDragonrage.cooldown > 15 or
+            ctx.vars.HasTalentEternitysSpan or 
+            not ctx.vars.HasTalentFontOfMagic or ctx.vars.BuffDragonrage.active)
+          end
+        },
+
+        {Key="Aoe_AzureStrike_DragonRage", SpellId=362969, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and ctx.vars.BuffDragonrage.active
+          end
+        },
+
+        {Key="Aoe_DeepBreath", SpellId=357210, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and 
+            not ctx.vars.BuffDragonrage.active
+          end
+        },
+
+        {Key="Aoe_Firestorm", SpellId=368847, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe
+          end
+        },
+
+        {Key="Aoe_ShatteringStar", SpellId=370452, Role={ "dps","hinder", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe
+          end
+        },
+
+        {Key="Aoe_AzureStrike", SpellId=362969, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe
+          end
+        },
+
+        {Key="Aoe_Pyre_Volatility", SpellId=357211, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and 
+            ctx.vars.HasTalentVolatility
+          end
+        },
+
+        {Key="Aoe_LivingFlame", SpellId=361469, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and 
+            (ctx.vars.BuffBurnout.active and ctx.vars.BuffLeapingFlames.active and 
+            not ctx.vars.BuffEssenceBurst.active)
+          end
+        },
+
+        {Key="Aoe_Pyre", SpellId=357211, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and ctx.vars.SpellDragonrage.cooldown >= 10
+          end
+        },
+
+        {Key="Aoe_Disintegrate", SpellId=356995, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and 
+            (not ctx.vars.HasTalentShatteringStar or ctx.vars.SpellShatteringStar.cooldown > 5 or ctx.vars.Essence > ctx.vars.EssenceMax - 1 or ctx.vars.BuffEssenceBurst.charges == ctx.vars.BuffEssenceBurst.max)
+          end
+        },
+
+        {Key="Aoe_LivingFlame_Burnout", SpellId=361469, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeAoe and 
+            ctx.vars.HasTalentSnapfire and 
+            ctx.vars.BuffBurnout.active
+          end
+        },
+
+        {Key="Dragonrage", SpellId=375087, Role={ "dps","cooldown", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return (
+            ctx.vars.SpellFireBreath.cooldown < ctx.vars.GCD and 
+            ctx.vars.SpellEternitySurge.cooldown < 2 * ctx.vars.GCD
+            ) or
+            ctx.vars.BossInFight
+          end
+        },
+
+        {Key="TipTheScales", SpellId=370553, Role={ "cooldown","preparation", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight and 
+            (ctx.vars.BuffDragonrage.active or (ctx.vars.HasTalentFeedTheFlames and 
+            not ctx.vars.SpellFireBreath.ready))
+          end
+        },
+
+        {Key="Fb_FireBreath", SpellId=357208, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFb
+          end
+        },
+
+        {Key="Es_EternitySurge", SpellId=359073, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeEs
+          end
+        },
+
+        {Key="ShatteringStar", SpellId=370452, Role={ "dps","hinder", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.BuffDragonrage.active or
+            ctx.vars.HasTalentFeedTheFlames or 
+            not ctx.vars.HasBloodLust
+          end
+        },
+
+        {Key="LivingFlame", SpellId=361469, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffDragonrage.active and
+            ctx.vars.BuffBurnout.active
+          end
+        },
+
+        {Key="AzureStrike", SpellId=362969, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffDragonrage.active
+          end
+        },
+
+        {Key="Pyre", SpellId=357211, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return (ctx.vars.HasTalentVolatility or 
+            not ctx.vars.HasTalentEternitysSpan or 
+            not ctx.vars.HasTalentScintillation)  and ctx.vars.BuffChargedBlast.charges > 19
+          end
+        },
+
+        {Key="Firestorm", SpellId=368847, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not (ctx.vars.BuffDragonrage.active or
+            ctx.vars.DebuffShatteringStar.active) or ctx.vars.BuffSnapfire.active
+          end
+        },
+
+        {Key="LivingFlame_MaxBurnout", SpellId=361469, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.BuffDragonrage.active and ctx.vars.BuffBurnout.charges == ctx.vars.BuffBurnout.max
+          end
+        },
+
+        {Key="Disintegrate", SpellId=356995, Role={ "dps","hinder", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.BuffDragonrage.active and 
+            (not ctx.vars.HasTalentShatteringStar or ctx.vars.SpellShatteringStar.cooldown > 6 or ctx.vars.Essence > (ctx.vars.EssenceMax - 1) or ctx.vars.BuffEssenceBurst.charges == ctx.vars.BuffEssenceBurst.max) 
+          end
+        },
+
+        {Key="DeepBreath", SpellId=357210, Role={ "dps","cooldown", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.BuffDragonrage.active and ctx.vars.Targets > 1
+          end
+        },
+
+        {Key="LivingFlame_Filler", SpellId=361469, Role={ "dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=true, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+      },
+
+      slots={
+      },
+
+      code={
+        BuffBurnout=function(ctx)
+          return ctx:GetBuff(ctx.SPI.Burnout)
+        end,
+
+        BuffChargedBlast=function(ctx)
+          return ctx:GetBuff(ctx.SPI.ChargedBlast)
+        end,
+
+        BuffDragonrage=function(ctx)
+          return ctx:GetBuff(ctx.SPI.Dragonrage)
+        end,
+
+        BuffEssenceBurst=function(ctx)
+          return ctx:GetBuff(ctx.SPI.EssenceBurst)
+        end,
+
+        BuffLeapingFlames=function(ctx)
+          return ctx:GetBuff(ctx.SPI.LeapingFlames)
+        end,
+
+        BuffRenewingBlaze=function(ctx)
+          return ctx:GetBuff(ctx.SPI.RenewingBlaze)
+        end,
+
+        BuffSnapfire=function(ctx)
+          return ctx:GetBuff(ctx.SPI.Snapfire)
+        end,
+
+        BuffTipTheScales=function(ctx)
+          return ctx:GetBuff(ctx.SPI.TipTheScales)
+        end,
+
+        DebuffFireBreath=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.FireBreath)
+        end,
+
+        DebuffLivingFlame=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.LivingFlame)
+        end,
+
+        DebuffShatteringStar=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.ShatteringStar)
+        end,
+
+        SpellDragonrage=function(ctx)
+          return ctx:GetSpell(ctx.SPI.Dragonrage)
+        end,
+
+        SpellEternitySurge=function(ctx)
+          return ctx:GetSpell(ctx.SPI.EternitySurge)
+        end,
+
+        SpellFireBreath=function(ctx)
+          return ctx:GetSpell(ctx.SPI.FireBreath)
+        end,
+
+        SpellShatteringStar=function(ctx)
+          return ctx:GetSpell(ctx.SPI.ShatteringStar)
+        end,
+
+        HasTalentAnimosity=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.Animosity)
+        end,
+
+        HasTalentDragonrage=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.Dragonrage)
+        end,
+
+        HasTalentEternitysSpan=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.EternitysSpan)
+        end,
+
+        HasTalentEverburningFlame=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.EverburningFlame)
+        end,
+
+        HasTalentFeedTheFlames=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.FeedTheFlames)
+        end,
+
+        HasTalentFirestorm=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.Firestorm)
+        end,
+
+        HasTalentFontOfMagic=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.FontOfMagic)
+        end,
+
+        HasTalentRubyEmbers=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.RubyEmbers)
+        end,
+
+        HasTalentScintillation=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.Scintillation)
+        end,
+
+        HasTalentShatteringStar=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.ShatteringStar)
+        end,
+
+        HasTalentSnapfire=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.Snapfire)
+        end,
+
+        HasTalentVolatility=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.Volatility)
+        end,
+
+        HealthIsDropping=function(ctx)
+          return ctx.vars.HealthPercent <= 0.85
+        end,
+
+        HealthIsMedium=function(ctx)
+          return ctx.vars.HealthPercent <= 0.6
+        end,
+
+        HealthIsLow=function(ctx)
+          return ctx.vars.HealthPercent <= 0.35
+        end,
+
+        TalentBlastFurnaceRank=function(ctx)
+          return ctx:GetTalentRank(ctx.SPI.BlastFurnace)
+        end,
+
+        IsModePreCombat=function(ctx)
+          return not ctx.vars.IsFighting
+        end,
+
+        IsModeAoe=function(ctx)
+          return ctx.vars.Targets >= 3
+        end,
+
+        IsModeFb=function(ctx)
+          return not ctx.vars.HasTalentDragonrage or 
+          ctx.vars.SpellDragonrage.cooldown > 0 or 
+          not ctx.vars.HasTalentAnimosity
+        end,
+
+        IsModeEs=function(ctx)
+          return not ctx.vars.HasTalentDragonrage or 
+          ctx.vars.SpellDragonrage.cooldown > 0 or 
+          not ctx.vars.HasTalentAnimosity
+        end,
+
+        IsDangerousFight=function(ctx)
+          return ctx.vars.IsBossFight or 
+          ctx.vars.IsPvp or
+          ctx.vars.HealthIsLow
         end,
 
       }
