@@ -53,6 +53,13 @@ function Engine:GetSpell(spell)
   if s then ret.NextCharge = s + d - self.Now end
   local e
   s, d, e = GetSpellCooldown(spell)
+  --[[
+  local fn = function()  
+    
+  end
+  local ok, err = pcall(fn)
+  if err then self.LastSpellError = "spell: " .. spell .. ":" .. err end
+  ]]
   ret.ready = d == 0 or e == 0
   ret.duration = d
   if s then ret.cooldown = s + d - self.Now end
@@ -293,6 +300,7 @@ function Engine:UpdateState(elapsed)
 ------------------------------------------------------------------------------
   self.vars = self.vars or {}
   local v = self.vars
+  v.LastSpellError = self.LastSpellError
   
   self.Now = GetTime()
   v.Now = self.Now
@@ -381,8 +389,6 @@ function Engine:UpdateState(elapsed)
     v.PainPerTick = v.CombatDamage / v.CombatTick / HealthMax * 100
   end
   
-  
-	
   v.HasBloodLust = (self:CheckBuff({
     SPN.Bloodlust, 
     SPN.Heroism, 
