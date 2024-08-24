@@ -7,6 +7,7 @@
 	<Include file="Libs\AceConsole-3.0\AceConsole-3.0.xml"/>
 	<Include file="Libs\AceGUI-3.0\AceGUI-3.0.xml"/>
 	<Include file="Libs\AceConfig-3.0\AceConfig-3.0.xml"/>
+  <Script file="L2P-Fun.lua" />
   <Script file="L2P-Framelets.lua" />
   <Script file="L2P-Engine.lua" />
 </Ui>
