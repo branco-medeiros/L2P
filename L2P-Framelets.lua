@@ -11,6 +11,9 @@ local MAJOR, MINOR = "L2P-Framelets", 1
 local Framelets = LibStub:NewLibrary(MAJOR, MINOR)
 if not Framelets then return end
 
+local Fun = LibStub("L2P-Fun")
+
+
 --//////////////////////////////////////////////////////////////////////////////
 -- Event
 -- simple "event" dispatching
@@ -169,9 +172,9 @@ local function Spell_Update(this, Ctx)
   this.InvalidSpell = not this.SpName or not this:IsValidSpell()
   if this.InvalidSpell then return false end
     
-  local cast = select(SPELL_CAST_TIME, GetSpellInfo(this.SpName))
+  local cast = select(SPELL_CAST_TIME, Fun.XGetSpellInfo(this.SpName))
   local ok = ((cast and cast <= 0) or this.NotInstant) and this:IsUsable()
-	this.Charges, this.MaxCharges = GetSpellCharges(this.SpName)
+	this.Charges, this.MaxCharges = Fun.XGetSpellCharges(this.SpName)
 
   if ok and this.Condition then
     this.Valid = this:Condition(Ctx)
@@ -193,7 +196,7 @@ local function Spell_IsUsable(this)
 -------------------------------------------------------------------------------
 -- returns true if the spell can be used/has mana
 -------------------------------------------------------------------------------
-  local ok, nomana = IsUsableSpell(this.SpName)
+  local ok, nomana = Fun.IsUsableSpell(this.SpName)
   this.Enabled = (ok and true) or false
   this.NoMana = (nomana and true) or false
   return this.Enabled
@@ -204,7 +207,7 @@ local function Spell_GetActivation(this, now)
 -------------------------------------------------------------------------------
 -- returns when the spell will become available
 -------------------------------------------------------------------------------
-  this.Start, this.Duration = GetSpellCooldown(this.SpName)
+  this.Start, this.Duration = Fun.XGetSpellCooldown(this.SpName)
   if not this.Start then return nil end
   local s = this.Start
   if s == 0 then s = now end
@@ -222,7 +225,7 @@ local function Spell_CheckRange(this)
     this.NoRange or
     (this.Slot and ActionHasRange(this.Slot) and IsActionInRange(this.Slot)) or
     not this.SpellBookIndexForRange or
-    IsSpellInRange(this.SpellBookIndexForRange, BOOKTYPE_SPELL, "target") == 1
+    Fun.XIsSPellInRange(this.SpellBookIndexForRange, BOOKTYPE_SPELL, "target") == 1
     or false
 
   return this.InRange
@@ -231,7 +234,7 @@ end -- fn Spell_CheckRange
 -------------------------------------------------------------------------------
 local function Spell_GetTexture(this)
 -------------------------------------------------------------------------------
-  return GetSpellTexture(this.SpName or "")
+  return Fun.XGetSpellTexture(this.SpName or "")
 end -- fn Spell_GetTexture
 
 -------------------------------------------------------------------------------
@@ -281,7 +284,7 @@ local function Spell_CreateById(Id)
 -------------------------------------------------------------------------------
 -- creates a spell based only in id and name
 -------------------------------------------------------------------------------
-  local sp = Spell_Create("", GetSpellInfo(Id))
+  local sp = Spell_Create("", Fun.GetSpellName(Id))
   sp.SpellId = Id
   return sp
 end -- fn Spell_CreateById
@@ -709,7 +712,7 @@ AuraIcon_FromIcon = function(Icon)
     local Aura = GetShapeshiftForm()
     Aura = this.Auras and this.Auras[Aura]
     if Aura ~= this.Aura then
-      this:SetImage(GetSpellTexture(Aura or ""))
+      this:SetImage(Fun.XGetSpellTexture(Aura or ""))
       this.Aura = Aura
     end
   end
@@ -744,7 +747,7 @@ BuffIcon_FromIcon = function(Icon)
 		if n ~= name or e ~= expires or d ~= duration then
       -- using both the spell name and the spell id because some spell names
       -- are not returning the texture!!
-      this:SetImage(GetSpellTexture(name) or GetSpellTexture(id))
+      this:SetImage(Fun.XGetSpellTexture(name) or Fun.XGetSpellTexture(id))
 			this:ShowCooldown((expires or Ctx.Now) - duration, duration, true)
       this.Buff = {name, expires, duration}
     end
@@ -776,7 +779,7 @@ DebuffIcon_FromIcon = function(Icon)
 		local count, _, duration, name, id, expires = Ctx:CheckDebuff(this.Debuffs or {})
 		local n, e, d = this.Debuff
 		if n ~= name or e ~= expires or d ~= duration then
-			this:SetImage(GetSpellTexture(name) or GetSpellTexture(id))
+			this:SetImage(Fun.XGetSpellTexture(name) or Fun.XGetSpellTexture(id))
 			this:ShowCooldown((expires or Ctx.Now) - duration, duration, true)
 			this.Debuff = {name, expires, duration}
 		end

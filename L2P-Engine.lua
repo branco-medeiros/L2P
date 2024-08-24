@@ -1,18 +1,22 @@
 -- L2P Engine
 
-local GCD_SPELL_ID = 61304
 local MAJOR, MINOR = "L2P-Engine", 1
 local Engine = LibStub:NewLibrary(MAJOR, MINOR)
 if not Engine then return end
 
+local Fun = LibStub("L2P-Fun")
+
+local GCD_SPELL_ID = 61304
+
+
 local Utils = LibStub("L2P-Framelets")
 local SPN = {
-  Bloodlust       = GetSpellInfo(2825),
-  Heroism         = GetSpellInfo(32182),
-  TimeWarp        = GetSpellInfo(80353),
-  AncientHysteria = GetSpellInfo(90355),
-  TimeWarp        = GetSpellInfo(80353),
-  FuryOfTheAspects = GetTalentInfo(390386)
+  Bloodlust       = Fun.GetSpellName(2825),
+  Heroism         = Fun.GetSpellName(32182),
+  TimeWarp        = Fun.GetSpellName(80353),
+  AncientHysteria = Fun.GetSpellName(90355),
+  TimeWarp        = Fun.GetSpellName(80353),
+  FuryOfTheAspects = Fun.GetSpellName(390386)
 }
 
 
@@ -29,7 +33,9 @@ function Engine:UpdateGCD()
 -- which triggers whenever a global cooldown dependent spell is cast
 -- if we have no information, we use the last value registered
 ------------------------------------------------------------------------------
-	local s, d = GetSpellCooldown(GCD_SPELL_ID)
+	local tb = Fun.GetSpellCooldown(GCD_SPELL_ID) or {}
+  local s = tb.startTime
+  local d = tb.duration
 	self.GCD = (s > 0 and d)
 		or (self.GCD ~= 0 and self.GCD)
 		or (1.5 * (1 - UnitSpellHaste("player")/100))
@@ -38,7 +44,7 @@ end
 ------------------------------------------------------------------------------
 function Engine:GetSpell(spell)
 ------------------------------------------------------------------------------
---[[ returns information about a give spell: 
+--[[ returns information about a given spell: 
   - ready: true if the spell can be used, 
   - charges: the number of charges (0 if the spell doesn't have charges)
   - max: the maximum number of charges (0 if the spell doesn't have charges)
@@ -47,20 +53,15 @@ function Engine:GetSpell(spell)
 ]]
 ------------------------------------------------------------------------------
   local ret = {ready = false, charges = 0, max = 0, cooldown = 0, NextCharge = 0, duration = 0} 
-  local c, m, s, d = GetSpellCharges(spell)
+  local c, m, s, d = Fun.XGetSpellCharges(spell)
   if c then ret.charges = c end
   if m then ret.max = m end
   if s then ret.NextCharge = s + d - self.Now end
-  local e
-  s, d, e = GetSpellCooldown(spell)
-  --[[
-  local fn = function()  
-    
-  end
-  local ok, err = pcall(fn)
-  if err then self.LastSpellError = "spell: " .. spell .. ":" .. err end
-  ]]
-  ret.ready = d == 0 or e == 0
+  local tb = Fun.GetSpellCooldown(spell) or {}
+  local s = tb.startTime
+  local d = tb.duration
+  local e = tb.isEnabled
+  ret.ready = d == 0 or not e
   ret.duration = d
   if s then ret.cooldown = s + d - self.Now end
   return ret
@@ -236,7 +237,7 @@ function Engine:OnCombatLog()
 		if event == "SPELL_CAST_SUCCESS" then
 			self.LastCastSpell = p1
 			self.LastCastTime = GetTime()
-			self:DbgTrack("LastCastSpell", tostring(self.LastCastSpell) .. " - " .. GetSpellInfo(self.LastCastSpell))
+			self:DbgTrack("LastCastSpell", tostring(self.LastCastSpell) .. " - " .. Fun.GetSpellName(self.LastCastSpell))
 		end
 	end
 
@@ -451,8 +452,8 @@ function Engine:IsSpellAvailable(spell)
 -- returns true if the spell can be used right now, false otherwise
 -------------------------------------------------------------------------------
 	if not spell then return false end
-	if not GetSpellCooldown(spell) == 0 then return false end
-	local u, m = IsUsableSpell(GetSpellInfo(spell))
+	if not Fun.XGetSpellCooldown(spell) == 0 then return false end
+	local u, m = Fun.IsUsableSpell(Fun.GetSpellName(spell))
 	return u == true and m == false
 
 end -- fn Engine_IsSpellAvailable
@@ -557,7 +558,7 @@ function Engine:MapSpellsToBook()
   local k, s, i
 
   local function getSpellSlot(id)
-    local name = GetSpellInfo(id)
+    local name = Fun.GetSpellName(id)
     local ok, index = pcall(FindSpellBookSlotBySpellID, id)
     if not ok then ShowError("Error locating spell book index for %s (%d)", tostring(name), id) end
     return index
@@ -576,10 +577,9 @@ function Engine:MapSpellsToBook()
     end
     if not s.NoRange and not s.NoTarget then
       if s.RangeSpellId then
-        --s.RangeSpellBookIndex = getId(s.RangeSpellId)
         s.SpellBookIndexForRange = s.RangeSpellBookIndex
       elseif s.SpellBookIndex then
-        s.NoRange = not SpellHasRange(s.SpellBookIndex, BOOKTYPE_SPELL)
+        s.NoRange = not Fun.XSpellHasRange(s.SpellBookIndex, BOOKTYPE_SPELL)
         if not s.NoRange then s.SpellBookIndexForRange = s.SpellBookIndex end
       end
     end
@@ -655,10 +655,10 @@ function Engine:CheckBuffOrDebuffAuto(What, isDebuff, target)
 	if isDebuff then
 		target = target or "target"
 		local src = (target ~= "PLAYER" and "PLAYER") or nil 
-		Getter = function(i) return UnitDebuff(target, i, src) end
+		Getter = function(i) return Fun.XUnitDebuff(target, i, src) end
 	else
 		target = target or "PLAYER"
-		Getter = function(i) return UnitBuff(target, i) end
+		Getter = function(i) return Fun.XUnitBuff(target, i) end
 	end
 	if type(What) ~= "table" then What = {What} end
   for i = 1, 128 do
@@ -676,7 +676,7 @@ function Engine:CheckBuffOrDebuffAuto(What, isDebuff, target)
 					expires = expires - self.Now 
 				end
         
-        local _, m, _, _ = GetSpellCharges(id)
+        local _, m, _, _ = Fun.XGetSpellCharges(id)
 				return count, expires, duration, name, id, xp, m or 0
 			end
 		end

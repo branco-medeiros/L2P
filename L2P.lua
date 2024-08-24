@@ -3,6 +3,8 @@ local Main = LibStub("AceAddon-3.0"):NewAddon("L2P", "AceConsole-3.0", "AceEvent
 local Frames = LibStub("L2P-Framelets")
 local AceGUI = LibStub("AceGUI-3.0")
 
+local Fun = LibStub("L2P-Fun")
+
 local DEFAULT_FREQUENCY = 15
 local DEFAULT_XICON_ROW_SIZE = 5
 
@@ -284,7 +286,7 @@ function Main:MapSpellKeys()
 						if id then id = tonumber(id) end
           end
           if id then
-            id = GetSpellInfo(id)
+            id = Fun.GetSpellName(id)
             if id then
 							slist[id] = {key = key, slot = isSpell and slot or nil}
 						end
@@ -496,11 +498,11 @@ function Main:CreateSpellNames(ids)
 -- passed in spid; spid has the format:
 -- { SpellName1 = SpellId1, SpellName2 = SpellId2, ...}
 -- and CreateSpellNames will return a table like
--- { SpellName1 = GetSpellInfo(SpellId1), SpellName2 = GetSpellInfo(SpellId2),...}
+-- { SpellName1 = GetSpellName(SpellId1), SpellName2 = GetSpellName(SpellId2),...}
 --------------------------------------------------------------------------------
 	local result = {}
 	for k, n in pairs(ids) do
-		local s = GetSpellInfo(n) or false
+		local s = Fun.GetSpellName(n) or false
 		if s then 
 			result[k] = s
 		elseif n ~= 0 then  
