@@ -371,19 +371,7 @@ function L2P:GetSpecData(ctx)
 				
         {Key="Spender_HammerOfLight", SpellId=427453, Role={ "dps","spender","cooldown", },
           Description="",
-					SpellAlwaysValid = true,
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="Spender_EmpyreanHammer", SpellId=431398, Role={ "dps","spender","cooldown", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-					SpellAlwaysValid = true,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
