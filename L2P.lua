@@ -87,7 +87,7 @@ function Main:EnableEvents()
   self:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
   self:RegisterEvent('UPDATE_SHAPESHIFT_FORM')
   self:RegisterEvent('PLAYER_TALENT_UPDATE')
-	self:RegisterEvent('ACTIVE_TALENT_GROUP_CHANGED')
+  self:RegisterEvent('ACTIVE_TALENT_GROUP_CHANGED')
   self:RegisterEvent('ACTIVE_COMBAT_CONFIG_CHANGED')
   self:RegisterEvent('TRAIT_CONFIG_UPDATED')
 end --  fn Main:EnableEvents
@@ -101,7 +101,7 @@ function Main:DisableEvents()
   self:UnregisterEvent('PLAYER_TARGET_CHANGED')
   self:UnregisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
   self:UnregisterEvent('PLAYER_TALENT_UPDATE')
-	self:UnregisterEvent('ACTIVE_TALENT_GROUP_CHANGED')
+  self:UnregisterEvent('ACTIVE_TALENT_GROUP_CHANGED')
   self:UnregisterEvent('ACTIVE_COMBAT_CONFIG_CHANGED')
   self:UnregisterEvent('TRAIT_CONFIG_UPDATED')
 end -- fn Main:DisableEvents
@@ -224,7 +224,12 @@ end -- fn Main:UpdateIcons
 function Main:ShowVars()
 --------------------------------------------------------------------------------
   if self.DebugFrame:IsVisible() then
-    self.DebugFrame:ShowVars(self.Engine.vars)
+		local vars = {}
+		for k, v in pairs(self.Engine.vars) do
+			local t = type(v)
+			if t ~= "function" and t ~= "table" then vars[k] = v end
+		end
+		self.DebugFrame:ShowVars(vars)
   end
 end
 
