@@ -124,13 +124,14 @@ function Fun.XGetSpellTexture(...)
   return ret
 end
 
-
-
 ----- Native api
 
 function Fun.GetSpellName(id)
   return C_Spell.GetSpellName(id)
 end
 
+----- SpellBook
 
-
+function Fun.GetSpellBookItemName(...)
+	return C_SpellBook.GetSpellBookItemName(...)
+end
