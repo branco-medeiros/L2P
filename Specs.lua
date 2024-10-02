@@ -7,19 +7,30 @@ function L2P:GetSpecData(ctx)
     return {
       SPI = {
         Animosity = 375797,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
         BlastFurnace = 375510,
         BlessedChampion = 403010,
         BoundlessJudgment = 405278,
         Burnout = 375801,
         ChargedBlast = 370455,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusadingStrikes = 404542,
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
+        DivinePurpose = 223817,
         DivineResonance = 384027,
+        DivineToll = 375576,
+        EchoesOfWrath = 423590,
         EmpyreanLegacy = 387170,
+        EmpyreanPower = 326732,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EverburningFlame = 370819,
+        ExecutionerSWill = 406940,
+        Expurgation = 383344,
         FeedTheFlames = 369846,
         Fireblood = 265221,
         FontOfMagic = 375783,
@@ -27,13 +38,17 @@ function L2P:GetSpecData(ctx)
         JusticarSVengeance = 215661,
         LeapingFlames = 369939,
         LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
+        RadiantGlory = 458359,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         Scintillation = 370821,
+        ShiningLight = 327510,
         Snapfire = 370783,
         TemplarSlash = 406647,
         TemplarStrike = 407480,
         TemplarSVerdict = 85256,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         Volatility = 369089,
       },
 
@@ -51,19 +66,30 @@ function L2P:GetSpecData(ctx)
     return {
       SPI = {
         Animosity = 375797,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
         BlastFurnace = 375510,
         BlessedChampion = 403010,
         BoundlessJudgment = 405278,
         Burnout = 375801,
         ChargedBlast = 370455,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusadingStrikes = 404542,
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
+        DivinePurpose = 223817,
         DivineResonance = 384027,
+        DivineToll = 375576,
+        EchoesOfWrath = 423590,
         EmpyreanLegacy = 387170,
+        EmpyreanPower = 326732,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EverburningFlame = 370819,
+        ExecutionerSWill = 406940,
+        Expurgation = 383344,
         FeedTheFlames = 369846,
         Fireblood = 265221,
         FontOfMagic = 375783,
@@ -71,13 +97,17 @@ function L2P:GetSpecData(ctx)
         JusticarSVengeance = 215661,
         LeapingFlames = 369939,
         LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
+        RadiantGlory = 458359,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         Scintillation = 370821,
+        ShiningLight = 327510,
         Snapfire = 370783,
         TemplarSlash = 406647,
         TemplarStrike = 407480,
         TemplarSVerdict = 85256,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         Volatility = 369089,
       },
 
@@ -95,19 +125,30 @@ function L2P:GetSpecData(ctx)
     return {
       SPI = {
         Animosity = 375797,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
         BlastFurnace = 375510,
         BlessedChampion = 403010,
         BoundlessJudgment = 405278,
         Burnout = 375801,
         ChargedBlast = 370455,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusadingStrikes = 404542,
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
+        DivinePurpose = 223817,
         DivineResonance = 384027,
+        DivineToll = 375576,
+        EchoesOfWrath = 423590,
         EmpyreanLegacy = 387170,
+        EmpyreanPower = 326732,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EverburningFlame = 370819,
+        ExecutionerSWill = 406940,
+        Expurgation = 383344,
         FeedTheFlames = 369846,
         Fireblood = 265221,
         FontOfMagic = 375783,
@@ -115,13 +156,17 @@ function L2P:GetSpecData(ctx)
         JusticarSVengeance = 215661,
         LeapingFlames = 369939,
         LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
+        RadiantGlory = 458359,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         Scintillation = 370821,
+        ShiningLight = 327510,
         Snapfire = 370783,
         TemplarSlash = 406647,
         TemplarStrike = 407480,
         TemplarSVerdict = 85256,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         Volatility = 369089,
       },
 
@@ -135,13 +180,14 @@ function L2P:GetSpecData(ctx)
       }
     }
 
-  elseif ctx.vars.Spec == "PALADIN-6" then
+  elseif ctx.vars.Spec == "PALADIN-3" then
     return {
       SPI = {
         Animosity = 375797,
         ArcaneTorrent = 155145,
         AshenHallow = 316958,
-        AvengingWrath = 31884,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
         BladeOfJustice = 184575,
         BlastFurnace = 375510,
         BlessedChampion = 403010,
@@ -157,8 +203,10 @@ function L2P:GetSpecData(ctx)
         ConcentratedFlame = 295373,
         Consecration = 26573,
         ConsecrationDebuff = 204242,
-        Crusade = 231895,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
         CrusaderStrike = 35395,
+        CrusadingStrikes = 404542,
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
@@ -167,16 +215,21 @@ function L2P:GetSpecData(ctx)
         DivineResonance = 384027,
         DivineShield = 642,
         DivineStorm = 53385,
-        DivineToll = 304971,
+        DivineToll = 375576,
+        EchoesOfWrath = 423590,
+		EmpyreanHammer = 431398,
         EmpyreanLegacy = 387170,
-        EmpyreanPower = 326733,
+        EmpyreanPower = 326732,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EverburningFlame = 370819,
+        ExecutionerSWill = 406940,
         ExecutionSentence = 343527,
         Exorcism = 383185,
+        Expurgation = 383344,
         FeedTheFlames = 369846,
         FinalReckoning = 343721,
+        FinalVerdict = 383328,
         Fireblood = 265221,
         FiresOfJusticeBuff = 203316,
         FlashOfLight = 19750,
@@ -184,6 +237,7 @@ function L2P:GetSpecData(ctx)
         FontOfMagic = 375783,
         GuardianOfAzeroth = 299358,
         HammerOfJustice = 853,
+        HammerOfLight = 427453,
         HammerOfWrath = 24275,
         HandOfHindrance = 183218,
         HolyAvenger = 105809,
@@ -193,23 +247,27 @@ function L2P:GetSpecData(ctx)
         LayOnHands = 633,
         LeapingFlames = 369939,
         LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
         MemoryOfLucidDreams = 299374,
         PurifyingBlast = 299347,
         RadiantDecree = 384052,
+        RadiantGlory = 458359,
         Rebuke = 96231,
         Reckoning = 247676,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         Scintillation = 370821,
         SelflessHealer = 114250,
         Seraphim = 152262,
         ShieldOfTheRighteous = 53600,
         ShieldOfVengeance = 184662,
+        ShiningLight = 327510,
         Snapfire = 370783,
         TemplarSlash = 406647,
         TemplarStrike = 407480,
         TemplarSVerdict = 85256,
         TheUnboundForce = 298452,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         VanquisherSHammer = 328204,
         VisionOfPerfection = 303344,
         Volatility = 369089,
@@ -218,7 +276,7 @@ function L2P:GetSpecData(ctx)
       },
 
       prios = {
-        {Key="divine-shield", SpellId=642, Role={ "survival","cooldown", },
+        {Key="Survival_DivineShield", SpellId=642, Role={ "survival","cooldown", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -229,7 +287,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="lay-on-hands", SpellId=633, Role={ "survival","cooldown", },
+        {Key="Survival_LayOnHands", SpellId=633, Role={ "survival","cooldown", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -239,29 +297,28 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="shield-of-vengeance", SpellId=184662, Role={ "survival","dps", },
+        {Key="Survival_ShieldOfVengeance", SpellId=184662, Role={ "survival","dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HealthIsLow and 
-            ctx.vars.IsBeingDamaged
+            return (ctx.vars.HealthIsLow and 
+            ctx.vars.IsBeingDamaged) or ctx.vars.IsBossFight
           end
         },
 
-        {Key="flash-of-light-free", SpellId=19750, Role={ "heal", },
+        {Key="Survival_InstantFlashOfLight", SpellId=19750, Role={ "heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HealthIsMedium and 
-            ctx.vars.SelflessHealerMaxStack
+            return ctx.vars.HealthIsMedium
           end
         },
 
-        {Key="word-of-glory", SpellId=85673, Role={ "heal", },
+        {Key="Survival_WordOfGlory", SpellId=85673, Role={ "heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -271,7 +328,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="justicars-vengeance-heal", SpellId=215661, Role={ "dps","spender","heal", },
+        {Key="Survival_JusticarsVengeance", SpellId=215661, Role={ "dps","spender","heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -281,7 +338,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="flash-of-light", SpellId=19750, Role={ "heal", },
+        {Key="Survival_FlashOfLight", SpellId=19750, Role={ "heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=true, WhileMoving=false,
@@ -291,69 +348,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="empyrean-divine-storm", SpellId=53385, Role={ "dps","spender", },
-          Description="",
-          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.EmpyreanPowerActive
-          end
-        },
-
-        {Key="shield-of-vengeance-dps", SpellId=184662, Role={ "dps","survival", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.IsDangerousFight
-            and ctx.vars.NotHpTime
-          end
-        },
-
-        {Key="seraphim", SpellId=152262, Role={ "preparation","spender", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return not ctx.vars.SeraphimActive
-          end
-        },
-
-        {Key="holy-avenger", SpellId=105809, Role={ "preparation", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.IsDangerousFight
-          end
-        },
-
-        {Key="final-reckoning", SpellId=343721, Role={ "preparation","dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="execution-sentence", SpellId=343527, Role={ "dps","spender", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.IsBossFight or 
-            (ctx.vars.IsDangerousFight and ctx.vars.TargetNotDying)
-          end
-        },
-
-        {Key="radiant-decree", SpellId=384052, Role={ "spender","dps", },
+        {Key="Damage_FinalReckoning", SpellId=343721, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -363,156 +358,70 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="shield-of-the-righteous", SpellId=53600, Role={ "dps","spender", },
-          Description="",
-          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HasShieldsEquipped
-          end
-        },
-
-        {Key="divine-storm", SpellId=53385, Role={ "dps","spender", },
-          Description="",
-          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.MultipleTargets and 
-            (ctx.vars.Has5HP or 
-              ctx.vars.WingsOn or
-              ctx.vars.HolyAvengerActive or
-              ctx.vars.DivinePurposeActive or
-              ctx.vars.FiresOfJusticeActive
-            )
-            
-          end
-        },
-
-        {Key="templars-verdict", SpellId=85256, Role={ "dps","spender", },
+        {Key="Spender_ExecutionSentence", SpellId=343527, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.Has5HP or 
-            ctx.vars.WingsOn or
-            ctx.vars.HolyAvengerActive or
-            ctx.vars.DivinePurposeActive or
-            ctx.vars.FiresOfJusticeActive
-            
+            return not ctx.vars.HasTalentExecutionAuxiliary
           end
         },
 
-        {Key="consecration", SpellId=26573, Role={ "hinder", },
+				
+        {Key="Spender_HammerOfLight", SpellId=427453, Role={ "dps","spender","cooldown", },
           Description="",
-          RangeSpell=184575, PetSpell=nil, ActionSpell=nil,
+					SpellAlwaysValid = true,
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsNotMoving 
-            and ctx.vars.NeedsConsecration
+            return true
           end
         },
 
-        {Key="divine-toll-aoe", SpellId=304971, Role={ "dps","generator", },
+        {Key="Spender_EmpyreanHammer", SpellId=431398, Role={ "dps","spender","cooldown", },
           Description="",
-          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+					SpellAlwaysValid = true,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.MultipleTargets and 
-            ctx.vars.CanUseTargetBasedHPGenerator
+            return true
           end
         },
 
-        {Key="wake-of-ashes", SpellId=255937, Role={ "dps","generator", },
+        {Key="Aoe_Spender_DivineStorm5p", SpellId=53385, Role={ "dps","spender", },
           Description="",
-          RangeSpell=184575, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsAoe and ctx.vars.HolyPower > 4
+          end
+        },
+
+        {Key="Spender_FinalVerdict5p", SpellId=383328, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HolyPower > 4
+          end
+        },
+
+        {Key="Generator_WakeOfAshes", SpellId=255937, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.CanUse3HPGenerator
-            
           end
         },
 
-        {Key="judgment", SpellId=20271, Role={ "dps","generator", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.CanUse1HPGenerator
-            
-          end
-        },
-
-        {Key="blade-of-justice", SpellId=184575, Role={ "dps","generator", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.CanUse2HPGenerator
-            
-          end
-        },
-
-        {Key="hammer-of-wrath", SpellId=24275, Role={ "dps","generator", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.CanUse1HPGenerator
-            
-          end
-        },
-
-        {Key="crusader-strike", SpellId=35395, Role={ "dps","generator", },
-          Description="",
-          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.CanUse1HPGenerator
-            
-          end
-        },
-
-        {Key="divine-toll", SpellId=304971, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.CanUseTargetBasedHPGenerator
-          end
-        },
-
-        {Key="exorcism", SpellId=383185, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.NotHpTime
-          end
-        },
-
-        {Key="divine-storm-3hp", SpellId=53385, Role={ "dps","spender", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.MultipleTargets
-          end
-        },
-
-        {Key="templars-verdict-3hp", SpellId=85256, Role={ "dps","spender", },
+        {Key="Damage_DivineToll", SpellId=375576, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -522,48 +431,68 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="hammer-of-justice", SpellId=853, Role={ "hinder", },
+        {Key="Generator_TemplarSlash_Refresh", SpellId=406647, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsPvp or (not ctx.vars.IsBossFight and ctx.vars.TargetIsMoving)
+            return ctx.vars.CanUse1HPGenerator and ctx.vars.DebuffTemplarStrikesFading
           end
         },
 
-        {Key="hand-of-hindrance", SpellId=183218, Role={ "hinder", },
+        {Key="Generator_Judgment", SpellId=20271, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsPvp or
-            (not ctx.vars.IsBossFight and ctx.vars.TargetIsMoving)
+            return ctx.vars.CanUse1HPGenerator 
+            and not ctx.vars.HasDebuffJudgment
           end
         },
 
-        {Key="blinding-light", SpellId=115750, Role={  },
+        {Key="Generator_BladeOfJustice", SpellId=184575, Role={ "dps","generator", },
           Description="",
-          RangeSpell=35395, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.NotHpTime
+            return ctx.vars.CanUse1HPGenerator
           end
         },
 
-        {Key="word-of-glory-filler", SpellId=85673, Role={ "heal","spender", },
+        {Key="Generator_HammerOfWrath", SpellId=24275, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=true,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HealthIsMedium and ctx.vars.NotHpTime
+            return ctx.vars.CanUse1HPGenerator
           end
         },
 
-        {Key="interrupt", SpellId=96231, Role={ "interrupt", },
+        {Key="Generator_TemplarStrike", SpellId=407480, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.CanUse1HPGenerator
+          end
+        },
+
+        {Key="Spender_DivineStorm", SpellId=53385, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsAoe
+          end
+        },
+
+        {Key="Spender_FinalVerdict", SpellId=383328, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -573,7 +502,17 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="avenging-wrath-monitor", SpellId=31884, Role={ "slot", },
+        {Key="Interrupt", SpellId=96231, Role={ "interrupt", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Slot_AvengingWrath", SpellId=384376, Role={ "slot", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -583,7 +522,17 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="shiled-of-vengeance-monitor", SpellId=184662, Role={ "slot", },
+        {Key="Slot_ShiledOfVengeance", SpellId=184662, Role={ "slot", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Slot_Crusade", SpellId=384392, Role={ "slot", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -596,7 +545,7 @@ function L2P:GetSpecData(ctx)
       },
 
       slots={
-        {Type="spell", Spell=31884, 
+        {Type="spell", Spell=384376, 
           Description="Default cooldown (%s)",
           Icon="", Overlay=false, Charges=false
         },
@@ -604,13 +553,9 @@ function L2P:GetSpecData(ctx)
           Description="Alerts when %s is up",
           Icon="", Overlay=false, Charges=false
         },
-        {Type="buff", Spell=223817, 
+        {Type="spell", Spell=384392, 
           Description="Alerts when %s is on",
           Icon="", Overlay=false, Charges=false
-        },
-        {Type="buff", Spell=114250, 
-          Description="Flash of Light has reduced cost",
-          Icon="", Overlay=false, Charges=true
         },
       },
 
@@ -702,14 +647,6 @@ function L2P:GetSpecData(ctx)
           return ctx.vars.HealthPercent <= 0.2
         end,
 
-        SelflessHealerMaxStack=function(ctx)
-          return ctx:GetBuff(ctx.SPI.SelflessHealer).charges > 3
-        end,
-
-        TargetNotDying=function(ctx)
-          return ctx.vars.TargetHealthPercent >= 0.3
-        end,
-
         HealthIsMedium=function(ctx)
           return ctx.vars.HealthPercent <= 0.8
         end,
@@ -737,24 +674,15 @@ function L2P:GetSpecData(ctx)
         end,
 
         CanUse1HPGenerator=function(ctx)
-          return (
-            ctx.vars.HolyPower + 
-            (1 * ctx.vars.HPMultiplier)
-          ) < 6
+          return (ctx.vars.HolyPower + 1) < 6
         end,
 
         CanUse2HPGenerator=function(ctx)
-          return (
-            ctx.vars.HolyPower + 
-            (2 * ctx.vars.HPMultiplier)
-          ) < 6
+          return (ctx.vars.HolyPower + 2) < 6
         end,
 
         CanUse3HPGenerator=function(ctx)
-          return (
-            ctx.vars.HolyPower + 
-            (3 * ctx.vars.HPMultiplier)
-          ) < 6
+          return (ctx.vars.HolyPower + 3) < 6
         end,
 
         CanUseTargetBasedHPGenerator=function(ctx)
@@ -762,6 +690,18 @@ function L2P:GetSpecData(ctx)
             ctx.vars.HolyPower + 
             (min(5, ctx.vars.Targets) * ctx.vars.HPMultiplier)
           ) < 6
+        end,
+
+        HasTalentExecutionAuxiliary=function(ctx)
+          return false
+        end,
+
+        DebuffTemplarStrikesFading=function(ctx)
+          return false
+        end,
+
+        HasDebuffJudgment=function(ctx)
+          return false
         end,
 
       }
@@ -775,7 +715,7 @@ function L2P:GetSpecData(ctx)
         ArdentDefender = 31850,
         AshenHallow = 316958,
         AvengerSShield = 31935,
-        AvengingWrath = 31884,
+        AvengingWrath = 384376,
         BastionOfLight = 378974,
         BlastFurnace = 375510,
         BlessedChampion = 403010,
@@ -789,19 +729,25 @@ function L2P:GetSpecData(ctx)
         Consecration = 26573,
         ConsecrationBuff = 188370,
         ConsecrationDebuff = 204242,
-        Crusade = 231895,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusadingStrikes = 404542,
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
         DivinePurpose = 223817,
         DivineResonance = 384027,
         DivineShield = 642,
-        DivineToll = 304971,
+        DivineToll = 375576,
+        EchoesOfWrath = 423590,
         EmpyreanLegacy = 387170,
+        EmpyreanPower = 326732,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EverburningFlame = 370819,
+        ExecutionerSWill = 406940,
         ExecutionSentence = 343527,
+        Expurgation = 383344,
         EyeOfTyr = 387174,
         FeedTheFlames = 369846,
         Fireblood = 265221,
@@ -822,10 +768,13 @@ function L2P:GetSpecData(ctx)
         LayOnHands = 633,
         LeapingFlames = 369939,
         LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
         MemoryOfLucidDreams = 299374,
         MomentOfGlory = 327193,
         PurifyingBlast = 299347,
+        RadiantGlory = 458359,
         Rebuke = 96231,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         SanctifiedWrath = 171648,
         Scintillation = 370821,
@@ -833,11 +782,12 @@ function L2P:GetSpecData(ctx)
         Seraphim = 152262,
         ShieldOfTheRighteous = 53600,
         ShiningLight = 321136,
+        ShiningLight = 327510,
         Snapfire = 370783,
         TemplarSlash = 406647,
         TemplarStrike = 407480,
         TemplarSVerdict = 85256,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         VanquisherSHammer = 328204,
         Volatility = 369089,
         WakeOfAshes = 255937,
@@ -950,7 +900,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="divine-toll", SpellId=304971, Role={ "dps", },
+        {Key="divine-toll", SpellId=375576, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -1110,7 +1060,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="avenging-wrath", SpellId=31884, Role={ "slot", },
+        {Key="avenging-wrath", SpellId=384376, Role={ "slot", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -1123,7 +1073,7 @@ function L2P:GetSpecData(ctx)
       },
 
       slots={
-        {Type="spell", Spell=31884, 
+        {Type="spell", Spell=384376, 
           Description="Default cooldown",
           Icon="", Overlay=false, Charges=false
         },
@@ -1253,6 +1203,8 @@ function L2P:GetSpecData(ctx)
         AncientAftershock = 325886,
         Animosity = 375797,
         Avatar = 107574,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
         BitterImmunity = 383762,
         BlademastersTormentTalent = 390138,
         Bladestorm = 227847,
@@ -1267,6 +1219,9 @@ function L2P:GetSpecData(ctx)
         ColossusSmashDebuff = 208086,
         Condemn = 317349,
         ConquerorSBanner = 324143,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusadingStrikes = 404542,
         DeadlyCalm = 262228,
         DeepWounds = 262115,
         DefensiveStance = 197690,
@@ -1274,13 +1229,19 @@ function L2P:GetSpecData(ctx)
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
+        DivinePurpose = 223817,
         DivineResonance = 384027,
+        DivineToll = 375576,
+        EchoesOfWrath = 423590,
         EmpyreanLegacy = 387170,
+        EmpyreanPower = 326732,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EverburningFlame = 370819,
         Execute = 163201,
         ExecutionersPrecisionTalent = 386634,
+        ExecutionerSWill = 406940,
+        Expurgation = 383344,
         FeedTheFlames = 369846,
         FervorOfBattleTalent = 202316,
         Fireblood = 265221,
@@ -1296,15 +1257,19 @@ function L2P:GetSpecData(ctx)
         JusticarSVengeance = 215661,
         LeapingFlames = 369939,
         LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
         MemoryOfLucidDreams = 299374,
         MortalStrike = 12294,
         Overpower = 7384,
         Pummel = 6552,
         PurifyingBlast = 299347,
+        RadiantGlory = 458359,
         RendArms = 772,
         RendDebuff = 388539,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         Scintillation = 370821,
+        ShiningLight = 327510,
         Skullsplitter = 260643,
         Slam = 1464,
         Snapfire = 370783,
@@ -1319,7 +1284,7 @@ function L2P:GetSpecData(ctx)
         ThunderClapArms = 396719,
         ThunderousRoar = 384318,
         TideOfBloodTalent = 386357,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         VictoryRush = 34428,
         Volatility = 369089,
         Warbreaker = 262161,
@@ -1762,6 +1727,8 @@ function L2P:GetSpecData(ctx)
       SPI = {
         Animosity = 375797,
         Annihilation = 201427,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
         BladeDance = 188499,
         BlastFurnace = 375510,
         BlessedChampion = 403010,
@@ -1772,6 +1739,9 @@ function L2P:GetSpecData(ctx)
         ChaosStrike = 162794,
         ChargedBlast = 370455,
         ConsumeMagic = 278326,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusadingStrikes = 404542,
         Darkness = 196718,
         DeathSweep = 210152,
         DemonBlades = 203555,
@@ -1780,13 +1750,19 @@ function L2P:GetSpecData(ctx)
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
+        DivinePurpose = 223817,
         DivineResonance = 384027,
+        DivineToll = 375576,
+        EchoesOfWrath = 423590,
         ElysianDecree = 390163,
         EmpyreanLegacy = 387170,
+        EmpyreanPower = 326732,
         EssenceBreak = 258860,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EverburningFlame = 370819,
+        ExecutionerSWill = 406940,
+        Expurgation = 383344,
         EyeBeam = 198013,
         FeedTheFlames = 369846,
         FelBarrage = 258925,
@@ -1804,12 +1780,16 @@ function L2P:GetSpecData(ctx)
         JusticarSVengeance = 215661,
         LeapingFlames = 369939,
         LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
         Metamorphosis = 187827,
         MetamorphosisOld = 191427,
         Momentum = 206476,
         Netherwalk = 196555,
+        RadiantGlory = 458359,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         Scintillation = 370821,
+        ShiningLight = 327510,
         SigilOfFlame = 204596,
         SinfulBrand = 317009,
         Snapfire = 370783,
@@ -1819,7 +1799,7 @@ function L2P:GetSpecData(ctx)
         TheHunt = 370965,
         ThrowGlaive = 204157,
         UnboundChaos = 347462,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         VengefulRetreat = 198793,
         Volatility = 369089,
       },
@@ -2187,6 +2167,8 @@ function L2P:GetSpecData(ctx)
       SPI = {
         Animosity = 375797,
         Avatar = 107574,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
         BattleShout = 6673,
         BattleStance = 386164,
         BerserkerRage = 18499,
@@ -2198,6 +2180,9 @@ function L2P:GetSpecData(ctx)
         Burnout = 375801,
         ChallengingShout = 1161,
         ChargedBlast = 370455,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusadingStrikes = 404542,
         DeepWounds = 262115,
         DefensiveStance = 386208,
         DemoralizingShout = 1160,
@@ -2206,13 +2191,19 @@ function L2P:GetSpecData(ctx)
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
+        DivinePurpose = 223817,
         DivineResonance = 384027,
+        DivineToll = 375576,
         DragonRoar = 118000,
+        EchoesOfWrath = 423590,
         EmpyreanLegacy = 387170,
+        EmpyreanPower = 326732,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EverburningFlame = 370819,
         Execute = 163201,
+        ExecutionerSWill = 406940,
+        Expurgation = 383344,
         FeedTheFlames = 369846,
         Fireblood = 265221,
         FontOfMagic = 375783,
@@ -2228,11 +2219,14 @@ function L2P:GetSpecData(ctx)
         LastStand = 12975,
         LeapingFlames = 369939,
         LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
         Pummel = 6552,
+        RadiantGlory = 458359,
         RallyingCry = 97462,
         Ravager = 228920,
         Rend = 394062,
         Revenge = 6572,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         Scintillation = 370821,
         ShatteringThrow = 64382,
@@ -2241,6 +2235,7 @@ function L2P:GetSpecData(ctx)
         ShieldCharge = 385952,
         ShieldSlam = 23922,
         ShieldWall = 871,
+        ShiningLight = 327510,
         Shockwave = 46968,
         Slam = 1464,
         Snapfire = 370783,
@@ -2255,7 +2250,7 @@ function L2P:GetSpecData(ctx)
         ThunderClap = 6343,
         ThunderousRoar = 384318,
         TitanicThrow = 384090,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         VictoryRush = 34428,
         Volatility = 369089,
         Whirlwind = 1680,
@@ -2647,6 +2642,8 @@ function L2P:GetSpecData(ctx)
     return {
       SPI = {
         Animosity = 375797,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
         BlastFurnace = 375510,
         BlessedChampion = 403010,
         BoundlessJudgment = 405278,
@@ -2654,6 +2651,9 @@ function L2P:GetSpecData(ctx)
         ChaosNova = 179057,
         ChargedBlast = 370455,
         ConsumeMagic = 278326,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusadingStrikes = 404542,
         Darkness = 196718,
         DemonSpikes = 203720,
         DemonSpikesBuff = 203819,
@@ -2661,12 +2661,18 @@ function L2P:GetSpecData(ctx)
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
+        DivinePurpose = 223817,
         DivineResonance = 384027,
+        DivineToll = 375576,
+        EchoesOfWrath = 423590,
         ElysianDecree = 390163,
         EmpyreanLegacy = 387170,
+        EmpyreanPower = 326732,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EverburningFlame = 370819,
+        ExecutionerSWill = 406940,
+        Expurgation = 383344,
         FeedTheFlames = 369846,
         Felblade = 232893,
         FelDevastation = 212084,
@@ -2680,12 +2686,16 @@ function L2P:GetSpecData(ctx)
         JusticarSVengeance = 215661,
         LeapingFlames = 369939,
         LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
         Metamorphosis = 187827,
+        RadiantGlory = 458359,
         RazelikhSDefilement = 337544,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         Scintillation = 370821,
         Shear = 203783,
         ShearOld = 203782,
+        ShiningLight = 327510,
         SigilOfFlame = 204596,
         SigilOfMisery = 207684,
         SigilOfSilence = 202137,
@@ -2702,7 +2712,7 @@ function L2P:GetSpecData(ctx)
         TheHunt = 370965,
         TheHuntDebuff = 323639,
         ThrowGlaive = 204157,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         VengefulRetreat = 198793,
         Volatility = 369089,
       },
@@ -3015,6 +3025,8 @@ function L2P:GetSpecData(ctx)
     return {
       SPI = {
         Animosity = 375797,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
         AzureStrike = 362969,
         BlastFurnace = 375510,
         BlessedChampion = 403010,
@@ -3023,20 +3035,29 @@ function L2P:GetSpecData(ctx)
         Burnout = 375801,
         CauterizingFlame = 374251,
         ChargedBlast = 370455,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusadingStrikes = 404542,
         DeepBreath = 357210,
         Disintegrate = 356995,
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
+        DivinePurpose = 223817,
         DivineResonance = 384027,
+        DivineToll = 375576,
         Dragonrage = 375087,
+        EchoesOfWrath = 423590,
         EmeraldBlossom = 355913,
         EmpyreanLegacy = 387170,
+        EmpyreanPower = 326732,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EternitySurge = 359073,
         EverburningFlame = 370819,
+        ExecutionerSWill = 406940,
         Expunge = 365585,
+        Expurgation = 383344,
         FeedTheFlames = 369846,
         Fireblood = 265221,
         FireBreath = 357208,
@@ -3050,15 +3071,19 @@ function L2P:GetSpecData(ctx)
         LeapingFlames = 369939,
         LightSJudgment = 255647,
         LivingFlame = 361469,
+        MarkOfFyrAlath = 414532,
         ObsidianScales = 363916,
         OppressingRoar = 372048,
         Pyre = 357211,
         Quell = 351338,
+        RadiantGlory = 458359,
         RenewingBlaze = 374348,
         Rescue = 370665,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         Scintillation = 370821,
         ShatteringStar = 370452,
+        ShiningLight = 327510,
         SleepWalk = 360806,
         Snapfire = 370783,
         Soar = 381322,
@@ -3070,7 +3095,7 @@ function L2P:GetSpecData(ctx)
         TimeSpiral = 374968,
         TipTheScales = 370553,
         Unravel = 368432,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         VerdantEmbrace = 360995,
         Volatility = 369089,
         WingBuffet = 357214,
@@ -3415,25 +3440,36 @@ function L2P:GetSpecData(ctx)
     return {
       SPI = {
         Animosity = 375797,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
         AzureStrike = 362969,
         BlastFurnace = 375510,
         BlessedChampion = 403010,
         BoundlessJudgment = 405278,
         Burnout = 375801,
         ChargedBlast = 370455,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusadingStrikes = 404542,
         DeepBreath = 357210,
         Disintegrate = 356995,
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
+        DivinePurpose = 223817,
         DivineResonance = 384027,
+        DivineToll = 375576,
         Dragonrage = 375087,
+        EchoesOfWrath = 423590,
         EmeraldBlossom = 355913,
         EmpyreanLegacy = 387170,
+        EmpyreanPower = 326732,
         EssenceBurst = 359618,
         EternitySSpan = 375757,
         EternitySurge = 359073,
         EverburningFlame = 370819,
+        ExecutionerSWill = 406940,
+        Expurgation = 383344,
         FeedTheFlames = 369846,
         Fireblood = 265221,
         FireBreath = 357208,
@@ -3444,18 +3480,22 @@ function L2P:GetSpecData(ctx)
         LeapingFlames = 369939,
         LightSJudgment = 255647,
         LivingFlame = 361469,
+        MarkOfFyrAlath = 414532,
         ObsidianScales = 363916,
         Pyre = 357211,
+        RadiantGlory = 458359,
         RenewingBlaze = 374348,
+        RighteousProtector = 204074,
         RubyEmbers = 365937,
         Scintillation = 370821,
         ShatteringStar = 370452,
+        ShiningLight = 327510,
         Snapfire = 370783,
         TemplarSlash = 406647,
         TemplarStrike = 407480,
         TemplarSVerdict = 85256,
         TipTheScales = 370553,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         Volatility = 369089,
       },
 
@@ -3996,226 +4036,650 @@ function L2P:GetSpecData(ctx)
       }
     }
 
-  elseif ctx.vars.Spec == "PALADIN-3" then
+  elseif ctx.vars.Spec == "PALADIN-6" then
     return {
       SPI = {
         ArcaneTorrent = 155145,
-        AvengingWrath = 31884,
+        AvengerSShield = 31935,
+        AvengingWrath = 384376,
+        BastionOfLight = 378974,
+        BlessedHammer = 204019,
+        Consecration = 26573,
+        Crusade = 384392,
+        CrusaderSJudgment = 204023,
+        CrusaderStrike = 35395,
+        CrusadingStrikes = 404542,
+        DivinePurpose = 223817,
+        DivineToll = 375576,
+        EchoesOfWrath = 423590,
+        EmpyreanPower = 326732,
+        ExecutionerSWill = 406940,
+        Expurgation = 383344,
+        EyeOfTyr = 387174,
+        HammerOfTheRighteous = 53595,
+        HammerOfWrath = 24275,
+        Judgment = 20271,
+        JusticarSVengeance = 215661,
+        LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
+        MomentOfGlory = 327193,
+        RadiantGlory = 458359,
+        RighteousProtector = 204074,
+        ShieldOfTheRighteous = 53600,
+        ShiningLight = 327510,
+        TemplarSVerdict = 85256,
+        VanguardSMomentumTalent = 383314,
+        WordOfGlory = 85673,
+      },
+
+      prios = {
+        {Key="PreCombat_LightsJudgment", SpellId=255647, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModePreCombat
+          end
+        },
+
+        {Key="PreCombat_ArcaneTorrent", SpellId=155145, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModePreCombat
+          end
+        },
+
+        {Key="PreCombat_Consecration", SpellId=26573, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModePreCombat
+          end
+        },
+
+        {Key="Cooldowns_AvengersShield", SpellId=31935, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.CombatDuration == 0 and ctx.vars.SetBonusTier292pc
+          end
+        },
+
+        {Key="Cooldowns_AvengingWrath", SpellId=384376, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Cooldowns_MomentOfGlory", SpellId=327193, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return (ctx.vars.BuffAvengingWrath.remaining < 15 or (ctx.vars.CombatDuration > 10 or (ctx.vars.SpellAvengingWrath.cooldown > 15) )  and (ctx.vars.SpellAvengersShield.cooldown and ctx.vars.SpellJudgment.cooldown and ctx.vars.SpellHammerOfWrath.cooldown) ) 
+          end
+        },
+
+        {Key="Cooldowns_BastionOfLight", SpellId=378974, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffAvengingWrath.active
+          end
+        },
+
+        {Key="Standard_ShieldOfTheRighteous", SpellId=53600, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ((notctx.vars.HasTalentRighteousProtector or ctx.vars.SpellRighteousProtectorIcd.cooldown == 0)  and ctx.vars.HolyPower > 2)  or ctx.vars.BuffBastionOfLight.active or ctx.vars.BuffDivinePurpose.active
+          end
+        },
+
+        {Key="Standard_AvengersShield", SpellId=31935, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffMomentOfGlory.active or (ctx.vars.SetBonusTier292pc and (notctx.vars.BuffAllyOfTheLight.active or ctx.vars.BuffAllyOfTheLight.remaining < ctx.vars.GCD) ) 
+          end
+        },
+
+        {Key="Standard_HammerOfWrath", SpellId=24275, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffAvengingWrath.active
+          end
+        },
+
+        {Key="Standard_Judgment", SpellId=20271, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.SpellJudgment.charges == 2 or 
+            not ctx.vars.HasTalentCrusadersJudgment
+          end
+        },
+
+        {Key="Standard_DivineToll", SpellId=375576, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.CombatDuration > 20 or ((ctx.vars.BuffAvengingWrath.active or notctx.vars.HasTalentAvengingWrath)  and (ctx.vars.BuffMomentOfGlory.active or notctx.vars.HasTalentMomentOfGlory) ) 
+          end
+        },
+
+        {Key="Standard_AvengersShield_1", SpellId=31935, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Standard_HammerOfWrath_1", SpellId=24275, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Standard_Judgment_1", SpellId=20271, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Standard_Consecration", SpellId=26573, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return notctx.vars.DebuffConsecration.active
+          end
+        },
+
+        {Key="Standard_EyeOfTyr", SpellId=387174, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Standard_BlessedHammer", SpellId=204019, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Standard_HammerOfTheRighteous", SpellId=53595, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Standard_CrusaderStrike", SpellId=35395, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Standard_WordOfGlory", SpellId=85673, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffShiningLight.active
+          end
+        },
+
+        {Key="Standard_ArcaneTorrent", SpellId=155145, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HolyPower < 5
+          end
+        },
+
+        {Key="Standard_LightsJudgment", SpellId=255647, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Standard_Consecration_1", SpellId=26573, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+      },
+
+      slots={
+      },
+
+      code={
+        BuffAllyOfTheLight=function(ctx)
+          return ctx:GetBuff(ctx.SPI.AllyOfTheLight)
+        end,
+
+        BuffAvengingWrath=function(ctx)
+          return ctx:GetBuff(ctx.SPI.AvengingWrath)
+        end,
+
+        BuffBastionOfLight=function(ctx)
+          return ctx:GetBuff(ctx.SPI.BastionOfLight)
+        end,
+
+        BuffDivinePurpose=function(ctx)
+          return ctx:GetBuff(ctx.SPI.DivinePurpose)
+        end,
+
+        BuffMomentOfGlory=function(ctx)
+          return ctx:GetBuff(ctx.SPI.MomentOfGlory)
+        end,
+
+        BuffShiningLight=function(ctx)
+          return ctx:GetBuff(ctx.SPI.ShiningLight)
+        end,
+
+        DebuffConsecration=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.Consecration)
+        end,
+
+        SpellAvengersShield=function(ctx)
+          return ctx:GetSpell(ctx.SPI.AvengersShield)
+        end,
+
+        SpellAvengingWrath=function(ctx)
+          return ctx:GetSpell(ctx.SPI.AvengingWrath)
+        end,
+
+        SpellHammerOfWrath=function(ctx)
+          return ctx:GetSpell(ctx.SPI.HammerOfWrath)
+        end,
+
+        SpellJudgment=function(ctx)
+          return ctx:GetSpell(ctx.SPI.Judgment)
+        end,
+
+        SpellRighteousProtectorIcd=function(ctx)
+          return ctx:GetSpell(ctx.SPI.RighteousProtectorIcd)
+        end,
+
+        HasTalentAvengingWrath=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.AvengingWrath)
+        end,
+
+        HasTalentCrusadersJudgment=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.CrusadersJudgment)
+        end,
+
+        HasTalentMomentOfGlory=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.MomentOfGlory)
+        end,
+
+        HasTalentRighteousProtector=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.RighteousProtector)
+        end,
+
+        Trinket1HasBuffStrength=function(ctx)
+          return false
+        end,
+
+        Trinket1HasBuffMastery=function(ctx)
+          return false
+        end,
+
+        Trinket1HasBuffVersatility=function(ctx)
+          return false
+        end,
+
+        Trinket1HasBuffHaste=function(ctx)
+          return false
+        end,
+
+        Trinket1HasBuffCrit=function(ctx)
+          return false
+        end,
+
+        Trinket2HasBuffStrength=function(ctx)
+          return false
+        end,
+
+        Trinket2HasBuffMastery=function(ctx)
+          return false
+        end,
+
+        Trinket2HasBuffVersatility=function(ctx)
+          return false
+        end,
+
+        Trinket2HasBuffHaste=function(ctx)
+          return false
+        end,
+
+        Trinket2HasBuffCrit=function(ctx)
+          return false
+        end,
+
+        SetBonusTier292pc=function(ctx)
+          return false
+        end,
+
+        IsModePreCombat=function(ctx)
+          return  not ctx.vars.IsFighting
+        end,
+
+      }
+    }
+
+  elseif ctx.vars.Spec == "PALADIN-7" then
+    return {
+      SPI = {
+        ArcaneTorrent = 155145,
+        AvengingWrath = 384376,
         BladeOfJustice = 184575,
         BlessedChampion = 403010,
         BoundlessJudgment = 405278,
-        Consecration = 26573,
-        Crusade = 231895,
+        Crusade = 384392,
         CrusaderStrike = 35395,
+        CrusadingStrikes = 404542,
         DivineArbiter = 404306,
         DivineAuxiliary = 406158,
         DivineHammer = 198034,
+        DivinePurpose = 223817,
         DivineResonance = 384027,
-        DivineShield = 642,
         DivineStorm = 53385,
-        DivineToll = 304971,
+        DivineToll = 375576,
+        EchoesOfWrath = 423590,
         EmpyreanLegacy = 387170,
-        EmpyreanPower = 326733,
+        EmpyreanPower = 326732,
+        ExecutionerSWill = 406940,
         ExecutionSentence = 343527,
+        Expurgation = 383344,
         FinalReckoning = 343721,
         Fireblood = 265221,
-        FlashOfLight = 19750,
         HammerOfWrath = 24275,
         HolyBlade = 383342,
         Judgment = 20271,
-        Judgment_bad = 275779,
         JusticarSVengeance = 215661,
-        LayOnHands = 633,
         LightSJudgment = 255647,
+        MarkOfFyrAlath = 414532,
+        RadiantGlory = 458359,
         Rebuke = 96231,
         ShieldOfVengeance = 184662,
         TemplarSlash = 406647,
         TemplarStrike = 407480,
         TemplarStrikes = 406646,
         TemplarSVerdict = 85256,
-        VanguardSMomentum = 383314,
+        VanguardSMomentumTalent = 383314,
         WakeOfAshes = 255937,
-        WordOfGlory = 85673,
       },
 
       prios = {
-        {Key="Survival_DivineShield", SpellId=642, Role={ "survival","cooldown", },
+        {Key="PreCombat_ShieldOfVengeance", SpellId=184662, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=true, NoRange=true, NotInstant=false, WhileMoving=true,
           Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HealthIsLow and
-            ctx.vars.IsBeingDamaged
-          end
-        },
-
-        {Key="Survival_LayOnHands", SpellId=633, Role={ "heal","cooldown", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HealthIsCritical
-          end
-        },
-
-        {Key="Surival_ShieldOfVengeance", SpellId=184662, Role={ "survival","dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HealthIsLow and 
-            ctx.vars.IsBeingDamaged
-          end
-        },
-
-        {Key="Survial_FlashOfLight", SpellId=19750, Role={ "heal", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HealthIsMedium
-            
-          end
-        },
-
-        {Key="Survival_WordOfGlory", SpellId=85673, Role={ "survival","heal", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HealthIsLow
-          end
-        },
-
-        {Key="Survival_JusticarsVengeance", SpellId=215661, Role={ "survival","heal","dps","spender", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HealthIsMedium
-          end
-        },
-
-        {Key="PreCombat_ShieldOfVengeance", SpellId=184662, Role={ "preparation","survival", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=true,
           Condition=function(this, ctx)
             return ctx.vars.IsModePreCombat
           end
         },
 
-        {Key="Cooldowns_LightsJudgment", SpellId=255647, Role={ "dps","cooldown", },
+        {Key="Cooldowns_LightsJudgment", SpellId=255647, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.Targets >= 2 
+            return ctx.vars.Targets >= 2
           end
         },
 
-        {Key="Cooldowns_Fireblood", SpellId=265221, Role={ "cooldown", },
+        {Key="Cooldowns_Fireblood", SpellId=265221, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.BuffAvengingWrath.active or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges == 10
           end
         },
 
-        {Key="Free_DivineStorm", SpellId=53385, Role={ "dps","survival", },
+        {Key="Cooldowns_ShieldOfVengeance", SpellId=184662, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.BuffEmpyreanPower.active
+            return (not ctx.vars.HasTalentExecutionSentence or not ctx.vars.DebuffExecutionSentence.active) 
           end
         },
 
-        {Key="Cooldowns_ExecutionSentence", SpellId=343527, Role={ "dps","spender","cooldown", },
+        {Key="Cooldowns_ExecutionSentence", SpellId=343527, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsDangerousFight and (not ctx.vars.BuffCrusade.active and ctx.vars.SpellCrusade.cooldown > 10 or ctx.vars.BuffCrusade.charges == 10 or ctx.vars.SpellAvengingWrath.cooldown > 10)
+            return (not ctx.vars.BuffCrusade.active and ctx.vars.SpellCrusade.cooldown > 15 or ctx.vars.BuffCrusade.charges == 10 or ctx.vars.SpellAvengingWrath.cooldown < 0.75 or ctx.vars.SpellAvengingWrath.cooldown > 15 or ctx.vars.HasTalentRadiantGlory) and (ctx.vars.HolyPower >= 2 and ctx.vars.HasTalentDivineAuxiliary)  and (not ctx.vars.HasTalentExecutionersWill) 
           end
         },
 
-        {Key="Cooldowns_FinalReckoning", SpellId=343721, Role={ "dps","cooldown", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return (ctx.vars.SpellCrusade.cooldown > 0 and (
-            not ctx.vars.BuffCrusade.active or ctx.vars.BuffCrusade.charges >= 10) )
-          end
-        },
-
-        {Key="Finishers_DivineStorm", SpellId=53385, Role={ "dps","spender", },
-          Description="",
-          RangeSpell=85256, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.IsModeFinishers and
-            ctx.vars.Targets >= 2
-          end
-        },
-
-        {Key="Finishers_JusticarsVengeance", SpellId=215661, Role={ "dps","spender", },
+        {Key="Cooldowns_AvengingWrath", SpellId=384376, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsModeFinishers
+            return (ctx.vars.HolyPower >= 4 and ctx.vars.CombatDuration < 5 or ctx.vars.HolyPower >= 3 and ctx.vars.CombatDuration > 5 or ctx.vars.HolyPower >= 2 and ctx.vars.HasTalentDivineAuxiliary and (ctx.vars.SpellExecutionSentence.cooldown == 0 or ctx.vars.SpellFinalReckoning.cooldown == 0) )  and (not ctx.vars.RaidEventAddsUp or ctx.vars.TargetTimeToDie > 10) 
           end
         },
 
-        {Key="Finishers_TemplarsVerdict", SpellId=85256, Role={ "dps","spender", },
+        {Key="Cooldowns_Crusade", SpellId=384392, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsModeFinishers and ctx.vars.IsTemplarsVerdictValid
+            return ctx.vars.HolyPower >= 5 and ctx.vars.CombatDuration < 5 or ctx.vars.HolyPower >= 3 and ctx.vars.CombatDuration > 5
           end
         },
 
-        {Key="Generators_WakeOfAshes", SpellId=255937, Role={ "dps","generator", },
-          Description="",
-          RangeSpell=184575, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HolyPower <= 2 
-          end
-        },
-
-        {Key="Generators_DivineToll", SpellId=304971, Role={ "dps","generator", },
+        {Key="Cooldowns_FinalReckoning", SpellId=343721, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HolyPower <= 2 and 
-            not ctx.vars.DebuffJudgment.active 
+            return (ctx.vars.HolyPower >= 4 and ctx.vars.CombatDuration < 8 or ctx.vars.HolyPower >= 3 and ctx.vars.CombatDuration >= 8 or ctx.vars.HolyPower >= 2 and ctx.vars.HasTalentDivineAuxiliary)  and (ctx.vars.SpellAvengingWrath.cooldown > 10 or ctx.vars.SpellCrusade.cooldown and (not ctx.vars.BuffCrusade.active or ctx.vars.BuffCrusade.charges >= 10)  or ctx.vars.HasTalentRadiantGlory and (ctx.vars.BuffAvengingWrath.active or ctx.vars.BuffCrusade.active) )  and (not ctx.vars.RaidEventAddsExists or ctx.vars.RaidEventAddsUp or ctx.vars.RaidEventAddsIn > 40) 
           end
         },
 
-        {Key="Generators_TemplarSlash_Aoe", SpellId=406647, Role={ "dps","generator", },
+        {Key="Finishers_DivineHammer", SpellId=198034, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFinishersInGenerators
+          end
+        },
+
+        {Key="Finishers_DivineStorm", SpellId=53385, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFinishersInGenerators and (ctx.vars.VariableDsCastable and (not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory) )
+          end
+        },
+
+        {Key="Finishers_JusticarsVengeance", SpellId=215661, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFinishersInGenerators and (not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory)
+          end
+        },
+
+        {Key="Finishers_TemplarsVerdict", SpellId=85256, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFinishersInGenerators and (not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory)
+          end
+        },
+
+        {Key="Generators_WakeOfAshes", SpellId=255937, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HolyPower <= 2 and (ctx.vars.SpellAvengingWrath.cooldown > 6 or ctx.vars.SpellCrusade.cooldown > 6 or ctx.vars.HasTalentRadiantGlory)  and (not ctx.vars.HasTalentExecutionSentence or ctx.vars.SpellExecutionSentence.cooldown > 4 or ctx.vars.TargetTimeToDie < 8)  and (not ctx.vars.RaidEventAddsExists or ctx.vars.RaidEventAddsIn > 20 or ctx.vars.RaidEventAddsUp) 
+          end
+        },
+
+        {Key="Generators_BladeOfJustice", SpellId=184575, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.DebuffExpurgation.active and ctx.vars.SetBonusTier312pc
+          end
+        },
+
+        {Key="Generators_DivineToll", SpellId=375576, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HolyPower <= 2 and (not ctx.vars.RaidEventAddsExists or ctx.vars.RaidEventAddsIn > 30 or ctx.vars.RaidEventAddsUp)  and (ctx.vars.SpellAvengingWrath.cooldown > 15 or ctx.vars.SpellCrusade.cooldown > 15 or ctx.vars.HasTalentRadiantGlory or ctx.vars.BossInFight and ctx.vars.FightRemains < 8) 
+          end
+        },
+
+        {Key="Generators_Judgment", SpellId=20271, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.DebuffExpurgation.active and not ctx.vars.BuffEchoesOfWrath.active and ctx.vars.SetBonusTier312pc
+          end
+        },
+
+        {Key="Finishers_DivineHammer_1", SpellId=198034, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFinishersInGenerators
+          end
+        },
+
+        {Key="Finishers_DivineStorm_1", SpellId=53385, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFinishersInGenerators and (ctx.vars.VariableDsCastable and (not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory) )
+          end
+        },
+
+        {Key="Finishers_JusticarsVengeance_1", SpellId=215661, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFinishersInGenerators and (not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory)
+          end
+        },
+
+        {Key="Finishers_TemplarsVerdict_1", SpellId=85256, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFinishersInGenerators and (not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory)
+          end
+        },
+
+        {Key="Generators_TemplarSlash", SpellId=406647, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4225,41 +4689,27 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Generators_Judgment_Aoe", SpellId=20271, Role={ "dps","generator", },
+        {Key="Generators_BladeOfJustice_1", SpellId=184575, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return not ctx.vars.DebuffJudgment.active and (ctx.vars.HolyPower <= 3 or 
-            not ctx.vars.HasTalentBoundlessJudgment) and 
-            ctx.vars.Targets >= 2
+            return (ctx.vars.HolyPower <= 3 or not ctx.vars.HasTalentHolyBlade)  and (ctx.vars.Targets >= 2 and not ctx.vars.HasTalentCrusadingStrikes or ctx.vars.Targets >= 4) 
           end
         },
 
-        {Key="Generators_BladeOfJustice_Aoe", SpellId=184575, Role={ "dps","generator", },
+        {Key="Generators_HammerOfWrath", SpellId=24275, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return (ctx.vars.HolyPower <= 3 or 
-            not ctx.vars.HasTalentHolyBlade) and 
-            ctx.vars.Targets >= 2
+            return (ctx.vars.Targets < 2 or not ctx.vars.HasTalentBlessedChampion)  and (ctx.vars.HolyPower <= 3 or ctx.vars.TargetHealthPct > 20 or not ctx.vars.HasTalentVanguardsMomentum) 
           end
         },
 
-        {Key="Generators_HammerOfWrath", SpellId=24275, Role={ "dps","generator", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.HolyPower <= 3
-          end
-        },
-
-        {Key="Generators_TemplarSlash", SpellId=406647, Role={ "dps","generator", },
+        {Key="Generators_TemplarSlash_1", SpellId=406647, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4269,90 +4719,167 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Generators_BladeOfJustice", SpellId=184575, Role={ "dps","generator", },
+        {Key="Generators_Judgment_1", SpellId=20271, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HolyPower <= 3 or 
-            not ctx.vars.HasTalentHolyBlade
+            return not ctx.vars.DebuffJudgment.active and (ctx.vars.HolyPower <= 3 or not ctx.vars.HasTalentBoundlessJudgment) 
           end
         },
 
-        {Key="Generators_Judgment", SpellId=275779, Role={ "dps","generator", },
+        {Key="Generators_BladeOfJustice_2", SpellId=184575, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return not ctx.vars.DebuffJudgment.active and (ctx.vars.HolyPower <= 3 or (ctx.vars.HolyPower <= 4 and not ctx.vars.HasTalentBoundlessJudgment))
+            return ctx.vars.HolyPower <= 3 or not ctx.vars.HasTalentHolyBlade
           end
         },
 
-        {Key="Generators_CrusaderStrike", SpellId=35395, Role={ "dps","generator", },
+        {Key="Generators_Judgment_2", SpellId=20271, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HolyPower <= 3
-            and ctx.vars.IsCrusaderStrikeValid
+            return ctx.vars.HolyPower <= 3 or not ctx.vars.HasTalentBoundlessJudgment
           end
         },
 
-        {Key="Generators_TemplarStrike", SpellId=407480, Role={ "dps","generator", },
+        {Key="Finishers_DivineHammer_2", SpellId=198034, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HolyPower <= 4
+            return ctx.vars.IsModeFinishersInGenerators
           end
         },
 
-        {Key="Cooldowns_ShieldOfVengeance", SpellId=184662, Role={ "dps","survival", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=true,
-          Condition=function(this, ctx)
-            return ctx.vars.IsDangerousFight and 
-            not ctx.vars.WingsOn
-          end
-        },
-
-        {Key="Fillers_Consecration", SpellId=26573, Role={ "dps", },
-          Description="",
-          RangeSpell=184575, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.NeedsConsecration
-          end
-        },
-
-        {Key="Filler_DivineHammer", SpellId=198034, Role={ "dps", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.Targets >= 2
-          end
-        },
-
-        {Key="Generator_ArcaneTorrent", SpellId=155145, Role={ "dps","generator", },
+        {Key="Finishers_DivineStorm_2", SpellId=53385, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.HolyPower <= 4
+            return ctx.vars.IsModeFinishersInGenerators and (ctx.vars.VariableDsCastable and (not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory) )
           end
         },
 
-        {Key="Filler_Judgment", SpellId=20271, Role={ "dps","generator", },
+        {Key="Finishers_JusticarsVengeance_2", SpellId=215661, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFinishersInGenerators and (not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory)
+          end
+        },
+
+        {Key="Finishers_TemplarsVerdict_2", SpellId=85256, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsModeFinishersInGenerators and (not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory)
+          end
+        },
+
+        {Key="Generators_CrusaderStrike", SpellId=35395, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.CooldownCrusaderStrikeChargesFractional >= 1.75 and (ctx.vars.HolyPower <= 2 or ctx.vars.HolyPower <= 3 and ctx.vars.SpellBladeOfJustice.cooldown > ctx.vars.GCD * 2 or ctx.vars.HolyPower == 4 and ctx.vars.SpellBladeOfJustice.cooldown > ctx.vars.GCD * 2 and ctx.vars.SpellJudgment.cooldown > ctx.vars.GCD * 2) 
+          end
+        },
+
+        {Key="Finishers_DivineHammer_3", SpellId=198034, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Finishers_DivineStorm_3", SpellId=53385, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.VariableDsCastable and (not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory) 
+          end
+        },
+
+        {Key="Finishers_JusticarsVengeance_3", SpellId=215661, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory
+          end
+        },
+
+        {Key="Finishers_TemplarsVerdict_3", SpellId=85256, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.HasTalentCrusade or ctx.vars.SpellCrusade.cooldown > ctx.vars.GCD * 3 or ctx.vars.BuffCrusade.active and ctx.vars.BuffCrusade.charges < 10 or ctx.vars.HasTalentRadiantGlory
+          end
+        },
+
+        {Key="Generators_TemplarSlash_2", SpellId=406647, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Generators_TemplarStrike", SpellId=407480, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Generators_HammerOfWrath_1", SpellId=24275, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HolyPower <= 3 or ctx.vars.TargetHealthPct > 20 or not ctx.vars.HasTalentVanguardsMomentum
+          end
+        },
+
+        {Key="Generators_CrusaderStrike_1", SpellId=35395, Role={  },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Generators_ArcaneTorrent", SpellId=155145, Role={  },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4372,37 +4899,9 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Slot_AvengingWrath", SpellId=31884, Role={ "cooldown","slot", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="Slot_Crusade", SpellId=231895, Role={ "cooldown","slot", },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
       },
 
       slots={
-        {Type="spell", Spell=31884, 
-          Description="Default Cooldown",
-          Icon="", Overlay=false, Charges=false
-        },
-        {Type="spell", Spell=184662, 
-          Description="Shields",
-          Icon="", Overlay=false, Charges=false
-        },
       },
 
       code={
@@ -4422,6 +4921,10 @@ function L2P:GetSpecData(ctx)
           return ctx:GetBuff(ctx.SPI.DivineResonance)
         end,
 
+        BuffEchoesOfWrath=function(ctx)
+          return ctx:GetBuff(ctx.SPI.EchoesOfWrath)
+        end,
+
         BuffEmpyreanLegacy=function(ctx)
           return ctx:GetBuff(ctx.SPI.EmpyreanLegacy)
         end,
@@ -4434,12 +4937,20 @@ function L2P:GetSpecData(ctx)
           return ctx:GetBuff(ctx.SPI.TemplarStrikes)
         end,
 
-        DebuffConsecration=function(ctx)
-          return ctx:GetDebuff(ctx.SPI.Consecration)
+        DebuffExecutionSentence=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.ExecutionSentence)
+        end,
+
+        DebuffExpurgation=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.Expurgation)
         end,
 
         DebuffJudgment=function(ctx)
           return ctx:GetDebuff(ctx.SPI.Judgment)
+        end,
+
+        DebuffMarkOfFyralath=function(ctx)
+          return ctx:GetDebuff(ctx.SPI.MarkOfFyralath)
         end,
 
         SpellAvengingWrath=function(ctx)
@@ -4478,83 +4989,160 @@ function L2P:GetSpecData(ctx)
           return ctx:HasTalentByID(ctx.SPI.Crusade)
         end,
 
+        HasTalentCrusadingStrikes=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.CrusadingStrikes)
+        end,
+
+        HasTalentDivineArbiter=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.DivineArbiter)
+        end,
+
         HasTalentDivineAuxiliary=function(ctx)
           return ctx:HasTalentByID(ctx.SPI.DivineAuxiliary)
+        end,
+
+        HasTalentExecutionersWill=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.ExecutionersWill)
         end,
 
         HasTalentExecutionSentence=function(ctx)
           return ctx:HasTalentByID(ctx.SPI.ExecutionSentence)
         end,
 
-        HasTalentFinalReckoning=function(ctx)
-          return ctx:HasTalentByID(ctx.SPI.FinalReckoning)
-        end,
-
         HasTalentHolyBlade=function(ctx)
           return ctx:HasTalentByID(ctx.SPI.HolyBlade)
+        end,
+
+        HasTalentRadiantGlory=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.RadiantGlory)
         end,
 
         HasTalentVanguardsMomentum=function(ctx)
           return ctx:HasTalentByID(ctx.SPI.VanguardsMomentum)
         end,
 
-        WingsOn=function(ctx)
-          return ctx.vars.BuffCrusade.active
-          or ctx.vars.BuffAvengingWrath.active
+        VariableTrinketPriority=function(ctx)
+          return false
+        end,
+
+        VariableTrinket1Buffs=function(ctx)
+          return false
+        end,
+
+        VariableTrinket2Buffs=function(ctx)
+          return false
+        end,
+
+        VariableDsCastable=function(ctx)
+          return false
+        end,
+
+        Trinket1HasBuffStrength=function(ctx)
+          return false
+        end,
+
+        Trinket1HasBuffMastery=function(ctx)
+          return false
+        end,
+
+        Trinket1HasBuffVersatility=function(ctx)
+          return false
+        end,
+
+        Trinket1HasBuffHaste=function(ctx)
+          return false
+        end,
+
+        Trinket1HasBuffCrit=function(ctx)
+          return false
+        end,
+
+        Trinket2HasBuffStrength=function(ctx)
+          return false
+        end,
+
+        Trinket2HasBuffMastery=function(ctx)
+          return false
+        end,
+
+        Trinket2HasBuffVersatility=function(ctx)
+          return false
+        end,
+
+        Trinket2HasBuffHaste=function(ctx)
+          return false
+        end,
+
+        Trinket2HasBuffCrit=function(ctx)
+          return false
+        end,
+
+        FightRemains=function(ctx)
+          return false
+        end,
+
+        RaidEventAddsExists=function(ctx)
+          return false
+        end,
+
+        RaidEventAddsIn=function(ctx)
+          return false
+        end,
+
+        RaidEventAddsUp=function(ctx)
+          return false
+        end,
+
+        Trinket2HasCooldown=function(ctx)
+          return false
+        end,
+
+        Trinket2CooldownRemains=function(ctx)
+          return false
+        end,
+
+        Trinket1ProcAnyDpsDuration=function(ctx)
+          return false
+        end,
+
+        Trinket1HasCooldown=function(ctx)
+          return false
+        end,
+
+        Trinket1CooldownRemains=function(ctx)
+          return false
+        end,
+
+        Trinket2ProcAnyDpsDuration=function(ctx)
+          return false
+        end,
+
+        TargetTimeToDie=function(ctx)
+          return false
+        end,
+
+        SetBonusTier314pc=function(ctx)
+          return false
+        end,
+
+        SetBonusTier312pc=function(ctx)
+          return false
+        end,
+
+        TargetHealthPct=function(ctx)
+          return false
+        end,
+
+        CooldownCrusaderStrikeChargesFractional=function(ctx)
+          return false
         end,
 
         IsModePreCombat=function(ctx)
-          return  not ctx.vars.IsFighting
+          return not ctx.vars.IsFighting
         end,
 
-        IsModeFinishers=function(ctx)
-          return ctx.vars.HolyPower == 5 or 
-          ctx.vars.WingsOn or
-          ((ctx.vars.DebuffJudgment.active or ctx.vars.HolyPower == 4)  and ctx.vars.BuffDivineResonance.active)
-        end,
-
-        IsDangerousFight=function(ctx)
-          return ctx.vars.IsBossFight
-          or ctx.vars.IsPvp
-          or (ctx.vars.Targets >= 2 
-            and ctx.vars.HealthPercent < 0.7)
-          or ctx.vars.HealthPercent < 0.5 
-          
-        end,
-
-        LastConsecrationTime=function(ctx)
-          return (
-            ctx.vars.LastCastSpell == ctx.SPI.Consecration and 
-            ctx.vars.LastCastTime
-          ) or ctx.vars.LastConsecrationTime or 0
-        end,
-
-        NeedsConsecration=function(ctx)
-          return (ctx.vars.Now - (ctx.vars.LastConsecrationTime or 0)) >= 8.5
-        end,
-
-        HealthIsCritical=function(ctx)
-          return ctx.vars.HealthPercent <= 0.2
-        end,
-
-        HealthIsLow=function(ctx)
-          return ctx.vars.HealthPercent <= 0.4
-        end,
-
-        HealthIsMedium=function(ctx)
-          return ctx.vars.HealthPercent <= 0.8
-        end,
-
-        IsBeingDamaged=function(ctx)
-          return ctx.vars.HealthChangingRate < 0
-        end,
-
-        IsTemplarsVerdictValid=function(ctx)
-          return not IsPlayerSpell(ctx.SPI.JusticarSVengeance)
-        end,
-
-        IsCrusaderStrikeValid=function(ctx)
-          return not IsPlayerSpell(ctx.SPI.TemplarStrike)
+        IsModeFinishersInGenerators=function(ctx)
+          return ctx.vars.HolyPower == 5 or ctx.vars.BuffEchoesOfWrath.active and ctx.vars.SetBonusTier314pc and ctx.vars.HasTalentCrusadingStrikes or (ctx.vars.DebuffJudgment.active or ctx.vars.HolyPower == 4)  and ctx.vars.BuffDivineResonance.active and not ctx.vars.SetBonusTier312pc
         end,
 
       }
