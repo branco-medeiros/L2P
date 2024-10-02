@@ -5,6 +5,7 @@ local DEFAULT_BDR_TEX = 'Interface\\DialogFrame\\UI-DialogBox-Background-Dark'
 local DEFAULT_BG_TEX = "Interface\\DialogFrame\\UI-DialogBox-Background"
 local DEFAULT_INTERVAL = 3
 local SPELL_CAST_TIME = 4
+local SPELLBOOK_SPELL = Enum.SpellBookSpellBank.Player
 
 -- AceAddon prelude for library registration
 local MAJOR, MINOR = "L2P-Framelets", 1
@@ -169,12 +170,12 @@ local function Spell_Update(this, Ctx)
   this.Valid = false
   this.Enabled = false
   this.NoMana = true
-  this.InvalidSpell = not this.SpName or not this:IsValidSpell()
+  this.InvalidSpell = not this:IsValidSpell()
   if this.InvalidSpell then return false end
-    
-  local cast = select(SPELL_CAST_TIME, Fun.XGetSpellInfo(this.SpName))
+  
+  local cast = (Fun.GetSpellInfo(this.SpellId) or {}).castTime
   local ok = ((cast and cast <= 0) or this.NotInstant) and this:IsUsable()
-	this.Charges, this.MaxCharges = Fun.XGetSpellCharges(this.SpName)
+  this.Charges, this.MaxCharges = Fun.XGetSpellCharges(this.SpName)
 
   if ok and this.Condition then
     this.Valid = this:Condition(Ctx)
@@ -187,8 +188,9 @@ end -- fn Spell_Update
 -------------------------------------------------------------------------------
 local function Spell_IsValidSpell(this)
 -------------------------------------------------------------------------------
-  local id = this.SpellId
-  return (id or false) and IsPlayerSpell(id)
+  return (this.SpellId or false) 
+		and (this.SpName or false) 
+		and (IsPlayerSpell(this.SpellId) or this:IsActive())
 end
   
 -------------------------------------------------------------------------------
@@ -196,11 +198,22 @@ local function Spell_IsUsable(this)
 -------------------------------------------------------------------------------
 -- returns true if the spell can be used/has mana
 -------------------------------------------------------------------------------
-  local ok, nomana = Fun.IsUsableSpell(this.SpName)
+  local ok, nomana = Fun.IsUsableSpell(this.SpellId)
   this.Enabled = (ok and true) or false
   this.NoMana = (nomana and true) or false
   return this.Enabled
 end -- fn Spell_IsUsable
+
+-------------------------------------------------------------------------------
+local function Spell_IsActive(this)
+-------------------------------------------------------------------------------
+	local id = this.SpellId
+	local slot = FindSpellBookSlotBySpellID( id )
+	-- return not slot
+	if not slot then return false end
+	local name = Fun.GetSpellBookItemName(slot, SPELLBOOK_SPELL)
+	return name == this.SpName
+end
 
 -------------------------------------------------------------------------------
 local function Spell_GetActivation(this, now)
@@ -234,14 +247,20 @@ end -- fn Spell_CheckRange
 -------------------------------------------------------------------------------
 local function Spell_GetTexture(this)
 -------------------------------------------------------------------------------
-  return Fun.XGetSpellTexture(this.SpName or "")
+  return (not this.SpellId and "") or Fun.GetSpellTexture(this.SpellId)
+	--local id = this.SpellId
+	--local ret = nil;
+	--if pcall(function() ret = Fun.GetSpellTexture(id) end ) then return ret end
+	--print("texture error for spell " .. this.SpName )
+  -- return Fun.GetSpellTexture(this.SpellId)
 end -- fn Spell_GetTexture
 
 -------------------------------------------------------------------------------
 local function Spell_Debug(this)
 -------------------------------------------------------------------------------
   for k, v in pairs(this) do
-    if type(v) ~= "function" then print(k, ": ", v) end
+	local t = type(v)
+    if t ~= "function" and t ~= "table" then print(k, ": ", v) end
   end
 end
 
@@ -269,6 +288,7 @@ local function Spell_Create(Key, SpName, Condition, Caption)
   sp.GetTexture = Spell_GetTexture
   sp.Update = Spell_Update
   sp.IsUsable = Spell_IsUsable
+	sp.IsActive = Spell_IsActive
   sp.GetActivation = Spell_GetActivation
   sp.CheckRange = Spell_CheckRange
   sp.IsValidSpell = Spell_IsValidSpell
