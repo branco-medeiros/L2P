@@ -246,6 +246,7 @@ end
 function Main:LoadKeys(show)
 --------------------------------------------------------------------------------
   local klist = self:MapSpellKeys()
+	self.Engine.SpellKeys = klist
   for k, s in pairs(self.Engine.Spells) do
     -- sets the message for the spell based on the spell name
     -- or the action spell name (in cases such as in Pyroblast, where the actual spell cast

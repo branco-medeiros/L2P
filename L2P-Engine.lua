@@ -854,6 +854,7 @@ local function InitEngine(Engine)
 
   eng.Spec = ''                     -- player spec we are handling
   eng.Spells = {}                   -- list of valid spells indexed by keys
+	eng.SpellKeys = {}								-- list of spell keybinds indexed by spell ids
   eng.Frame = nil                 -- the spell frame
   eng.WeAreBeingAttacked = false
   eng.ElapsedDamage = 0             -- the raw damage received between updates
