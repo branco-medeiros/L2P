@@ -765,6 +765,10 @@ function Engine:Load(data)
       for k, v in pairs(p) do
         spell[k] = v
       end
+			if spell.ActionSpell then
+				spell.ActionSpellId = spell.ActionSpell
+				spell.ActionSpell = Fun.GetSpellName(spell.ActionSpell)
+			end
       for i, v in ipairs(spell.Role) do
         spell["HasRole" .. strupper(string.sub(v,1, 1)) .. string.sub(v, 2)] = true
       end
