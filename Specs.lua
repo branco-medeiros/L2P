@@ -217,7 +217,6 @@ function L2P:GetSpecData(ctx)
         DivineStorm = 53385,
         DivineToll = 375576,
         EchoesOfWrath = 423590,
-		EmpyreanHammer = 431398,
         EmpyreanLegacy = 387170,
         EmpyreanPower = 326732,
         EssenceBurst = 359618,
@@ -368,10 +367,9 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-				
         {Key="Spender_HammerOfLight", SpellId=427453, Role={ "dps","spender","cooldown", },
           Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          RangeSpell=nil, PetSpell=nil, ActionSpell=255937,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
@@ -390,6 +388,26 @@ function L2P:GetSpecData(ctx)
         },
 
         {Key="Spender_FinalVerdict5p", SpellId=383328, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HolyPower > 4
+          end
+        },
+
+        {Key="Spender_TemplarsVerdict5Hp", SpellId=85256, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HolyPower > 4
+          end
+        },
+
+        {Key="Spender_JusticarsVengeance5Hp", SpellId=215661, Role={ "dps","spender","heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -419,13 +437,23 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Generator_TemplarSlash_Refresh", SpellId=406647, Role={ "dps","generator", },
+        {Key="Generator_TemplarSlash", SpellId=406647, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=407480,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.CanUse1HPGenerator
+          end
+        },
+
+        {Key="Generator_TemplarStrike", SpellId=407480, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.CanUse1HPGenerator and ctx.vars.DebuffTemplarStrikesFading
+            return ctx.vars.CanUse2HPGenerator
           end
         },
 
@@ -460,7 +488,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Generator_TemplarStrike", SpellId=407480, Role={ "dps","generator", },
+        {Key="Generator_CrusaderStrike", SpellId=35395, Role={ "generator","dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -481,6 +509,26 @@ function L2P:GetSpecData(ctx)
         },
 
         {Key="Spender_FinalVerdict", SpellId=383328, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Spender_TemplarsVerdict", SpellId=85256, Role={ "spender","dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Spender_JsticasVengeance", SpellId=215661, Role={ "heal","dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -636,7 +684,7 @@ function L2P:GetSpecData(ctx)
         end,
 
         HealthIsMedium=function(ctx)
-          return ctx.vars.HealthPercent <= 0.8
+          return ctx.vars.HealthPercent <= 0.6
         end,
 
         MultipleAttackers=function(ctx)
@@ -681,10 +729,6 @@ function L2P:GetSpecData(ctx)
         end,
 
         HasTalentExecutionAuxiliary=function(ctx)
-          return false
-        end,
-
-        DebuffTemplarStrikesFading=function(ctx)
           return false
         end,
 
