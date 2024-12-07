@@ -190,7 +190,10 @@ local function Spell_IsValidSpell(this)
 -------------------------------------------------------------------------------
   return (this.SpellId or false) 
 		and (this.SpName or false) 
-		and (IsPlayerSpell(this.SpellId) or this:IsActive())
+		and (
+		--IsPlayerSpell(this.SpellId) or 
+			this:IsActive()
+		)
 end
   
 -------------------------------------------------------------------------------
@@ -248,11 +251,6 @@ end -- fn Spell_CheckRange
 local function Spell_GetTexture(this)
 -------------------------------------------------------------------------------
   return (not this.SpellId and "") or Fun.GetSpellTexture(this.SpellId)
-	--local id = this.SpellId
-	--local ret = nil;
-	--if pcall(function() ret = Fun.GetSpellTexture(id) end ) then return ret end
-	--print("texture error for spell " .. this.SpName )
-  -- return Fun.GetSpellTexture(this.SpellId)
 end -- fn Spell_GetTexture
 
 -------------------------------------------------------------------------------
