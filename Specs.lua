@@ -217,6 +217,7 @@ function L2P:GetSpecData(ctx)
         DivineStorm = 53385,
         DivineToll = 375576,
         EchoesOfWrath = 423590,
+        EmpyreanHammer = 431398,
         EmpyreanLegacy = 387170,
         EmpyreanPower = 326732,
         EssenceBurst = 359618,
@@ -739,7 +740,7 @@ function L2P:GetSpecData(ctx)
       }
     }
 
-  elseif ctx.vars.Spec == "PALADIN-2" then
+  elseif ctx.vars.Spec == "PALADIN-6" then
     return {
       SPI = {
         Animosity = 375797,
@@ -4068,35 +4069,45 @@ function L2P:GetSpecData(ctx)
       }
     }
 
-  elseif ctx.vars.Spec == "PALADIN-6" then
+  elseif ctx.vars.Spec == "PALADIN-2" then
     return {
       SPI = {
         ArcaneTorrent = 155145,
+        ArdentDefender = 31850,
         AvengerSShield = 31935,
         AvengingWrath = 384376,
         BastionOfLight = 378974,
         BlessedHammer = 204019,
         Consecration = 26573,
+        ConsecrationBuff = 188370,
         Crusade = 384392,
         CrusaderSJudgment = 204023,
         CrusaderStrike = 35395,
         CrusadingStrikes = 404542,
         DivinePurpose = 223817,
+        DivineShield = 642,
         DivineToll = 375576,
         EchoesOfWrath = 423590,
         EmpyreanPower = 326732,
         ExecutionerSWill = 406940,
         Expurgation = 383344,
         EyeOfTyr = 387174,
+        FinalStand = 204077,
+        GuardianOfAncientKings = 86659,
+        HammerOfLight = 427453,
         HammerOfTheRighteous = 53595,
         HammerOfWrath = 24275,
+        HolyBulwark = 432459,
         Judgment = 20271,
         JusticarSVengeance = 215661,
+        LayOnHands = 633,
         LightSJudgment = 255647,
         MarkOfFyrAlath = 414532,
         MomentOfGlory = 327193,
         RadiantGlory = 458359,
+        Rebuke = 96231,
         RighteousProtector = 204074,
+        SacredWeapon = 432472,
         ShieldOfTheRighteous = 53600,
         ShiningLight = 327510,
         TemplarSVerdict = 85256,
@@ -4105,47 +4116,146 @@ function L2P:GetSpecData(ctx)
       },
 
       prios = {
-        {Key="PreCombat_LightsJudgment", SpellId=255647, Role={  },
+        {Key="Survival_ArdentDefender", SpellId=31850, Role={ "survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=true, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsCritical 
+              and ctx.vars.InCombat
+          end
+        },
+
+        {Key="Survival_DivineShield_Taunt", SpellId=642, Role={ "survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=true, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsCritical 
+              and ctx.vars.HasTalentFinalStand
+              and ctx.vars.InCombat 
+          end
+        },
+
+        {Key="Survival_LayOnHands", SpellId=633, Role={ "survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=true, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsCritical
+              and ctx.vars.InCombat
+          end
+        },
+
+        {Key="Survival_DivineShield", SpellId=642, Role={ "survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=true,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsCritical
+              and ctx.vars.InCombat
+              and not ctx.vars.IsGrouped
+          end
+        },
+
+        {Key="Survival_GuardianOfAncientKings", SpellId=86659, Role={ "survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=true, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsAlmostCritical
+              and ctx.vars.InCombat
+          end
+        },
+
+        {Key="Spender_Heal_WordOfGlory", SpellId=85673, Role={ "heal","dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=true, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.HealthIsMedium
+              and ctx.vars.InCombat
+          end
+        },
+
+        {Key="Survival_EyeOfTyr", SpellId=387174, Role={ "survival","dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=true, Secondary=false,
+          Condition=function(this, ctx)
+            return (ctx.vars.HealthIsLow or ctx.vars.HolyPower < 3)
+              and ctx.vars.InCombat
+              and ctx.vars.IsCloseCombat
+            
+              
+          end
+        },
+
+        {Key="Colldown_SacredWeapon", SpellId=432472, Role={ "cooldown","preparation", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return not ctx.vars.BuffAvengingWrath
+              and ctx.vars.IsDangerousFight
+          end
+        },
+
+        {Key="Spender_HammerOfLight", SpellId=427453, Role={ "dps","spender", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=387174,
+          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.BuffBlessingOfDawn
+          end
+        },
+
+        {Key="Cooldown_MomentOfGlory", SpellId=327193, Role={ "survival","cooldown", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return ctx.vars.IsDangerousFight
+              and ctx.vars.IsCloseCombat
+            
+          end
+        },
+
+        {Key="Cooldown_BastionOfLight", SpellId=378974, Role={ "cooldown","dps", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="Consecration", SpellId=26573, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
-            return ctx.vars.IsModePreCombat
+            return (
+              ctx.vars.NeedsConsecration or not ctx.vars.BuffConsecration
+              )
+              and not ctx.vars.IsMoving
+              and ctx.vars.IsCloseCombat
           end
         },
 
-        {Key="PreCombat_ArcaneTorrent", SpellId=155145, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.IsModePreCombat
-          end
-        },
-
-        {Key="PreCombat_Consecration", SpellId=26573, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.IsModePreCombat
-          end
-        },
-
-        {Key="Cooldowns_AvengersShield", SpellId=31935, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.CombatDuration == 0 and ctx.vars.SetBonusTier292pc
-          end
-        },
-
-        {Key="Cooldowns_AvengingWrath", SpellId=384376, Role={  },
+        {Key="Spender_ShieldOfTheRighteous", SpellId=53600, Role={ "dps","spender", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4155,78 +4265,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Cooldowns_MomentOfGlory", SpellId=327193, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return (ctx.vars.BuffAvengingWrath.remaining < 15 or (ctx.vars.CombatDuration > 10 or (ctx.vars.SpellAvengingWrath.cooldown > 15) )  and (ctx.vars.SpellAvengersShield.cooldown and ctx.vars.SpellJudgment.cooldown and ctx.vars.SpellHammerOfWrath.cooldown) ) 
-          end
-        },
-
-        {Key="Cooldowns_BastionOfLight", SpellId=378974, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.BuffAvengingWrath.active
-          end
-        },
-
-        {Key="Standard_ShieldOfTheRighteous", SpellId=53600, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ((notctx.vars.HasTalentRighteousProtector or ctx.vars.SpellRighteousProtectorIcd.cooldown == 0)  and ctx.vars.HolyPower > 2)  or ctx.vars.BuffBastionOfLight.active or ctx.vars.BuffDivinePurpose.active
-          end
-        },
-
-        {Key="Standard_AvengersShield", SpellId=31935, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.BuffMomentOfGlory.active or (ctx.vars.SetBonusTier292pc and (notctx.vars.BuffAllyOfTheLight.active or ctx.vars.BuffAllyOfTheLight.remaining < ctx.vars.GCD) ) 
-          end
-        },
-
-        {Key="Standard_HammerOfWrath", SpellId=24275, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.BuffAvengingWrath.active
-          end
-        },
-
-        {Key="Standard_Judgment", SpellId=20271, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.SpellJudgment.charges == 2 or 
-            not ctx.vars.HasTalentCrusadersJudgment
-          end
-        },
-
-        {Key="Standard_DivineToll", SpellId=375576, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return ctx.vars.CombatDuration > 20 or ((ctx.vars.BuffAvengingWrath.active or notctx.vars.HasTalentAvengingWrath)  and (ctx.vars.BuffMomentOfGlory.active or notctx.vars.HasTalentMomentOfGlory) ) 
-          end
-        },
-
-        {Key="Standard_AvengersShield_1", SpellId=31935, Role={  },
+        {Key="AvengersShield", SpellId=31935, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4236,7 +4275,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Standard_HammerOfWrath_1", SpellId=24275, Role={  },
+        {Key="HammerOfWrath", SpellId=24275, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4246,7 +4285,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Standard_Judgment_1", SpellId=20271, Role={  },
+        {Key="Judgment", SpellId=20271, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4256,17 +4295,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Standard_Consecration", SpellId=26573, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return notctx.vars.DebuffConsecration.active
-          end
-        },
-
-        {Key="Standard_EyeOfTyr", SpellId=387174, Role={  },
+        {Key="DivineToll", SpellId=375576, Role={ "dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4276,7 +4305,27 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Standard_BlessedHammer", SpellId=204019, Role={  },
+        {Key="Survival_HolyBulwark", SpellId=432459, Role={ "preparation","survival", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=true, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="BlessedHammer", SpellId=204019, Role={ "dps","generator", },
+          Description="",
+          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
+          Primary=false, Secondary=false,
+          Condition=function(this, ctx)
+            return true
+          end
+        },
+
+        {Key="HammerOfTheRighteous", SpellId=53595, Role={ "generator","dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4286,7 +4335,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Standard_HammerOfTheRighteous", SpellId=53595, Role={  },
+        {Key="CrusaderStrike", SpellId=35395, Role={ "dps","generator", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4296,27 +4345,18 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Standard_CrusaderStrike", SpellId=35395, Role={  },
+        {Key="Free_WordOfGlory", SpellId=85673, Role={ "heal", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
-          Primary=false, Secondary=false,
-          Condition=function(this, ctx)
-            return true
-          end
-        },
-
-        {Key="Standard_WordOfGlory", SpellId=85673, Role={  },
-          Description="",
-          RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
-          NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
+          NoTarget=true, NoRange=false, NotInstant=false, WhileMoving=false,
           Primary=false, Secondary=false,
           Condition=function(this, ctx)
             return ctx.vars.BuffShiningLight.active
+              and ctx.vars.HealthIsLow
           end
         },
 
-        {Key="Standard_ArcaneTorrent", SpellId=155145, Role={  },
+        {Key="ArcaneTorrent", SpellId=155145, Role={ "generator","dps", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4326,7 +4366,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Standard_LightsJudgment", SpellId=255647, Role={  },
+        {Key="Slot_AvengingWrath", SpellId=384376, Role={ "cooldown", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4336,7 +4376,7 @@ function L2P:GetSpecData(ctx)
           end
         },
 
-        {Key="Standard_Consecration_1", SpellId=26573, Role={  },
+        {Key="Rebuke", SpellId=96231, Role={ "interrupt", },
           Description="",
           RangeSpell=nil, PetSpell=nil, ActionSpell=nil,
           NoTarget=false, NoRange=false, NotInstant=false, WhileMoving=false,
@@ -4349,13 +4389,13 @@ function L2P:GetSpecData(ctx)
       },
 
       slots={
+        {Type="spell", Spell=384376, 
+          Description="Avenging Wrath",
+          Icon="", Overlay=false, Charges=false
+        },
       },
 
       code={
-        BuffAllyOfTheLight=function(ctx)
-          return ctx:GetBuff(ctx.SPI.AllyOfTheLight)
-        end,
-
         BuffAvengingWrath=function(ctx)
           return ctx:GetBuff(ctx.SPI.AvengingWrath)
         end,
@@ -4376,92 +4416,53 @@ function L2P:GetSpecData(ctx)
           return ctx:GetBuff(ctx.SPI.ShiningLight)
         end,
 
-        DebuffConsecration=function(ctx)
-          return ctx:GetDebuff(ctx.SPI.Consecration)
+        HealthIsCritical=function(ctx)
+          return ctx.vars.HealthPercent < 0.2
         end,
 
-        SpellAvengersShield=function(ctx)
-          return ctx:GetSpell(ctx.SPI.AvengersShield)
+        InCombat=function(ctx)
+          return ctx.vars.Attackers > 0
         end,
 
-        SpellAvengingWrath=function(ctx)
-          return ctx:GetSpell(ctx.SPI.AvengingWrath)
+        HasTalentFinalStand=function(ctx)
+          return ctx:HasTalentByID(ctx.SPI.FinalStand)
         end,
 
-        SpellHammerOfWrath=function(ctx)
-          return ctx:GetSpell(ctx.SPI.HammerOfWrath)
+        HealthIsAlmostCritical=function(ctx)
+          return ctx.vars.HealthPercent < 0.35
         end,
 
-        SpellJudgment=function(ctx)
-          return ctx:GetSpell(ctx.SPI.Judgment)
+        HealthIsMedium=function(ctx)
+          return ctx.vars.HealthPercent < 0.8
         end,
 
-        SpellRighteousProtectorIcd=function(ctx)
-          return ctx:GetSpell(ctx.SPI.RighteousProtectorIcd)
+        HealthIsLow=function(ctx)
+          return ctx.vars.HealthPercent < 0.45
         end,
 
-        HasTalentAvengingWrath=function(ctx)
-          return ctx:HasTalentByID(ctx.SPI.AvengingWrath)
+        IsDangerousFight=function(ctx)
+          return ctx.vars.IsBossFight
+            or ctx.vars.IsPvp
+            or ctx.vars.HealthIsLow
         end,
 
-        HasTalentCrusadersJudgment=function(ctx)
-          return ctx:HasTalentByID(ctx.SPI.CrusadersJudgment)
+        NeedsConsecration=function(ctx)
+          return (ctx.vars.Now - (ctx.vars.LastConsecrationTime or 0)) > 13.5
         end,
 
-        HasTalentMomentOfGlory=function(ctx)
-          return ctx:HasTalentByID(ctx.SPI.MomentOfGlory)
+        LastConsecrationTime=function(ctx)
+          return (ctx.vars.LastCastSpell == ctx.SPI.Consecration 
+            and ctx.vars.LastCastTime) 
+            or ctx.vars.LastConsecrationTime 
+            or 0
         end,
 
-        HasTalentRighteousProtector=function(ctx)
-          return ctx:HasTalentByID(ctx.SPI.RighteousProtector)
+        BuffBlessingOfDawn=function(ctx)
+          return ctx:GetBuff(ctx.SPI.BlessingOfDawn)
         end,
 
-        Trinket1HasBuffStrength=function(ctx)
-          return false
-        end,
-
-        Trinket1HasBuffMastery=function(ctx)
-          return false
-        end,
-
-        Trinket1HasBuffVersatility=function(ctx)
-          return false
-        end,
-
-        Trinket1HasBuffHaste=function(ctx)
-          return false
-        end,
-
-        Trinket1HasBuffCrit=function(ctx)
-          return false
-        end,
-
-        Trinket2HasBuffStrength=function(ctx)
-          return false
-        end,
-
-        Trinket2HasBuffMastery=function(ctx)
-          return false
-        end,
-
-        Trinket2HasBuffVersatility=function(ctx)
-          return false
-        end,
-
-        Trinket2HasBuffHaste=function(ctx)
-          return false
-        end,
-
-        Trinket2HasBuffCrit=function(ctx)
-          return false
-        end,
-
-        SetBonusTier292pc=function(ctx)
-          return false
-        end,
-
-        IsModePreCombat=function(ctx)
-          return  not ctx.vars.IsFighting
+        BuffConsecration=function(ctx)
+          return ctx:GetBuff(ctx.SPI.ConsecrationBuff)
         end,
 
       }

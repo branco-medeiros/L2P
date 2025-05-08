@@ -242,7 +242,8 @@ local function Spell_CheckRange(this)
     (this.Slot and ActionHasRange(this.Slot) and IsActionInRange(this.Slot)) or
     not this.SpellBookIndexForRange or
     Fun.XIsSPellInRange(this.SpellBookIndexForRange, BOOKTYPE_SPELL, "target") == 1
-    or false
+		-- should be 'false', but range check not working in wow
+    or true
 
   return this.InRange
 end -- fn Spell_CheckRange

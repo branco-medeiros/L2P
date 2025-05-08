@@ -313,7 +313,10 @@ function Engine:UpdateState(elapsed)
   v.LastCastSpell = self.LastCastSpell
   v.LastCastTime = self.LastCastTime
   v.IsFighting = UnitAffectingCombat("player")
+	v.IsCloseCombat = self:CheckEnemyIsNear()
+	v.IsRangedCombat = self:CheckEnemyIsNotFar() or self:CheckEnemyIsFar()
   v.GCD = self.GCD
+	v.IsGrouped = IsInGroup()
 
   
   if self.CombatTick == 0 then
